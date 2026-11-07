@@ -1,0 +1,26 @@
+{
+  "name": "neopetcare-backend",
+  "version": "2.0.0",
+  "private": true,
+  "description": "API do NeoPetCare",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "check": "node --check server.js && node --check src/app.js && node --check src/database.js && node --check src/security.js && node --check src/routes/auth.js && node --check src/routes/newsletter.js && node --check src/routes/adoptions.js && node --check src/routes/reports.js && node --check src/routes/partners.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.1.0",
+    "helmet": "^8.1.0",
+    "pg": "^8.16.3"
+  }
+}

@@ -1,0 +1,737 @@
+/* =========================================================
+   CORRECOES DE EMERGENCIA DO LAYOUT
+========================================================= */
+
+[hidden] {
+  display: none !important;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  padding-top: 76px;
+  overflow-x: hidden;
+}
+
+main {
+  display: block;
+  width: 100%;
+}
+
+/* =========================================================
+   MODAIS
+========================================================= */
+
+.modal {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 9999 !important;
+
+  display: none !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  padding: 20px !important;
+
+  background: rgba(2, 29, 44, 0.75) !important;
+  backdrop-filter: blur(4px);
+}
+
+.modal.open {
+  display: flex !important;
+}
+
+#donation-modal:not(.open),
+#adoption-modal:not(.open),
+#report-modal:not(.open) {
+  display: none !important;
+}
+
+.modal-box {
+  position: relative !important;
+
+  display: block !important;
+
+  width: min(100%, 460px) !important;
+  max-height: 88vh !important;
+
+  margin: 0 !important;
+  padding: 28px !important;
+
+  overflow-y: auto !important;
+
+  background: #ffffff !important;
+  color: #173c53 !important;
+
+  border-radius: 18px !important;
+  box-shadow:
+    0 24px 60px
+    rgba(0, 0, 0, 0.28) !important;
+
+  text-align: center !important;
+}
+
+.modal-close {
+  position: absolute !important;
+
+  top: 10px !important;
+  right: 12px !important;
+
+  width: 34px !important;
+  height: 34px !important;
+
+  display: grid !important;
+  place-items: center !important;
+
+  padding: 0 !important;
+
+  border: 0 !important;
+  border-radius: 50% !important;
+
+  background: transparent !important;
+  color: #667f8e !important;
+
+  font-size: 25px !important;
+  line-height: 1 !important;
+}
+
+.modal-icon {
+  display: block !important;
+
+  margin-bottom: 8px !important;
+
+  color: #ff7655 !important;
+
+  font-size: 32px !important;
+}
+
+.modal-box h2 {
+  margin: 0 0 10px !important;
+
+  color: #073b5c !important;
+
+  font-size: 27px !important;
+}
+
+/* =========================================================
+   FORMULARIOS DOS MODAIS
+========================================================= */
+
+.report-form {
+  display: block !important;
+
+  width: 100% !important;
+
+  margin-top: 20px !important;
+
+  text-align: left !important;
+}
+
+.report-form label {
+  display: block !important;
+
+  margin-bottom: 14px !important;
+
+  color: #073b5c !important;
+
+  font-size: 13px !important;
+  font-weight: 700 !important;
+}
+
+.report-form input,
+.report-form select,
+.report-form textarea {
+  display: block !important;
+
+  width: 100% !important;
+
+  margin-top: 5px !important;
+  padding: 11px !important;
+
+  box-sizing: border-box !important;
+
+  border: 1px solid #d8e7ec !important;
+  border-radius: 8px !important;
+
+  background: #ffffff !important;
+  color: #173c53 !important;
+}
+
+.report-form textarea {
+  min-height: 95px !important;
+  resize: vertical !important;
+}
+
+.report-type {
+  display: grid !important;
+
+  grid-template-columns: 1fr 1fr !important;
+
+  gap: 8px !important;
+
+  margin-bottom: 18px !important;
+}
+
+.report-type-button {
+  padding: 10px !important;
+
+  border: 0 !important;
+  border-radius: 8px !important;
+
+  background: #edf6f4 !important;
+  color: #667f8e !important;
+
+  font-size: 12px !important;
+  font-weight: 700 !important;
+}
+
+.report-type-button.selected {
+  background: #10b866 !important;
+  color: #ffffff !important;
+}
+
+/* =========================================================
+   BOTOES
+========================================================= */
+
+.button,
+.card-button,
+.mini-button {
+  border: 0;
+  cursor: pointer;
+}
+
+.button {
+  display: inline-flex !important;
+
+  align-items: center !important;
+  justify-content: center !important;
+
+  min-height: 46px !important;
+
+  padding: 12px 20px !important;
+
+  border-radius: 10px !important;
+
+  background:
+    linear-gradient(
+      135deg,
+      #1bc876,
+      #0a9d5b
+    ) !important;
+
+  color: #ffffff !important;
+
+  font-weight: 800 !important;
+
+  text-decoration: none !important;
+}
+
+.full-button {
+  width: 100% !important;
+}
+
+/* =========================================================
+   RODAPE E NEWSLETTER
+========================================================= */
+
+footer {
+  display: grid !important;
+
+  grid-template-columns:
+    1.5fr 1fr 1fr 1.5fr !important;
+
+  gap: 35px !important;
+
+  padding:
+    45px
+    max(7vw, 30px)
+    20px !important;
+
+  background: #052d46 !important;
+  color: #d8e8ee !important;
+}
+
+footer h4 {
+  color: #ffffff !important;
+}
+
+footer a {
+  display: block !important;
+
+  margin: 7px 0 !important;
+
+  color: #c0d4dc !important;
+
+  text-decoration: none !important;
+}
+
+footer .newsletter {
+  display: flex !important;
+
+  width: 100% !important;
+  max-width: 360px !important;
+
+  padding: 4px !important;
+
+  background: #164d6a !important;
+
+  border-radius: 8px !important;
+}
+
+footer .newsletter input {
+  flex: 1 !important;
+
+  min-width: 0 !important;
+
+  padding: 10px !important;
+
+  border: 0 !important;
+  outline: 0 !important;
+
+  background: transparent !important;
+  color: #ffffff !important;
+}
+
+footer .newsletter input::placeholder {
+  color: #bdd0d7 !important;
+}
+
+footer .newsletter button {
+  width: 42px !important;
+
+  border: 0 !important;
+  border-radius: 6px !important;
+
+  background: #10b866 !important;
+  color: #ffffff !important;
+}
+
+.footer-bottom {
+  grid-column: 1 / -1 !important;
+
+  display: flex !important;
+
+  justify-content: space-between !important;
+
+  gap: 20px !important;
+
+  margin-top: 20px !important;
+  padding-top: 18px !important;
+
+  border-top:
+    1px solid
+    rgba(255, 255, 255, 0.12) !important;
+}
+
+/* =========================================================
+   LOGIN E SAIR
+========================================================= */
+
+.auth-section {
+  display: grid !important;
+
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(320px, 460px) !important;
+
+  align-items: center !important;
+
+  gap: 45px !important;
+}
+
+.auth-form,
+.logged-user {
+  width: 100% !important;
+  max-width: 460px !important;
+
+  justify-self: end !important;
+}
+
+.logged-user {
+  padding: 28px !important;
+
+  background: #ffffff !important;
+
+  border:
+    1px solid #d8e7ec !important;
+
+  border-radius: 16px !important;
+
+  box-shadow:
+    0 12px 32px
+    rgba(7, 59, 92, 0.1) !important;
+
+  text-align: center !important;
+}
+
+.logged-user-icon {
+  display: grid !important;
+  place-items: center !important;
+
+  width: 56px !important;
+  height: 56px !important;
+
+  margin:
+    0 auto 15px !important;
+
+  border-radius: 50% !important;
+
+  background: #10b866 !important;
+  color: #ffffff !important;
+
+  font-size: 26px !important;
+  font-weight: 800 !important;
+}
+
+.logged-user h3 {
+  margin-bottom: 8px !important;
+
+  color: #073b5c !important;
+}
+
+.logged-user p {
+  margin-bottom: 20px !important;
+
+  color: #667f8e !important;
+}
+
+.logged-user strong {
+  color: #078e50 !important;
+}
+
+.logout-button {
+  width: 100% !important;
+
+  background:
+    linear-gradient(
+      135deg,
+      #e45b50,
+      #bd3832
+    ) !important;
+
+  color: #ffffff !important;
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 800px) {
+  footer {
+    grid-template-columns:
+      repeat(2, 1fr) !important;
+  }
+
+  .auth-section {
+    grid-template-columns:
+      1fr !important;
+  }
+
+  .auth-form,
+  .logged-user {
+    max-width: none !important;
+    justify-self: stretch !important;
+  }
+}
+
+@media (max-width: 520px) {
+  footer {
+    grid-template-columns:
+      1fr !important;
+  }
+
+  .report-type {
+    grid-template-columns:
+      1fr !important;
+  }
+
+  .modal {
+    padding: 10px !important;
+  }
+
+  .modal-box {
+    padding:
+      24px 16px !important;
+  }
+
+  .footer-bottom {
+    flex-direction: column !important;
+  }
+}
+/* =========================================================
+   CORRECAO LOGIN / CADASTRO
+========================================================= */
+
+.auth-section {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 440px) !important;
+  gap: 50px !important;
+  align-items: center !important;
+
+  max-width: 1280px !important;
+  margin: 52px auto !important;
+  padding: 40px max(5vw, 30px) !important;
+
+  background: linear-gradient(
+    135deg,
+    #edf9f4,
+    #edf7fb
+  ) !important;
+
+  border-radius: 22px !important;
+}
+
+.auth-intro {
+  min-width: 0 !important;
+}
+
+.auth-intro h2 {
+  margin: 0 0 10px !important;
+
+  color: #073b5c !important;
+
+  font-size: clamp(2rem, 4vw, 2.7rem) !important;
+  line-height: 1.1 !important;
+}
+
+.auth-intro p:not(.eyebrow) {
+  max-width: 520px !important;
+
+  color: #667f8e !important;
+}
+
+.auth-form {
+  display: block !important;
+
+  width: 100% !important;
+  max-width: 440px !important;
+
+  padding: 24px !important;
+
+  background: #ffffff !important;
+
+  border: 1px solid #d8e7ec !important;
+  border-radius: 16px !important;
+
+  box-shadow:
+    0 12px 32px
+    rgba(7, 59, 92, 0.10) !important;
+}
+
+.auth-tabs {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+
+  gap: 5px !important;
+
+  margin: 0 0 20px !important;
+  padding: 4px !important;
+
+  background: #eef6f5 !important;
+
+  border-radius: 10px !important;
+}
+
+.auth-tab {
+  width: 100% !important;
+
+  padding: 10px !important;
+
+  border: 0 !important;
+  border-radius: 7px !important;
+
+  background: transparent !important;
+
+  color: #667f8e !important;
+
+  font-weight: 800 !important;
+
+  cursor: pointer !important;
+}
+
+.auth-tab.active {
+  background: #073b5c !important;
+  color: #ffffff !important;
+}
+
+.auth-form label {
+  display: block !important;
+
+  width: 100% !important;
+
+  margin: 0 0 14px !important;
+
+  color: #073b5c !important;
+
+  font-size: 13px !important;
+  font-weight: 700 !important;
+}
+
+.auth-form input {
+  display: block !important;
+
+  width: 100% !important;
+
+  margin: 6px 0 0 !important;
+  padding: 12px 13px !important;
+
+  box-sizing: border-box !important;
+
+  border: 1px solid #d8e7ec !important;
+  border-radius: 9px !important;
+
+  background: #ffffff !important;
+  color: #173c53 !important;
+
+  outline: none !important;
+}
+
+.auth-form input:focus {
+  border-color: #10b866 !important;
+
+  box-shadow:
+    0 0 0 3px
+    rgba(16, 184, 102, 0.12) !important;
+}
+
+.auth-form .full-button {
+  display: flex !important;
+
+  width: 100% !important;
+
+  margin-top: 5px !important;
+  padding: 13px 18px !important;
+
+  border: 0 !important;
+  border-radius: 9px !important;
+
+  background: linear-gradient(
+    135deg,
+    #1bc876,
+    #0a9d5b
+  ) !important;
+
+  color: #ffffff !important;
+
+  font-weight: 800 !important;
+
+  justify-content: center !important;
+}
+
+.form-note {
+  display: block !important;
+
+  margin-top: 13px !important;
+
+  color: #667f8e !important;
+
+  font-size: 11px !important;
+
+  text-align: center !important;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+
+/* Usuario logado */
+
+.logged-user {
+  display: block;
+
+  width: 100% !important;
+  max-width: 440px !important;
+
+  padding: 28px !important;
+
+  justify-self: end !important;
+
+  background: #ffffff !important;
+
+  border: 1px solid #d8e7ec !important;
+  border-radius: 16px !important;
+
+  box-shadow:
+    0 12px 32px
+    rgba(7, 59, 92, 0.10) !important;
+
+  text-align: center !important;
+}
+
+.logged-user[hidden] {
+  display: none !important;
+}
+
+.logged-user-icon {
+  display: grid !important;
+  place-items: center !important;
+
+  width: 58px !important;
+  height: 58px !important;
+
+  margin: 0 auto 14px !important;
+
+  border-radius: 50% !important;
+
+  background: #10b866 !important;
+  color: white !important;
+
+  font-size: 26px !important;
+  font-weight: bold !important;
+}
+
+.logged-user h3 {
+  margin: 0 0 8px !important;
+
+  color: #073b5c !important;
+}
+
+.logged-user p {
+  margin: 0 0 20px !important;
+
+  color: #667f8e !important;
+}
+
+.logged-user strong {
+  color: #078e50 !important;
+}
+
+.logout-button {
+  width: 100% !important;
+
+  background: linear-gradient(
+    135deg,
+    #e45b50,
+    #bd3832
+  ) !important;
+
+  color: white !important;
+}
+
+
+/* Celular */
+
+@media (max-width: 800px) {
+
+  .auth-section {
+    grid-template-columns: 1fr !important;
+    gap: 25px !important;
+
+    margin-left: 18px !important;
+    margin-right: 18px !important;
+
+    padding: 28px 20px !important;
+  }
+
+  .auth-form,
+  .logged-user {
+    max-width: none !important;
+
+    justify-self: stretch !important;
+  }
+}
