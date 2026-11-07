@@ -980,6 +980,115 @@ const petsData = {
 
     story:
       'Luna procura uma família responsável para começar uma nova história. Nesta ficha poderão aparecer informações sobre sua rotina, comportamento e cuidados especiais.'
+    },
+
+  Mingau: {
+    name: 'Mingau',
+    status: 'Disponível para adoção',
+    imageClass: 'image-mingau',
+
+    species: 'Gato',
+    breed: 'A confirmar',
+    color: 'A confirmar',
+    sex: 'A confirmar',
+    age: '2 anos',
+    size: 'Pequeno',
+    weight: 'A confirmar',
+    identification: 'A confirmar',
+
+    location: 'Minas Gerais',
+
+    vaccination: 'A confirmar',
+    deworming: 'A confirmar',
+    neutering: 'A confirmar',
+    microchip: 'A confirmar',
+
+    specialNeeds:
+      'Nenhuma informação cadastrada',
+
+    livesWithDogs: 'A confirmar',
+    livesWithCats: 'A confirmar',
+    livesWithChildren: 'A confirmar',
+
+    temperament: 'A confirmar',
+
+    guardian: 'A confirmar',
+
+    story:
+      'Mingau foi resgatado e está pronto para encontrar uma família.'
+  },
+
+  Thor: {
+    name: 'Thor',
+    status: 'Em tratamento',
+    imageClass: 'image-thor',
+
+    species: 'Cão',
+    breed: 'A confirmar',
+    color: 'A confirmar',
+    sex: 'A confirmar',
+    age: '5 anos',
+    size: 'Grande',
+    weight: 'A confirmar',
+    identification: 'A confirmar',
+
+    location: 'Minas Gerais',
+
+    vaccination: 'A confirmar',
+    deworming: 'A confirmar',
+    neutering: 'A confirmar',
+    microchip: 'A confirmar',
+
+    specialNeeds:
+      'Necessita acompanhamento. Mais informações em atualização.',
+
+    livesWithDogs: 'A confirmar',
+    livesWithCats: 'A confirmar',
+    livesWithChildren: 'A confirmar',
+
+    temperament: 'A confirmar',
+
+    guardian: 'A confirmar',
+
+    story:
+      'Thor precisa de acompanhamento e busca uma família preparada para adotá-lo.'
+  },
+
+  Mel: {
+    name: 'Mel',
+    status: 'Em lar temporário',
+    imageClass: 'image-mel',
+
+    species: 'Gato',
+    breed: 'A confirmar',
+    color: 'A confirmar',
+    sex: 'A confirmar',
+    age: '1 ano',
+    size: 'Pequeno',
+    weight: 'A confirmar',
+    identification: 'A confirmar',
+
+    location: 'Minas Gerais',
+
+    vaccination: 'A confirmar',
+    deworming: 'A confirmar',
+    neutering: 'A confirmar',
+    microchip: 'A confirmar',
+
+    specialNeeds:
+      'Nenhuma informação cadastrada',
+
+    livesWithDogs: 'A confirmar',
+    livesWithCats: 'A confirmar',
+    livesWithChildren: 'A confirmar',
+
+    temperament: 'A confirmar',
+
+    guardian:
+      'Atualmente em lar temporário. Mais informações em atualização.',
+
+    story:
+      'Mel procura uma família ou um lar temporário.'
   }
 };
 
@@ -2405,7 +2514,7 @@ document.addEventListener(
     closeDonationModal();
     closeAdoptionModal();
     closeReportModal();
-    closeLunaDetails();
+    closePetDetails();
     closeNavMore();
   }
 );

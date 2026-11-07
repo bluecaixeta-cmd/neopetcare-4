@@ -97,59 +97,49 @@
   </header>
 
   <!-- ======================================================
-     FICHA REUTILIZÁVEL DO PET
+     DETALHES DO PET - LUNA
 ======================================================= -->
 
 <div
   class="modal pet-details-modal"
-  id="pet-details-modal"
+  id="luna-details-modal"
   aria-hidden="true"
 >
   <div
     class="modal-box pet-details-box"
     role="dialog"
     aria-modal="true"
-    aria-labelledby="pet-details-title"
+    aria-labelledby="luna-details-title"
   >
 
     <button
       class="modal-close pet-details-close"
       type="button"
-      aria-label="Fechar detalhes do animal"
+      aria-label="Fechar detalhes da Luna"
     >
       ×
     </button>
 
     <div class="pet-details-header">
 
-      <div
-        class="pet-details-photo"
-        id="pet-details-photo"
-        role="img"
-        aria-label="Foto do animal"
-      ></div>
+      <div class="pet-details-photo image-luna"></div>
 
       <div class="pet-details-title">
-
-        <p
-          class="eyebrow"
-          id="pet-details-status"
-        >
+        <p class="eyebrow">
           Disponível para adoção
         </p>
 
-        <h2 id="pet-details-title">
-          Animal
+        <h2 id="luna-details-title">
+          Luna
         </h2>
 
-        <p id="pet-details-profile">
-          Informações do animal
+        <p>
+          Cão · 3 anos · Porte médio
         </p>
 
-        <p id="pet-details-location">
-          Localização não informada
+        <p>
+          📍 Minas Gerais
         </p>
-
       </div>
 
     </div>
@@ -157,192 +147,106 @@
     <div class="pet-details-content">
 
       <section class="pet-details-group">
-
         <h3>🐾 Características</h3>
 
         <div class="pet-details-grid">
 
           <div>
             <strong>Espécie</strong>
-            <span id="pet-details-species">
-              Não informado
-            </span>
+            <span>Cão</span>
           </div>
 
           <div>
             <strong>Raça</strong>
-            <span id="pet-details-breed">
-              Não informada
-            </span>
+            <span>Sem raça definida</span>
           </div>
 
           <div>
-            <strong>Cor ou pelagem</strong>
-            <span id="pet-details-color">
-              Não informada
-            </span>
+            <strong>Cor</strong>
+            <span>Caramelo</span>
           </div>
 
           <div>
             <strong>Sexo</strong>
-            <span id="pet-details-sex">
-              Não informado
-            </span>
+            <span>Fêmea</span>
           </div>
 
           <div>
             <strong>Idade</strong>
-            <span id="pet-details-age">
-              Não informada
-            </span>
+            <span>3 anos</span>
           </div>
 
           <div>
             <strong>Porte</strong>
-            <span id="pet-details-size">
-              Não informado
-            </span>
-          </div>
-
-          <div>
-            <strong>Peso</strong>
-            <span id="pet-details-weight">
-              Não informado
-            </span>
-          </div>
-
-          <div>
-            <strong>Identificação</strong>
-            <span id="pet-details-identification">
-              Não informada
-            </span>
+            <span>Médio</span>
           </div>
 
         </div>
-
       </section>
 
       <section class="pet-details-group">
-
         <h3>❤️ Saúde</h3>
 
         <div class="pet-details-grid">
 
           <div>
             <strong>Vacinação</strong>
-            <span id="pet-details-vaccination">
-              A confirmar
-            </span>
+            <span>A confirmar</span>
           </div>
 
           <div>
             <strong>Vermifugação</strong>
-            <span id="pet-details-deworming">
-              A confirmar
-            </span>
+            <span>A confirmar</span>
           </div>
 
           <div>
             <strong>Castração</strong>
-            <span id="pet-details-neutering">
-              A confirmar
-            </span>
+            <span>A confirmar</span>
           </div>
 
           <div>
             <strong>Microchip</strong>
-            <span id="pet-details-microchip">
-              A confirmar
-            </span>
-          </div>
-
-          <div class="pet-details-wide">
-            <strong>Necessidades especiais</strong>
-            <span id="pet-details-special-needs">
-              Nenhuma informação cadastrada
-            </span>
+            <span>A confirmar</span>
           </div>
 
         </div>
-
       </section>
 
       <section class="pet-details-group">
-
-        <h3>🤝 Convivência</h3>
-
-        <div class="pet-details-grid">
-
-          <div>
-            <strong>Com cães</strong>
-            <span id="pet-details-dogs">
-              A confirmar
-            </span>
-          </div>
-
-          <div>
-            <strong>Com gatos</strong>
-            <span id="pet-details-cats">
-              A confirmar
-            </span>
-          </div>
-
-          <div>
-            <strong>Com crianças</strong>
-            <span id="pet-details-children">
-              A confirmar
-            </span>
-          </div>
-
-          <div>
-            <strong>Temperamento</strong>
-            <span id="pet-details-temperament">
-              Não informado
-            </span>
-          </div>
-
-        </div>
-
-      </section>
-
-      <section class="pet-details-group">
-
         <h3>🏠 Acolhimento atual</h3>
 
-        <p id="pet-details-guardian">
+        <p>
           Informações sobre o responsável atual
-          não foram cadastradas.
+          pelo acolhimento serão exibidas aqui.
         </p>
-
       </section>
 
       <section class="pet-details-group">
+        <h3>📖 Sobre a Luna</h3>
 
-        <h3>📖 História do animal</h3>
-
-        <p id="pet-details-story">
-          A história deste animal será apresentada aqui.
+        <p>
+          Luna procura uma família responsável para começar
+          uma nova história. Nesta ficha poderão aparecer
+          informações sobre comportamento, rotina,
+          convivência com outros animais e cuidados especiais.
         </p>
-
       </section>
 
       <div class="pet-details-actions">
 
         <button
           class="button adoption-button"
-          id="pet-details-adoption-button"
           type="button"
-          data-pet=""
+          data-pet="Luna"
         >
-          🏡 Quero adotar
+          🏡 Quero adotar Luna
         </button>
 
         <button
           class="button open-donation"
-          id="pet-details-donation-button"
           type="button"
         >
-          ❤️ Apoiar este animal
+          ❤️ Apoiar Luna
         </button>
 
       </div>
