@@ -96,50 +96,60 @@
 
   </header>
 
-  <!-- ======================================================
-     DETALHES DO PET - LUNA
+<!-- ======================================================
+     FICHA REUTILIZÁVEL DO PET
 ======================================================= -->
 
 <div
   class="modal pet-details-modal"
-  id="luna-details-modal"
+  id="pet-details-modal"
   aria-hidden="true"
 >
   <div
     class="modal-box pet-details-box"
     role="dialog"
     aria-modal="true"
-    aria-labelledby="luna-details-title"
+    aria-labelledby="pet-details-title"
   >
 
     <button
       class="modal-close pet-details-close"
       type="button"
-      aria-label="Fechar detalhes da Luna"
+      aria-label="Fechar detalhes do animal"
     >
       ×
     </button>
 
     <div class="pet-details-header">
 
-      <div class="pet-details-photo image-luna"></div>
+      <div
+        class="pet-details-photo"
+        id="pet-details-photo"
+        role="img"
+        aria-label="Foto do animal"
+      ></div>
 
       <div class="pet-details-title">
-        <p class="eyebrow">
+
+        <p
+          class="eyebrow"
+          id="pet-details-status"
+        >
           Disponível para adoção
         </p>
 
-        <h2 id="luna-details-title">
-          Luna
+        <h2 id="pet-details-title">
+          Animal
         </h2>
 
-        <p>
-          Cão · 3 anos · Porte médio
+        <p id="pet-details-profile">
+          Informações do animal
         </p>
 
-        <p>
-          📍 Minas Gerais
+        <p id="pet-details-location">
+          Localização não informada
         </p>
+
       </div>
 
     </div>
@@ -147,106 +157,192 @@
     <div class="pet-details-content">
 
       <section class="pet-details-group">
+
         <h3>🐾 Características</h3>
 
         <div class="pet-details-grid">
 
           <div>
             <strong>Espécie</strong>
-            <span>Cão</span>
+            <span id="pet-details-species">
+              Não informado
+            </span>
           </div>
 
           <div>
             <strong>Raça</strong>
-            <span>Sem raça definida</span>
+            <span id="pet-details-breed">
+              Não informada
+            </span>
           </div>
 
           <div>
-            <strong>Cor</strong>
-            <span>Caramelo</span>
+            <strong>Cor ou pelagem</strong>
+            <span id="pet-details-color">
+              Não informada
+            </span>
           </div>
 
           <div>
             <strong>Sexo</strong>
-            <span>Fêmea</span>
+            <span id="pet-details-sex">
+              Não informado
+            </span>
           </div>
 
           <div>
             <strong>Idade</strong>
-            <span>3 anos</span>
+            <span id="pet-details-age">
+              Não informada
+            </span>
           </div>
 
           <div>
             <strong>Porte</strong>
-            <span>Médio</span>
+            <span id="pet-details-size">
+              Não informado
+            </span>
+          </div>
+
+          <div>
+            <strong>Peso</strong>
+            <span id="pet-details-weight">
+              Não informado
+            </span>
+          </div>
+
+          <div>
+            <strong>Identificação</strong>
+            <span id="pet-details-identification">
+              Não informada
+            </span>
           </div>
 
         </div>
+
       </section>
 
       <section class="pet-details-group">
+
         <h3>❤️ Saúde</h3>
 
         <div class="pet-details-grid">
 
           <div>
             <strong>Vacinação</strong>
-            <span>A confirmar</span>
+            <span id="pet-details-vaccination">
+              A confirmar
+            </span>
           </div>
 
           <div>
             <strong>Vermifugação</strong>
-            <span>A confirmar</span>
+            <span id="pet-details-deworming">
+              A confirmar
+            </span>
           </div>
 
           <div>
             <strong>Castração</strong>
-            <span>A confirmar</span>
+            <span id="pet-details-neutering">
+              A confirmar
+            </span>
           </div>
 
           <div>
             <strong>Microchip</strong>
-            <span>A confirmar</span>
+            <span id="pet-details-microchip">
+              A confirmar
+            </span>
+          </div>
+
+          <div class="pet-details-wide">
+            <strong>Necessidades especiais</strong>
+            <span id="pet-details-special-needs">
+              Nenhuma informação cadastrada
+            </span>
           </div>
 
         </div>
+
       </section>
 
       <section class="pet-details-group">
+
+        <h3>🤝 Convivência</h3>
+
+        <div class="pet-details-grid">
+
+          <div>
+            <strong>Com cães</strong>
+            <span id="pet-details-dogs">
+              A confirmar
+            </span>
+          </div>
+
+          <div>
+            <strong>Com gatos</strong>
+            <span id="pet-details-cats">
+              A confirmar
+            </span>
+          </div>
+
+          <div>
+            <strong>Com crianças</strong>
+            <span id="pet-details-children">
+              A confirmar
+            </span>
+          </div>
+
+          <div>
+            <strong>Temperamento</strong>
+            <span id="pet-details-temperament">
+              Não informado
+            </span>
+          </div>
+
+        </div>
+
+      </section>
+
+      <section class="pet-details-group">
+
         <h3>🏠 Acolhimento atual</h3>
 
-        <p>
+        <p id="pet-details-guardian">
           Informações sobre o responsável atual
-          pelo acolhimento serão exibidas aqui.
+          não foram cadastradas.
         </p>
+
       </section>
 
       <section class="pet-details-group">
-        <h3>📖 Sobre a Luna</h3>
 
-        <p>
-          Luna procura uma família responsável para começar
-          uma nova história. Nesta ficha poderão aparecer
-          informações sobre comportamento, rotina,
-          convivência com outros animais e cuidados especiais.
+        <h3>📖 História do animal</h3>
+
+        <p id="pet-details-story">
+          A história deste animal será apresentada aqui.
         </p>
+
       </section>
 
       <div class="pet-details-actions">
 
         <button
           class="button adoption-button"
+          id="pet-details-adoption-button"
           type="button"
-          data-pet="Luna"
+          data-pet=""
         >
-          🏡 Quero adotar Luna
+          🏡 Quero adotar
         </button>
 
         <button
           class="button open-donation"
+          id="pet-details-donation-button"
           type="button"
         >
-          ❤️ Apoiar Luna
+          ❤️ Apoiar este animal
         </button>
 
       </div>
@@ -255,44 +351,6 @@
 
   </div>
 </div>
-
-  <main>
-
-    <!-- ===================================================
-         HERO
-    ==================================================== -->
-
-    <section class="hero" id="inicio">
-
-      <div class="hero-copy">
-        <p class="eyebrow">
-          Uma rede de cuidado para todos os pets
-        </p>
-
-        <h1>
-          Juntos por um mundo melhor para os
-          <em>pets</em>
-        </h1>
-
-        <p class="hero-text">
-          O NeoPetCare conecta pessoas que querem ajudar
-          a animais que precisam. Cada gesto de cuidado
-          faz toda a diferença.
-        </p>
-
-        <div class="hero-actions">
-          <button
-            class="button button-primary open-donation"
-            type="button"
-          >
-            ♡ Quero ajudar
-          </button>
-
-          <a class="button button-secondary" href="#adote">
-            Encontrar um pet
-          </a>
-        </div>
-      </div>
 
     </section>
 
@@ -516,142 +574,286 @@
 </article>
 
         <article class="pet-card" data-type="gato">
-          <div class="card-content">
 
-            <h3>Mingau</h3>
+  <div class="card-content">
 
-            <p class="pet-profile">
-              Gato · 2 anos · Pequeno
-            </p>
+    <h3>Mingau</h3>
 
-            <div class="pet-image image-mingau">
-              <span class="tag green">Adoção</span>
+    <p class="pet-profile">
+      Gato · 2 anos · Pequeno
+    </p>
 
-              <button
-                class="favorite"
-                type="button"
-                aria-label="Favoritar Mingau"
-              >
-                ♡
-              </button>
-            </div>
+    <div class="pet-image image-mingau">
 
-            <p class="muted pet-health">
-              Mingau foi resgatado e está pronto
-              para encontrar uma família.
-            </p>
+      <span class="tag green">
+        Adoção
+      </span>
 
-            <p class="pet-location">Minas Gerais</p>
+      <button
+        class="favorite"
+        type="button"
+        aria-label="Favoritar Mingau"
+      >
+        ♡
+      </button>
 
-            <button
-              class="card-button adoption-button"
-              type="button"
-              data-pet="Mingau"
-            >
-              🏡 Quero adotar
-            </button>
+    </div>
 
-            <button
-              class="card-button open-donation"
-              type="button"
-            >
-              ❤️ Apoiar agora
-            </button>
+    <div class="pet-summary">
+      <span>🐱 Gato</span>
+      <span>🎂 2 anos</span>
+      <span>📏 Pequeno</span>
+      <span>❤️ Adoção</span>
+    </div>
 
-          </div>
-        </article>
+    <p class="pet-health">
+      Mingau foi resgatado e está pronto
+      para encontrar uma família.
+    </p>
+
+    <div class="pet-quick-info">
+
+      <span>
+        <strong>Raça:</strong>
+        A confirmar
+      </span>
+
+      <span>
+        <strong>Cor:</strong>
+        A confirmar
+      </span>
+
+      <span>
+        <strong>Vacinas:</strong>
+        A confirmar
+      </span>
+
+      <span>
+        <strong>Castração:</strong>
+        A confirmar
+      </span>
+
+    </div>
+
+    <p class="pet-location">
+      📍 Minas Gerais
+    </p>
+
+    <button
+      class="card-button pet-details-button"
+      type="button"
+      data-pet-details="Mingau"
+    >
+      🐾 Ver detalhes
+    </button>
+
+    <button
+      class="card-button adoption-button"
+      type="button"
+      data-pet="Mingau"
+    >
+      🏡 Quero adotar
+    </button>
+
+    <button
+      class="card-button open-donation"
+      type="button"
+    >
+      ❤️ Apoiar agora
+    </button>
+
+  </div>
+
+</article>
 
         <article class="pet-card" data-type="tratamento cao">
-          <div class="card-content">
 
-            <h3>Thor</h3>
+  <div class="card-content">
 
-            <p class="pet-profile">
-              Cachorro · 5 anos · Grande
-            </p>
+    <h3>Thor</h3>
 
-            <div class="pet-image image-thor">
-              <span class="tag blue">Medicação</span>
+    <p class="pet-profile">
+      Cachorro · 5 anos · Grande
+    </p>
 
-              <button
-                class="favorite"
-                type="button"
-                aria-label="Favoritar Thor"
-              >
-                ♡
-              </button>
-            </div>
+    <div class="pet-image image-thor">
 
-            <p class="muted pet-health">
-              Thor precisa de acompanhamento e busca
-              uma família preparada para adotá-lo.
-            </p>
+      <span class="tag blue">
+        Medicação
+      </span>
 
-            <p class="pet-location">Minas Gerais</p>
+      <button
+        class="favorite"
+        type="button"
+        aria-label="Favoritar Thor"
+      >
+        ♡
+      </button>
 
-            <button
-              class="card-button adoption-button"
-              type="button"
-              data-pet="Thor"
-            >
-              🏡 Quero adotar
-            </button>
+    </div>
 
-            <button
-              class="card-button open-donation"
-              type="button"
-            >
-              ❤️ Apoiar agora
-            </button>
+    <div class="pet-summary">
 
-          </div>
-        </article>
+      <span>🐶 Cão</span>
+      <span>🎂 5 anos</span>
+      <span>📏 Grande</span>
+      <span>💊 Tratamento</span>
+
+    </div>
+
+    <p class="pet-health">
+      Thor precisa de acompanhamento e busca
+      uma família preparada para adotá-lo.
+    </p>
+
+    <div class="pet-quick-info">
+
+      <span>
+        <strong>Raça:</strong>
+        A confirmar
+      </span>
+
+      <span>
+        <strong>Cor:</strong>
+        A confirmar
+      </span>
+
+      <span>
+        <strong>Tratamento:</strong>
+        Em acompanhamento
+      </span>
+
+      <span>
+        <strong>Castração:</strong>
+        A confirmar
+      </span>
+
+    </div>
+
+    <p class="pet-location">
+      📍 Minas Gerais
+    </p>
+
+    <button
+      class="card-button pet-details-button"
+      type="button"
+      data-pet-details="Thor"
+    >
+      🐾 Ver detalhes
+    </button>
+
+    <button
+      class="card-button adoption-button"
+      type="button"
+      data-pet="Thor"
+    >
+      🏡 Quero adotar
+    </button>
+
+    <button
+      class="card-button open-donation"
+      type="button"
+    >
+      ❤️ Apoiar agora
+    </button>
+
+  </div>
+
+</article>
 
         <article class="pet-card" data-type="gato">
-          <div class="card-content">
 
-            <h3>Mel</h3>
+  <div class="card-content">
 
-            <p class="pet-profile">
-              Gata · 1 ano · Pequeno
-            </p>
+    <h3>Mel</h3>
 
-            <div class="pet-image image-mel">
-              <span class="tag purple">Lar temporário</span>
+    <p class="pet-profile">
+      Gata · 1 ano · Pequeno
+    </p>
 
-              <button
-                class="favorite"
-                type="button"
-                aria-label="Favoritar Mel"
-              >
-                ♡
-              </button>
-            </div>
+    <div class="pet-image image-mel">
 
-            <p class="muted pet-health">
-              Mel procura uma família ou um lar temporário.
-            </p>
+      <span class="tag purple">
+        Lar temporário
+      </span>
 
-            <p class="pet-location">Minas Gerais</p>
+      <button
+        class="favorite"
+        type="button"
+        aria-label="Favoritar Mel"
+      >
+        ♡
+      </button>
 
-            <button
-              class="card-button adoption-button"
-              type="button"
-              data-pet="Mel"
-            >
-              🏡 Quero adotar
-            </button>
+    </div>
 
-            <button
-              class="card-button open-donation"
-              type="button"
-            >
-              ❤️ Apoiar agora
-            </button>
+    <div class="pet-summary">
 
-          </div>
-        </article>
+      <span>🐱 Gato</span>
+      <span>🎂 1 ano</span>
+      <span>📏 Pequeno</span>
+      <span>🏠 Lar temporário</span>
 
+    </div>
+
+    <p class="pet-health">
+      Mel procura uma família ou um lar temporário.
+    </p>
+
+    <div class="pet-quick-info">
+
+      <span>
+        <strong>Raça:</strong>
+        A confirmar
+      </span>
+
+      <span>
+        <strong>Cor:</strong>
+        A confirmar
+      </span>
+
+      <span>
+        <strong>Vacinas:</strong>
+        A confirmar
+      </span>
+
+      <span>
+        <strong>Castração:</strong>
+        A confirmar
+      </span>
+
+    </div>
+
+    <p class="pet-location">
+      📍 Minas Gerais
+    </p>
+
+    <button
+      class="card-button pet-details-button"
+      type="button"
+      data-pet-details="Mel"
+    >
+      🐾 Ver detalhes
+    </button>
+
+    <button
+      class="card-button adoption-button"
+      type="button"
+      data-pet="Mel"
+    >
+      🏡 Quero adotar
+    </button>
+
+    <button
+      class="card-button open-donation"
+      type="button"
+    >
+      ❤️ Apoiar agora
+    </button>
+
+  </div>
+
+</article>
       </div>
 
     </section>
