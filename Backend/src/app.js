@@ -1,3 +1,21 @@
+import cors from 'cors';
+import cookieParser from 'cookie-parser';
+import express from 'express';
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
+
+import { checkDatabase } from './database.js';
+
+import authRoutes from './routes/auth.js';
+import newsletterRoutes from './routes/newsletter.js';
+import adoptionRoutes from './routes/adoptions.js';
+import reportRoutes from './routes/reports.js';
+import partnerRoutes from './routes/partners.js';
+
+
+const app = express();
+
+
 const allowedOrigins = String(
   process.env.FRONTEND_URL || ''
 )
@@ -5,9 +23,14 @@ const allowedOrigins = String(
   .map((origin) => origin.trim())
   .filter(Boolean);
 
+
 const corsOptions = {
   origin(origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
+
+    if (
+      !origin ||
+      allowedOrigins.includes(origin)
+    ) {
       return callback(null, true);
     }
 
@@ -39,12 +62,151 @@ const corsOptions = {
   optionsSuccessStatus: 204
 };
 
-app.use(cors(corsOptions));
 
-app.options(
-  /.+/,
+app.set('trust proxy', 1);
+
+
+app.use(
+  helmet({
+    crossOriginResourcePolicy: {
+      policy: 'cross-origin'
+    }
+  })
+);
+
+
+app.use(
   cors(corsOptions)
 );
 
-app.use(express.json({ limit: '4mb' }));
-app.use(cookieParser());
+
+app.use(
+  rateLimit({
+    windowMs: 60 * 1000,
+    limit: 120,
+    standardHeaders: true,
+    legacyHeaders: false
+  })
+);
+
+
+app.use(
+  express.json({
+    limit: '4mb'
+  })
+);
+
+
+app.use(
+  cookieParser()
+);
+
+
+/* =========================================================
+   HEALTH CHECK
+========================================================= */
+
+app.get(
+  '/api/health',
+  async (req, res, next) => {
+
+    try {
+
+      const database =
+        await checkDatabase();
+
+      return res.json({
+        ok: true,
+        database: true,
+        time: database.current_time
+      });
+
+    } catch (error) {
+
+      next(error);
+    }
+  }
+);
+
+
+/* =========================================================
+   ROTAS
+========================================================= */
+
+app.use(
+  '/api/auth',
+  authRoutes
+);
+
+app.use(
+  '/api/newsletter',
+  newsletterRoutes
+);
+
+app.use(
+  '/api/adoptions',
+  adoptionRoutes
+);
+
+app.use(
+  '/api/reports',
+  reportRoutes
+);
+
+app.use(
+  '/api/partners',
+  partnerRoutes
+);
+
+
+/* =========================================================
+   ROTA NÃO ENCONTRADA
+========================================================= */
+
+app.use(
+  '/api',
+  (req, res) => {
+
+    return res
+      .status(404)
+      .json({
+        error:
+          'Rota da API não encontrada.'
+      });
+  }
+);
+
+
+/* =========================================================
+   TRATAMENTO DE ERROS
+========================================================= */
+
+app.use(
+  (error, req, res, next) => {
+
+    console.error(error);
+
+    if (
+      error.message ===
+      'Origem não autorizada.'
+    ) {
+
+      return res
+        .status(403)
+        .json({
+          error:
+            'Origem não autorizada.'
+        });
+    }
+
+    return res
+      .status(500)
+      .json({
+        error:
+          'Erro interno do servidor.'
+      });
+  }
+);
+
+
+export default app;
