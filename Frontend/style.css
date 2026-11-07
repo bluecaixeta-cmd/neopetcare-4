@@ -4736,3 +4736,143 @@ button[type="submit"] {
     max-height: 240px;
   }
 }
+
+/* =========================================================
+   DETALHES - ACHADOS E PERDIDOS
+========================================================= */
+
+.report-photo-placeholder {
+  width: 100%;
+  height: 100%;
+
+  display: grid;
+  place-items: center;
+
+  background:
+    linear-gradient(
+      135deg,
+      #dff5e9,
+      #dceff7
+    );
+
+  color: var(--navy);
+
+  font-size: 48px;
+}
+
+.report-location {
+  margin-bottom: 4px;
+
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.report-quick-info {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 6px;
+
+  margin:
+    12px 0;
+}
+
+.report-quick-info span {
+  display: block;
+
+  min-width: 0;
+
+  padding: 7px 8px;
+
+  background: #edf8f4;
+
+  color: var(--muted);
+
+  border-radius: 7px;
+
+  font-size: 10px;
+
+  overflow-wrap: anywhere;
+}
+
+.report-quick-info strong {
+  color: var(--navy);
+}
+
+
+.report-identification {
+  display: grid;
+  gap: 5px;
+
+  margin:
+    10px 0;
+
+  padding: 10px;
+
+  background: #f7fafb;
+
+  border:
+    1px solid var(--border);
+
+  border-radius: 9px;
+}
+
+.report-identification span {
+  color: var(--muted);
+
+  font-size: 10px;
+  line-height: 1.45;
+
+  overflow-wrap: anywhere;
+}
+
+.report-identification strong {
+  color: var(--navy);
+}
+
+
+.report-contact {
+  margin-top: 10px;
+  margin-bottom: 0;
+
+  padding-top: 10px;
+
+  border-top:
+    1px solid var(--border);
+
+  color: var(--muted);
+
+  font-size: 11px;
+}
+
+.report-contact strong {
+  color: var(--navy);
+}
+
+
+/* =========================================================
+   ACHADOS E PERDIDOS - CELULAR
+========================================================= */
+
+@media (max-width: 560px) {
+
+  .report-quick-info {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+  .report-quick-info span {
+    font-size: 10px;
+  }
+
+  .report-identification {
+    padding: 9px;
+  }
+
+  .report-photo-placeholder {
+    font-size: 40px;
+  }
+}

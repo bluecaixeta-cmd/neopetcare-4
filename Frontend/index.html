@@ -2400,108 +2400,436 @@
 
       <h2>Publicar ocorrência</h2>
 
-      <form
-        id="report-form"
-        class="report-form"
+     <form
+  id="report-form"
+  class="report-form"
+>
+
+  <!-- =====================================================
+       TIPO DA OCORRÊNCIA
+  ====================================================== -->
+
+  <div class="report-type">
+
+    <button
+      type="button"
+      class="report-type-button selected"
+      data-report-type="perdido"
+    >
+      🔎 Meu pet está perdido
+    </button>
+
+    <button
+      type="button"
+      class="report-type-button"
+      data-report-type="encontrado"
+    >
+      🐾 Encontrei um animal
+    </button>
+
+  </div>
+
+
+  <!-- =====================================================
+       IDENTIFICAÇÃO DO ANIMAL
+  ====================================================== -->
+
+  <h3>
+    🐾 Identificação do animal
+  </h3>
+
+  <label>
+    Nome ou identificação *
+
+    <input
+      name="name"
+      type="text"
+      maxlength="100"
+      required
+      placeholder="Ex.: Mel, desconhecido, gato preto..."
+    >
+  </label>
+
+
+  <div class="form-row">
+
+    <label>
+      Espécie *
+
+      <select
+        name="animal"
+        required
       >
 
-        <div class="report-type">
+        <option value="">
+          Selecione
+        </option>
 
-          <button
-            type="button"
-            class="report-type-button selected"
-            data-report-type="perdido"
-          >
-            Meu pet está perdido
-          </button>
+        <option value="Cão">
+          Cão
+        </option>
 
-          <button
-            type="button"
-            class="report-type-button"
-            data-report-type="encontrado"
-          >
-            Encontrei um pet
-          </button>
+        <option value="Gato">
+          Gato
+        </option>
 
-        </div>
+        <option value="Ave">
+          Ave
+        </option>
 
-        <label>
-          Nome ou identificação
+        <option value="Coelho">
+          Coelho
+        </option>
 
-          <input
-            name="name"
-            type="text"
-            maxlength="100"
-            required
-            placeholder="Ex.: Mel"
-          >
-        </label>
+        <option value="Hamster">
+          Hamster
+        </option>
 
-        <div class="form-row">
+        <option value="Porquinho-da-índia">
+          Porquinho-da-índia
+        </option>
 
-          <label>
-            Animal
+        <option value="Furão">
+          Furão
+        </option>
 
-            <select name="animal" required>
-              <option value="Cachorro">Cachorro</option>
-              <option value="Gato">Gato</option>
-              <option value="Outro">Outro</option>
-            </select>
-          </label>
+        <option value="Chinchila">
+          Chinchila
+        </option>
 
-          <label>
-            Data
+        <option value="Tartaruga/Jabuti">
+          Tartaruga / Jabuti
+        </option>
 
-            <input
-              name="date"
-              type="date"
-            >
-          </label>
+        <option value="Lagarto/Iguana">
+          Lagarto / Iguana
+        </option>
 
-        </div>
+        <option value="Serpente">
+          Serpente
+        </option>
 
-        <label>
-          Localização
+        <option value="Cavalo">
+          Cavalo
+        </option>
 
-          <input
-            name="location"
-            type="text"
-            maxlength="150"
-            required
-            placeholder="Bairro, cidade e estado"
-          >
-        </label>
+        <option value="Outro">
+          Outro
+        </option>
 
-        <label>
-          Contato
+      </select>
+    </label>
 
-          <input
-            name="contact"
-            type="text"
-            maxlength="254"
-            placeholder="E-mail ou WhatsApp"
-          >
-        </label>
 
-        <label>
-          Descrição
+    <label>
+      Raça
 
-          <textarea
-            name="description"
-            maxlength="2000"
-            required
-            placeholder="Detalhes que ajudem no reconhecimento"
-          ></textarea>
-        </label>
+      <input
+        name="breed"
+        type="text"
+        maxlength="100"
+        placeholder="Ex.: SRD, Siamês..."
+      >
+    </label>
 
-        <button
-          class="button full-button"
-          type="submit"
-        >
-          Publicar →
-        </button>
+  </div>
 
-      </form>
+
+  <div class="form-row">
+
+    <label>
+      Cor / pelagem
+
+      <input
+        name="color"
+        type="text"
+        maxlength="100"
+        placeholder="Ex.: preto e branco"
+      >
+    </label>
+
+
+    <label>
+      Sexo
+
+      <select name="sex">
+
+        <option value="">
+          Não identificado
+        </option>
+
+        <option value="Fêmea">
+          Fêmea
+        </option>
+
+        <option value="Macho">
+          Macho
+        </option>
+
+        <option value="Não identificado">
+          Não identificado
+        </option>
+
+      </select>
+    </label>
+
+  </div>
+
+
+  <div class="form-row">
+
+    <label>
+      Idade aproximada
+
+      <input
+        name="age"
+        type="text"
+        maxlength="50"
+        placeholder="Ex.: 2 anos, filhote..."
+      >
+    </label>
+
+
+    <label>
+      Porte
+
+      <select name="size">
+
+        <option value="">
+          Não informado
+        </option>
+
+        <option value="Muito pequeno">
+          Muito pequeno
+        </option>
+
+        <option value="Pequeno">
+          Pequeno
+        </option>
+
+        <option value="Médio">
+          Médio
+        </option>
+
+        <option value="Grande">
+          Grande
+        </option>
+
+        <option value="Muito grande">
+          Muito grande
+        </option>
+
+        <option value="Não se aplica">
+          Não se aplica
+        </option>
+
+      </select>
+    </label>
+
+  </div>
+
+
+  <!-- =====================================================
+       CARACTERÍSTICAS PARA RECONHECIMENTO
+  ====================================================== -->
+
+  <h3>
+    🔍 Características para reconhecimento
+  </h3>
+
+
+  <label>
+    Coleira / identificação
+
+    <input
+      name="identification"
+      type="text"
+      maxlength="150"
+      placeholder="Ex.: coleira azul com medalha"
+    >
+  </label>
+
+
+  <div class="form-row">
+
+    <label>
+      Microchip
+
+      <select name="microchip">
+
+        <option value="">
+          Não sei / não informado
+        </option>
+
+        <option value="Possui">
+          Possui
+        </option>
+
+        <option value="Não possui">
+          Não possui
+        </option>
+
+        <option value="Não foi possível verificar">
+          Não foi possível verificar
+        </option>
+
+        <option value="Não se aplica">
+          Não se aplica
+        </option>
+
+      </select>
+    </label>
+
+
+    <label>
+      Castração
+
+      <select name="neutering">
+
+        <option value="">
+          Não sei / não informado
+        </option>
+
+        <option value="Castrado">
+          Castrado
+        </option>
+
+        <option value="Não castrado">
+          Não castrado
+        </option>
+
+        <option value="Não foi possível verificar">
+          Não foi possível verificar
+        </option>
+
+        <option value="Não se aplica">
+          Não se aplica
+        </option>
+
+      </select>
+    </label>
+
+  </div>
+
+
+  <label>
+    Características marcantes
+
+    <textarea
+      name="distinctiveFeatures"
+      maxlength="2000"
+      placeholder="Ex.: mancha branca no peito, ponta da orelha diferente, cicatriz, anilha, coleira..."
+    ></textarea>
+  </label>
+
+
+  <!-- =====================================================
+       DADOS DA OCORRÊNCIA
+  ====================================================== -->
+
+  <h3>
+    📍 Dados da ocorrência
+  </h3>
+
+
+  <div class="form-row">
+
+    <label>
+      Data
+
+      <input
+        name="date"
+        type="date"
+      >
+    </label>
+
+
+    <label>
+      Contato
+
+      <input
+        name="contact"
+        type="text"
+        maxlength="254"
+        placeholder="WhatsApp ou e-mail"
+      >
+    </label>
+
+  </div>
+
+
+  <label>
+    Localização *
+
+    <input
+      name="location"
+      type="text"
+      maxlength="150"
+      required
+      placeholder="Bairro, cidade e estado"
+    >
+  </label>
+
+
+  <label>
+    Descrição *
+
+    <textarea
+      name="description"
+      maxlength="2000"
+      required
+      placeholder="Conte onde o animal foi visto pela última vez, onde foi encontrado e outras informações importantes"
+    ></textarea>
+  </label>
+
+
+  <!-- =====================================================
+       FOTO
+  ====================================================== -->
+
+  <h3>
+    📷 Foto
+  </h3>
+
+
+  <label class="photo-upload-field">
+
+    Foto do animal
+
+    <input
+      name="photoFile"
+      id="report-photo"
+      type="file"
+      accept="image/jpeg,image/png,image/webp"
+    >
+
+    <small>
+      Envie uma foto JPG, PNG ou WebP de até 2,5 MB.
+    </small>
+
+  </label>
+
+
+  <img
+    id="report-photo-preview"
+    class="photo-upload-preview"
+    alt="Prévia da foto da ocorrência"
+    hidden
+  >
+
+
+  <!-- =====================================================
+       PUBLICAR
+  ====================================================== -->
+
+  <button
+    class="button full-button"
+    type="submit"
+  >
+    📢 Publicar ocorrência
+  </button>
+
+</form>
 
     </div>
 

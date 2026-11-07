@@ -133,3 +133,37 @@ ON pets(species);
 
 CREATE INDEX IF NOT EXISTS idx_pets_adoption_status
 ON pets(adoption_status);
+
+/* =========================================================
+   DETALHES DE ACHADOS E PERDIDOS
+========================================================= */
+
+ALTER TABLE reports
+ADD COLUMN IF NOT EXISTS breed VARCHAR(100);
+
+ALTER TABLE reports
+ADD COLUMN IF NOT EXISTS color VARCHAR(100);
+
+ALTER TABLE reports
+ADD COLUMN IF NOT EXISTS sex VARCHAR(30);
+
+ALTER TABLE reports
+ADD COLUMN IF NOT EXISTS age VARCHAR(50);
+
+ALTER TABLE reports
+ADD COLUMN IF NOT EXISTS size VARCHAR(30);
+
+ALTER TABLE reports
+ADD COLUMN IF NOT EXISTS identification VARCHAR(150);
+
+ALTER TABLE reports
+ADD COLUMN IF NOT EXISTS microchip VARCHAR(100);
+
+ALTER TABLE reports
+ADD COLUMN IF NOT EXISTS neutering VARCHAR(100);
+
+ALTER TABLE reports
+ADD COLUMN IF NOT EXISTS distinctive_features TEXT;
+
+CREATE INDEX IF NOT EXISTS idx_reports_animal_type
+ON reports(animal_type);

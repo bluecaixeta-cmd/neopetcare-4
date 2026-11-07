@@ -1982,6 +1982,142 @@ const reportForm =
     '#report-form'
   );
 
+  const reportPhotoInput =
+  document.querySelector(
+    '#report-photo'
+  );
+
+const reportPhotoPreview =
+  document.querySelector(
+    '#report-photo-preview'
+  );
+
+let reportPhotoData = '';
+
+
+function clearReportPhoto() {
+  reportPhotoData = '';
+
+  if (reportPhotoInput) {
+    reportPhotoInput.value = '';
+  }
+
+  if (reportPhotoPreview) {
+    reportPhotoPreview.src = '';
+    reportPhotoPreview.hidden = true;
+  }
+}
+
+
+function readReportPhoto(file) {
+  return new Promise(
+    (resolve, reject) => {
+      const reader = new FileReader();
+
+      reader.addEventListener(
+        'load',
+        () => {
+          resolve(
+            typeof reader.result === 'string'
+              ? reader.result
+              : ''
+          );
+        }
+      );
+
+      reader.addEventListener(
+        'error',
+        () => {
+          reject(
+            new Error(
+              'Não foi possível ler a foto selecionada.'
+            )
+          );
+        }
+      );
+
+      reader.readAsDataURL(file);
+    }
+  );
+}
+
+
+if (reportPhotoInput) {
+  reportPhotoInput.addEventListener(
+    'change',
+    async () => {
+      const file =
+        reportPhotoInput.files?.[0];
+
+      if (!file) {
+        clearReportPhoto();
+        return;
+      }
+
+      const allowedTypes = [
+        'image/jpeg',
+        'image/png',
+        'image/webp'
+      ];
+
+      if (
+        !allowedTypes.includes(
+          file.type
+        )
+      ) {
+        clearReportPhoto();
+
+        showToast(
+          'Selecione uma foto JPG, PNG ou WebP.',
+          'error'
+        );
+
+        return;
+      }
+
+      const maximumFileSize =
+        2.5 * 1024 * 1024;
+
+      if (
+        file.size >
+        maximumFileSize
+      ) {
+        clearReportPhoto();
+
+        showToast(
+          'A foto deve ter no máximo 2,5 MB.',
+          'error'
+        );
+
+        return;
+      }
+
+      try {
+        reportPhotoData =
+          await readReportPhoto(
+            file
+          );
+
+        if (reportPhotoPreview) {
+          reportPhotoPreview.src =
+            reportPhotoData;
+
+          reportPhotoPreview.hidden =
+            false;
+        }
+
+      } catch (error) {
+        clearReportPhoto();
+
+        showToast(
+          error.message,
+          'error'
+        );
+      }
+    }
+  );
+}
+
 const reportGrid =
   document.querySelector(
     '#report-grid'
@@ -2177,6 +2313,11 @@ function renderReport(report) {
       ? 'status-lost'
       : 'status-found';
 
+
+  /* =====================================================
+     CRIAR CARD
+  ===================================================== */
+
   const card =
     document.createElement(
       'article'
@@ -2188,19 +2329,37 @@ function renderReport(report) {
   card.dataset.status =
     status;
 
+
+  /* =====================================================
+     TEXTO UTILIZADO NA BUSCA
+  ===================================================== */
+
   card.dataset.search =
     [
       report.name || '',
       report.animal || '',
+      report.breed || '',
+      report.color || '',
+      report.sex || '',
+      report.age || '',
+      report.size || '',
+      report.identification || '',
+      report.microchip || '',
+      report.neutering || '',
+      report.distinctiveFeatures || '',
       report.location || '',
       report.description || ''
     ]
       .join(' ')
       .toLowerCase();
 
+
+  /* =====================================================
+     FOTO
+  ===================================================== */
+
   const photo =
-    typeof report.photo ===
-      'string'
+    typeof report.photo === 'string'
       ? report.photo.trim()
       : '';
 
@@ -2224,9 +2383,188 @@ function renderReport(report) {
           )}"
         >
       `
+      : `
+        <div class="report-photo-placeholder">
+          🐾
+        </div>
+      `;
+
+
+  /* =====================================================
+     INFORMAÇÕES RÁPIDAS
+  ===================================================== */
+
+  const quickInformation = [];
+
+  if (report.animal) {
+    quickInformation.push(
+      `
+        <span>
+          <strong>Espécie:</strong>
+          ${escapeHtml(report.animal)}
+        </span>
+      `
+    );
+  }
+
+  if (report.breed) {
+    quickInformation.push(
+      `
+        <span>
+          <strong>Raça:</strong>
+          ${escapeHtml(report.breed)}
+        </span>
+      `
+    );
+  }
+
+  if (report.color) {
+    quickInformation.push(
+      `
+        <span>
+          <strong>Cor:</strong>
+          ${escapeHtml(report.color)}
+        </span>
+      `
+    );
+  }
+
+  if (report.sex) {
+    quickInformation.push(
+      `
+        <span>
+          <strong>Sexo:</strong>
+          ${escapeHtml(report.sex)}
+        </span>
+      `
+    );
+  }
+
+  if (report.age) {
+    quickInformation.push(
+      `
+        <span>
+          <strong>Idade:</strong>
+          ${escapeHtml(report.age)}
+        </span>
+      `
+    );
+  }
+
+  if (report.size) {
+    quickInformation.push(
+      `
+        <span>
+          <strong>Porte:</strong>
+          ${escapeHtml(report.size)}
+        </span>
+      `
+    );
+  }
+
+
+  const quickInformationHtml =
+    quickInformation.length
+      ? `
+        <div class="report-quick-info">
+          ${quickInformation.join('')}
+        </div>
+      `
       : '';
 
+
+  /* =====================================================
+     IDENTIFICAÇÃO
+  ===================================================== */
+
+  const identificationInformation = [];
+
+  if (report.identification) {
+    identificationInformation.push(
+      `
+        <span>
+          <strong>Identificação:</strong>
+          ${escapeHtml(
+            report.identification
+          )}
+        </span>
+      `
+    );
+  }
+
+  if (report.microchip) {
+    identificationInformation.push(
+      `
+        <span>
+          <strong>Microchip:</strong>
+          ${escapeHtml(
+            report.microchip
+          )}
+        </span>
+      `
+    );
+  }
+
+  if (report.neutering) {
+    identificationInformation.push(
+      `
+        <span>
+          <strong>Castração:</strong>
+          ${escapeHtml(
+            report.neutering
+          )}
+        </span>
+      `
+    );
+  }
+
+  if (report.distinctiveFeatures) {
+    identificationInformation.push(
+      `
+        <span>
+          <strong>Características:</strong>
+          ${escapeHtml(
+            report.distinctiveFeatures
+          )}
+        </span>
+      `
+    );
+  }
+
+
+  const identificationHtml =
+    identificationInformation.length
+      ? `
+        <div class="report-identification">
+          ${identificationInformation.join('')}
+        </div>
+      `
+      : '';
+
+
+  /* =====================================================
+     CONTATO
+  ===================================================== */
+
+  const contactHtml =
+    report.contact
+      ? `
+        <p class="report-contact">
+          <strong>Contato:</strong>
+          ${escapeHtml(
+            report.contact
+          )}
+        </p>
+      `
+      : '';
+
+
+  /* =====================================================
+     CONTEÚDO DO CARD
+  ===================================================== */
+
   card.innerHTML = `
+
     <div class="report-photo report-new">
 
       ${photoHtml}
@@ -2239,10 +2577,10 @@ function renderReport(report) {
 
     </div>
 
+
     <div class="report-body">
 
       <h3>
-
         ${escapeHtml(
           report.name ||
           'Animal'
@@ -2254,25 +2592,33 @@ function renderReport(report) {
             ''
           )}
         </small>
-
       </h3>
 
-      <p>
+
+      <p class="report-location">
+        📍
         ${escapeHtml(
           report.location ||
           'Local não informado'
         )}
       </p>
 
-      <span class="report-date">
 
+      <span class="report-date">
+        📅
         ${escapeHtml(
           formatReportDate(
             report.date
           )
         )}
-
       </span>
+
+
+      ${quickInformationHtml}
+
+
+      ${identificationHtml}
+
 
       <p class="report-description">
 
@@ -2283,8 +2629,12 @@ function renderReport(report) {
 
       </p>
 
+
+      ${contactHtml}
+
     </div>
   `;
+
 
   reportGrid.prepend(
     card
@@ -2466,43 +2816,128 @@ if (reportForm) {
           reportForm
         );
 
+
+      /* =====================================================
+         MONTAR DADOS DA OCORRÊNCIA
+      ===================================================== */
+
       const report = {
 
         status:
           selectedReportStatus,
 
         name:
-          formData.get(
-            'name'
-          ),
+          String(
+            formData.get('name') ||
+            ''
+          ).trim(),
 
         animal:
-          formData.get(
-            'animal'
-          ),
+          String(
+            formData.get('animal') ||
+            ''
+          ).trim(),
+
+        breed:
+          String(
+            formData.get('breed') ||
+            ''
+          ).trim(),
+
+        color:
+          String(
+            formData.get('color') ||
+            ''
+          ).trim(),
+
+        sex:
+          String(
+            formData.get('sex') ||
+            ''
+          ).trim(),
+
+        age:
+          String(
+            formData.get('age') ||
+            ''
+          ).trim(),
+
+        size:
+          String(
+            formData.get('size') ||
+            ''
+          ).trim(),
+
+        identification:
+          String(
+            formData.get(
+              'identification'
+            ) ||
+            ''
+          ).trim(),
+
+        microchip:
+          String(
+            formData.get(
+              'microchip'
+            ) ||
+            ''
+          ).trim(),
+
+        neutering:
+          String(
+            formData.get(
+              'neutering'
+            ) ||
+            ''
+          ).trim(),
+
+        distinctiveFeatures:
+          String(
+            formData.get(
+              'distinctiveFeatures'
+            ) ||
+            ''
+          ).trim(),
 
         date:
-          formData.get(
-            'date'
-          ),
+          String(
+            formData.get('date') ||
+            ''
+          ).trim(),
 
         location:
-          formData.get(
-            'location'
-          ),
+          String(
+            formData.get(
+              'location'
+            ) ||
+            ''
+          ).trim(),
 
         contact:
-          formData.get(
-            'contact'
-          ) || '',
+          String(
+            formData.get(
+              'contact'
+            ) ||
+            ''
+          ).trim(),
 
         description:
-          formData.get(
-            'description'
-          ),
+          String(
+            formData.get(
+              'description'
+            ) ||
+            ''
+          ).trim(),
 
-        photo: ''
+        photo:
+          reportPhotoData
       };
+
+
+      /* =====================================================
+         VALIDAR CAMPOS OBRIGATÓRIOS
+      ===================================================== */
 
       if (
         !report.name ||
@@ -2512,20 +2947,37 @@ if (reportForm) {
       ) {
 
         showToast(
-          'Preencha os campos obrigatórios da ocorrência.'
+          'Preencha nome, espécie, localização e descrição.',
+          'error'
         );
 
         return;
       }
+
+
+      /* =====================================================
+         BOTÃO DURANTE O ENVIO
+      ===================================================== */
 
       const submitButton =
         reportForm.querySelector(
           'button[type="submit"]'
         );
 
+      const originalButtonText =
+        submitButton?.textContent;
+
       if (submitButton) {
         submitButton.disabled = true;
+
+        submitButton.textContent =
+          'Publicando...';
       }
+
+
+      /* =====================================================
+         ENVIAR PARA O POSTGRESQL
+      ===================================================== */
 
       try {
 
@@ -2542,14 +2994,32 @@ if (reportForm) {
             }
           );
 
+
+        /* ===================================================
+           MOSTRAR NOVA OCORRÊNCIA
+        =================================================== */
+
         if (result.report) {
 
           renderReport(
             result.report
           );
+
         }
 
+
+        /* ===================================================
+           LIMPAR FORMULÁRIO
+        =================================================== */
+
         reportForm.reset();
+
+        clearReportPhoto();
+
+
+        /* ===================================================
+           VOLTAR TIPO PARA PERDIDO
+        =================================================== */
 
         selectedReportStatus =
           'perdido';
@@ -2563,31 +3033,64 @@ if (reportForm) {
 
               button.classList.toggle(
                 'selected',
+
                 button.dataset
                   .reportType ===
                   'perdido'
               );
+
             }
           );
 
+
+        /* ===================================================
+           FECHAR FORMULÁRIO
+        =================================================== */
+
         closeReportModal();
 
+
+        /* ===================================================
+           ATUALIZAR FILTROS
+        =================================================== */
+
         filterReports();
+
+
+        /* ===================================================
+           CONFIRMAÇÃO
+        =================================================== */
 
         showToast(
           'Ocorrência publicada com sucesso!'
         );
 
+
       } catch (error) {
 
-        showToast(
-          error.message
+        console.error(
+          'Erro ao publicar ocorrência:',
+          error
         );
+
+        showToast(
+          error.message ||
+          'Não foi possível publicar a ocorrência.',
+          'error'
+        );
+
 
       } finally {
 
         if (submitButton) {
-          submitButton.disabled = false;
+
+          submitButton.disabled =
+            false;
+
+          submitButton.textContent =
+            originalButtonText ||
+            '📢 Publicar ocorrência';
+
         }
       }
     }
