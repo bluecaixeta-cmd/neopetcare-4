@@ -1380,7 +1380,7 @@ footer .newsletter button {
    CAPA PRINCIPAL - CORREÇÃO FINAL
 ========================================================= */
 
-section.hero {
+.hero {
   background-color: #073b5c !important;
 
   background-image:
@@ -1398,7 +1398,7 @@ section.hero {
 }
 
 @media screen and (max-width: 600px) {
-  section.hero {
+  .hero {
     background-position: 60% center !important;
   }
 }
