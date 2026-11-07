@@ -579,6 +579,54 @@ const logoutButton =
   );
 
 let authMode = 'login';
+const authUserKey = 'neopetcare.auth.user.v1';
+
+function saveLoggedUser(user) {
+  if (!user) {
+    return;
+  }
+
+  try {
+    localStorage.setItem(
+      authUserKey,
+      JSON.stringify({
+        name: user.name || '',
+        email: user.email || ''
+      })
+    );
+  } catch (error) {
+    console.warn(
+      'Não foi possível salvar o usuário.',
+      error
+    );
+  }
+}
+
+function getSavedUser() {
+  try {
+    const savedUser =
+      localStorage.getItem(authUserKey);
+
+    if (!savedUser) {
+      return null;
+    }
+
+    return JSON.parse(savedUser);
+  } catch (error) {
+    return null;
+  }
+}
+
+function removeSavedUser() {
+  try {
+    localStorage.removeItem(authUserKey);
+  } catch (error) {
+    console.warn(
+      'Não foi possível remover o usuário.',
+      error
+    );
+  }
+}
 
 function updateAuthMode(mode) {
 
@@ -745,6 +793,8 @@ if (authForm) {
 
         authForm.reset();
 
+        saveLoggedUser(result.user);
+
         showLoggedUser(
           result.user
         );
@@ -786,6 +836,8 @@ if (logoutButton) {
             body: JSON.stringify({})
           }
         );
+
+        removeSavedUser();
 
         showLoggedOut();
 
@@ -1899,6 +1951,11 @@ if (partnerForm) {
 /* =========================================================
    INICIALIZAÇÃO DAS INFORMAÇÕES DA API
 ========================================================= */
+const savedUser = getSavedUser();
+
+if (savedUser) {
+  showLoggedUser(savedUser);
+}
 
 loadReports();
 loadPartners();
