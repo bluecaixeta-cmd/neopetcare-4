@@ -914,6 +914,82 @@ if (logoutButton) {
 /* =========================================================
    ADOÇÃO
 ========================================================= */
+/* =========================================================
+   DETALHES DOS PETS
+========================================================= */
+
+const lunaDetailsModal =
+  document.querySelector(
+    '#luna-details-modal'
+  );
+
+const lunaDetailsButton =
+  document.querySelector(
+    '[data-pet-details="Luna"]'
+  );
+
+const lunaDetailsClose =
+  lunaDetailsModal?.querySelector(
+    '.pet-details-close'
+  );
+
+function openLunaDetails() {
+  if (!lunaDetailsModal) {
+    return;
+  }
+
+  lunaDetailsModal.classList.add(
+    'open'
+  );
+
+  lunaDetailsModal.setAttribute(
+    'aria-hidden',
+    'false'
+  );
+}
+
+function closeLunaDetails() {
+  if (!lunaDetailsModal) {
+    return;
+  }
+
+  lunaDetailsModal.classList.remove(
+    'open'
+  );
+
+  lunaDetailsModal.setAttribute(
+    'aria-hidden',
+    'true'
+  );
+}
+
+if (lunaDetailsButton) {
+  lunaDetailsButton.addEventListener(
+    'click',
+    openLunaDetails
+  );
+}
+
+if (lunaDetailsClose) {
+  lunaDetailsClose.addEventListener(
+    'click',
+    closeLunaDetails
+  );
+}
+
+if (lunaDetailsModal) {
+  lunaDetailsModal.addEventListener(
+    'click',
+    (event) => {
+      if (
+        event.target ===
+        lunaDetailsModal
+      ) {
+        closeLunaDetails();
+      }
+    }
+  );
+}
 
 const adoptionForm =
   document.querySelector(
@@ -2027,6 +2103,7 @@ document.addEventListener(
     closeDonationModal();
     closeAdoptionModal();
     closeReportModal();
+    closeLunaDetails();
     closeNavMore();
   }
 );

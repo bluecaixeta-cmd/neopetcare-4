@@ -4437,3 +4437,18 @@ button {
     font-size: 12px;
   }
 }
+/* =========================================================
+   CARDS DE ADOCAO - ALTURA INDEPENDENTE
+========================================================= */
+
+.pet-grid {
+  align-items: start;
+}
+
+.pet-card {
+  align-self: start;
+}
+
+.card-content {
+  height: auto;
+}
