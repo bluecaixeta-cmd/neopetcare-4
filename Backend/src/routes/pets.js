@@ -535,13 +535,4 @@ router.post(
   }
 );
 
-
-export default router;
-router.post(
-  '/',
-  async (req, res, next) => {
-    // restante da rota
-  }
-);
-
 export default router;
