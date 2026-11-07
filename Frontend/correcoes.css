@@ -1306,3 +1306,48 @@ footer .newsletter button {
     max-width: none !important;
   }
 }
+/* =========================================================
+   RESTAURA IMAGEM LOCAL DA CAPA
+========================================================= */
+
+.hero {
+  background-image:
+    linear-gradient(
+      90deg,
+      rgba(2, 37, 55, 0.93) 0%,
+      rgba(5, 57, 81, 0.78) 44%,
+      rgba(5, 57, 81, 0.15) 100%
+    ),
+    url("./imagens/hero-pets.jpg.jpeg") !important;
+
+  background-position:
+    center !important;
+
+  background-size:
+    cover !important;
+
+  background-repeat:
+    no-repeat !important;
+}
+
+@media screen and (max-width: 600px) {
+  .hero {
+    background-image:
+      linear-gradient(
+        90deg,
+        rgba(2, 37, 55, 0.96) 0%,
+        rgba(5, 57, 81, 0.88) 70%,
+        rgba(5, 57, 81, 0.65) 100%
+      ),
+      url("./imagens/hero-pets.jpg.jpeg") !important;
+
+    background-position:
+      60% center !important;
+
+    background-size:
+      cover !important;
+
+    background-repeat:
+      no-repeat !important;
+  }
+}
