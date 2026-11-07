@@ -915,6 +915,392 @@ if (logoutButton) {
    ADOÇÃO
 ========================================================= */
 /* =========================================================
+   CADASTRAR NOVO ANIMAL
+========================================================= */
+
+const petRegisterModal =
+  document.querySelector(
+    '#pet-register-modal'
+  );
+
+const petRegisterForm =
+  document.querySelector(
+    '#pet-register-form'
+  );
+
+const petRegisterOpenButton =
+  document.querySelector(
+    '.open-pet-register'
+  );
+
+const petRegisterCloseButton =
+  document.querySelector(
+    '.pet-register-close'
+  );
+
+const petRegisterPhotoInput =
+  document.querySelector(
+    '#pet-register-photo'
+  );
+
+const petRegisterPhotoPreview =
+  document.querySelector(
+    '#pet-register-photo-preview'
+  );
+
+let petRegisterPhotoData = '';
+
+
+/* =========================================================
+   ABRIR FORMULÁRIO
+========================================================= */
+
+function openPetRegisterModal() {
+  if (!petRegisterModal) {
+    return;
+  }
+
+  petRegisterModal.classList.add(
+    'open'
+  );
+
+  petRegisterModal.setAttribute(
+    'aria-hidden',
+    'false'
+  );
+
+  window.setTimeout(
+    () => {
+      const firstInput =
+        petRegisterForm?.querySelector(
+          'input, select, textarea'
+        );
+
+      firstInput?.focus();
+    },
+    50
+  );
+}
+
+
+/* =========================================================
+   FECHAR FORMULÁRIO
+========================================================= */
+
+function closePetRegisterModal() {
+  if (!petRegisterModal) {
+    return;
+  }
+
+  petRegisterModal.classList.remove(
+    'open'
+  );
+
+  petRegisterModal.setAttribute(
+    'aria-hidden',
+    'true'
+  );
+}
+
+
+/* =========================================================
+   LIMPAR FOTO
+========================================================= */
+
+function clearPetRegisterPhoto() {
+  petRegisterPhotoData = '';
+
+  if (petRegisterPhotoInput) {
+    petRegisterPhotoInput.value = '';
+  }
+
+  if (petRegisterPhotoPreview) {
+    petRegisterPhotoPreview.src = '';
+    petRegisterPhotoPreview.hidden = true;
+  }
+}
+
+
+/* =========================================================
+   LER FOTO SELECIONADA
+========================================================= */
+
+function readPetRegisterPhoto(file) {
+  return new Promise(
+    (resolve, reject) => {
+      const reader =
+        new FileReader();
+
+      reader.addEventListener(
+        'load',
+        () => {
+          resolve(
+            typeof reader.result === 'string'
+              ? reader.result
+              : ''
+          );
+        }
+      );
+
+      reader.addEventListener(
+        'error',
+        () => {
+          reject(
+            new Error(
+              'Não foi possível ler a foto selecionada.'
+            )
+          );
+        }
+      );
+
+      reader.readAsDataURL(file);
+    }
+  );
+}
+
+
+/* =========================================================
+   BOTÃO ABRIR CADASTRO
+========================================================= */
+
+if (petRegisterOpenButton) {
+  petRegisterOpenButton.addEventListener(
+    'click',
+    openPetRegisterModal
+  );
+}
+
+
+/* =========================================================
+   BOTÃO FECHAR CADASTRO
+========================================================= */
+
+if (petRegisterCloseButton) {
+  petRegisterCloseButton.addEventListener(
+    'click',
+    closePetRegisterModal
+  );
+}
+
+
+/* =========================================================
+   FECHAR CLICANDO NO FUNDO
+========================================================= */
+
+if (petRegisterModal) {
+  petRegisterModal.addEventListener(
+    'click',
+    (event) => {
+      if (
+        event.target ===
+        petRegisterModal
+      ) {
+        closePetRegisterModal();
+      }
+    }
+  );
+}
+
+
+/* =========================================================
+   PRÉVIA DA FOTO
+========================================================= */
+
+if (petRegisterPhotoInput) {
+  petRegisterPhotoInput.addEventListener(
+    'change',
+    async () => {
+      const file =
+        petRegisterPhotoInput.files?.[0];
+
+      if (!file) {
+        clearPetRegisterPhoto();
+        return;
+      }
+
+      const allowedTypes = [
+        'image/jpeg',
+        'image/png',
+        'image/webp'
+      ];
+
+      if (
+        !allowedTypes.includes(
+          file.type
+        )
+      ) {
+        clearPetRegisterPhoto();
+
+        showToast(
+          'Selecione uma foto JPG, PNG ou WebP.',
+          'error'
+        );
+
+        return;
+      }
+
+      /*
+       * A imagem vira texto Base64 e aumenta de tamanho.
+       * O limite abaixo mantém a requisição abaixo do
+       * limite de 4 MB configurado no backend.
+       */
+      const maximumFileSize =
+        2.5 * 1024 * 1024;
+
+      if (
+        file.size >
+        maximumFileSize
+      ) {
+        clearPetRegisterPhoto();
+
+        showToast(
+          'A foto deve ter no máximo 2,5 MB.',
+          'error'
+        );
+
+        return;
+      }
+
+      try {
+        petRegisterPhotoData =
+          await readPetRegisterPhoto(
+            file
+          );
+
+        if (petRegisterPhotoPreview) {
+          petRegisterPhotoPreview.src =
+            petRegisterPhotoData;
+
+          petRegisterPhotoPreview.hidden =
+            false;
+        }
+
+      } catch (error) {
+        clearPetRegisterPhoto();
+
+        showToast(
+          error.message,
+          'error'
+        );
+      }
+    }
+  );
+}
+
+
+/* =========================================================
+   ENVIAR ANIMAL PARA O BACKEND
+========================================================= */
+
+if (petRegisterForm) {
+  petRegisterForm.addEventListener(
+    'submit',
+    async (event) => {
+      event.preventDefault();
+
+      const formData =
+        new FormData(
+          petRegisterForm
+        );
+
+      const pet =
+        Object.fromEntries(
+          formData.entries()
+        );
+
+      /*
+       * O arquivo não deve ser enviado diretamente
+       * dentro do JSON.
+       */
+      delete pet.photoFile;
+
+      pet.photo =
+        petRegisterPhotoData;
+
+      if (
+        !pet.name?.trim() ||
+        !pet.species?.trim() ||
+        !pet.location?.trim() ||
+        !pet.story?.trim()
+      ) {
+        showToast(
+          'Preencha nome, espécie, localização e história do animal.',
+          'error'
+        );
+
+        return;
+      }
+
+      const submitButton =
+        petRegisterForm.querySelector(
+          'button[type="submit"]'
+        );
+
+      const originalButtonText =
+        submitButton?.textContent;
+
+      if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.textContent =
+          'Cadastrando animal...';
+      }
+
+      try {
+        const result =
+          await apiRequest(
+            '/api/pets',
+            {
+              method: 'POST',
+
+              body:
+                JSON.stringify(
+                  pet
+                )
+            }
+          );
+
+        if (!result.pet) {
+          throw new Error(
+            'O servidor não retornou o animal cadastrado.'
+          );
+        }
+
+        petRegisterForm.reset();
+
+        clearPetRegisterPhoto();
+
+        closePetRegisterModal();
+
+        showToast(
+          `${result.pet.name} foi cadastrado com sucesso!`
+        );
+
+      } catch (error) {
+        console.error(
+          'Erro ao cadastrar animal:',
+          error
+        );
+
+        showToast(
+          error.message ||
+          'Não foi possível cadastrar o animal.',
+          'error'
+        );
+
+      } finally {
+        if (submitButton) {
+          submitButton.disabled = false;
+
+          submitButton.textContent =
+            originalButtonText ||
+            '🐾 Cadastrar animal';
+        }
+      }
+    }
+  );
+}
+
+/* =========================================================
    FICHA REUTILIZÁVEL DOS PETS
 ========================================================= */
 
@@ -2515,6 +2901,7 @@ document.addEventListener(
     closeAdoptionModal();
     closeReportModal();
     closePetDetails();
+    closePetRegisterModal();
     closeNavMore();
   }
 );
