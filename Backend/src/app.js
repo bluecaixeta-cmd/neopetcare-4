@@ -11,7 +11,7 @@ import newsletterRoutes from './routes/newsletter.js';
 import adoptionRoutes from './routes/adoptions.js';
 import reportRoutes from './routes/reports.js';
 import partnerRoutes from './routes/partners.js';
-
+import petRoutes from './routes/pets.js';
 
 const app = express();
 
@@ -162,6 +162,10 @@ app.use(
 /* =========================================================
    ROTA NÃO ENCONTRADA
 ========================================================= */
+app.use(
+  '/api/pets',
+  petRoutes
+);
 
 app.use(
   '/api',

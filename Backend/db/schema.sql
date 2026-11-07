@@ -67,3 +67,69 @@ ON partners(created_at DESC);
 
 CREATE INDEX IF NOT EXISTS idx_adoptions_created_at
 ON adoptions(created_at DESC);
+
+CREATE TABLE IF NOT EXISTS pets (
+    id BIGSERIAL PRIMARY KEY,
+
+    user_id BIGINT
+        REFERENCES users(id)
+        ON DELETE SET NULL,
+
+    name VARCHAR(100) NOT NULL,
+    species VARCHAR(50) NOT NULL,
+    breed VARCHAR(100),
+    color VARCHAR(100),
+    sex VARCHAR(30),
+    age VARCHAR(50),
+    size VARCHAR(30),
+    weight VARCHAR(30),
+
+    identification VARCHAR(150),
+    location VARCHAR(150) NOT NULL,
+
+    vaccination VARCHAR(150),
+    deworming VARCHAR(150),
+    neutering VARCHAR(150),
+    microchip VARCHAR(150),
+
+    special_needs TEXT,
+
+    lives_with_dogs VARCHAR(100),
+    lives_with_cats VARCHAR(100),
+    lives_with_children VARCHAR(100),
+
+    temperament TEXT,
+    guardian TEXT,
+    story TEXT NOT NULL,
+
+    photo TEXT,
+
+    adoption_status VARCHAR(30)
+        NOT NULL
+        DEFAULT 'disponivel'
+        CHECK (
+            adoption_status IN (
+                'disponivel',
+                'tratamento',
+                'lar-temporario',
+                'adotado'
+            )
+        ),
+
+    created_at TIMESTAMPTZ
+        NOT NULL
+        DEFAULT NOW(),
+
+    updated_at TIMESTAMPTZ
+        NOT NULL
+        DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_pets_created_at
+ON pets(created_at DESC);
+
+CREATE INDEX IF NOT EXISTS idx_pets_species
+ON pets(species);
+
+CREATE INDEX IF NOT EXISTS idx_pets_adoption_status
+ON pets(adoption_status);
