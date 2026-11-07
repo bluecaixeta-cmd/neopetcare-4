@@ -3708,3 +3708,611 @@ footer .newsletter button {
     padding: 22px 16px;
   }
 }
+
+/* =========================================================
+   CORREÇÃO RESPONSIVA FINAL - CELULARES
+========================================================= */
+
+/* Evita elementos ultrapassando a largura da tela */
+html,
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  min-width: 0;
+}
+
+main,
+section,
+header,
+footer,
+.hero,
+.section,
+.stats-wrap {
+  min-width: 0;
+}
+
+img,
+video,
+iframe,
+svg {
+  max-width: 100%;
+  height: auto;
+}
+
+input,
+select,
+textarea,
+button {
+  max-width: 100%;
+}
+
+/* Corrige palavras e conteúdos muito longos */
+.pet-card,
+.report-card,
+.partner-card,
+.partner-form,
+.campaign,
+.wiki-card,
+.event-card,
+.auth-form,
+.logged-user,
+.modal-box {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+/* Corrige definitivamente o cartão do usuário */
+.logged-user {
+  width: 100%;
+  max-width: 460px;
+  padding: 28px;
+
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+
+.logged-user p {
+  margin-bottom: 18px;
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.logged-user strong {
+  color: var(--green-dark);
+}
+
+.logout-button {
+  width: 100%;
+  color: #ffffff;
+
+  background:
+    linear-gradient(
+      135deg,
+      #e45b50,
+      #c63d36
+    );
+}
+
+.logout-button:hover {
+  background:
+    linear-gradient(
+      135deg,
+      #d14c43,
+      #ad302b
+    );
+}
+
+.logout-button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+/* =========================================================
+   TABLETS E TELAS MENORES
+========================================================= */
+
+@media (max-width: 900px) {
+  body {
+    padding-top: 66px;
+  }
+
+  .site-header {
+    width: 100%;
+    min-height: 66px;
+    padding: 10px 14px;
+    gap: 10px;
+  }
+
+  .brand {
+    min-width: 0;
+  }
+
+  .brand-mark {
+    width: 36px;
+    height: 36px;
+    flex: 0 0 36px;
+  }
+
+  .brand strong {
+    font-size: 17px;
+  }
+
+  .brand small {
+    display: none;
+  }
+
+  .menu-toggle {
+    display: block;
+    flex: 0 0 auto;
+    margin-left: auto;
+    padding: 6px;
+  }
+
+  .main-nav {
+    position: absolute;
+    top: 66px;
+    left: 0;
+    right: 0;
+
+    display: none;
+    width: 100%;
+    max-height: calc(100vh - 66px);
+
+    margin: 0;
+    padding: 12px 16px;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    flex-direction: column;
+    align-items: stretch;
+
+    background: #ffffff;
+    border-top: 1px solid var(--border);
+    box-shadow: var(--shadow-large);
+  }
+
+  .main-nav.open {
+    display: flex;
+  }
+
+  .main-nav > a,
+  .nav-more-toggle {
+    width: 100%;
+    padding: 13px 12px;
+    text-align: left;
+  }
+
+  .nav-more,
+  .nav-more-menu {
+    width: 100%;
+  }
+
+  .nav-more-menu {
+    position: static;
+    margin-top: 5px;
+    box-shadow: none;
+  }
+
+  .hero {
+    width: 100%;
+    min-height: 500px;
+    padding: 65px 24px;
+
+    border-radius: 0 0 22px 22px;
+    background-position: 62% center;
+  }
+
+  .hero-copy {
+    width: 100%;
+    max-width: 600px;
+  }
+
+  .hero h1 {
+    max-width: 100%;
+    font-size: clamp(2.3rem, 9vw, 3.5rem);
+  }
+
+  .hero-text {
+    font-size: 16px;
+  }
+
+  .stats-wrap {
+    width: 100%;
+    padding: 0 16px;
+  }
+
+  .stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 18px 10px;
+    gap: 8px;
+  }
+
+  .stat {
+    min-width: 0;
+    padding: 10px;
+    border-right: 0;
+  }
+
+  .section {
+    width: auto;
+    max-width: none;
+
+    margin: 32px 16px;
+    padding: 28px 20px;
+  }
+
+  .section-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .about-section,
+  .auth-section,
+  .partner-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 25px;
+  }
+
+  .auth-form,
+  .logged-user {
+    width: 100%;
+    max-width: none;
+    justify-self: stretch;
+  }
+
+  .pet-grid,
+  .report-grid,
+  .wiki-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+  .campaign-grid,
+  .event-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .lost-found-toolbar,
+  .wiki-intro,
+  .wiki-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .search-box {
+    width: 100%;
+    max-width: none;
+  }
+
+  .partner-status-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  footer {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 35px 20px 18px;
+  }
+
+  .footer-brand,
+  .footer-bottom {
+    grid-column: 1 / -1;
+  }
+}
+
+/* =========================================================
+   CELULARES
+========================================================= */
+
+@media (max-width: 600px) {
+  body {
+    padding-top: 62px;
+  }
+
+  .site-header {
+    min-height: 62px;
+    padding: 8px 12px;
+  }
+
+  .brand {
+    gap: 8px;
+  }
+
+  .brand-mark {
+    width: 34px;
+    height: 34px;
+    flex-basis: 34px;
+    border-radius: 11px 11px 11px 4px;
+  }
+
+  .brand strong {
+    font-size: 16px;
+  }
+
+  .contrast-toggle {
+    display: none;
+  }
+
+  .main-nav {
+    top: 62px;
+    max-height: calc(100vh - 62px);
+  }
+
+  .hero {
+    min-height: auto;
+    padding: 55px 18px 48px;
+
+    background:
+      linear-gradient(
+        90deg,
+        rgba(2, 37, 55, 0.96) 0%,
+        rgba(5, 57, 81, 0.88) 70%,
+        rgba(5, 57, 81, 0.65) 100%
+      ),
+      url(
+        "https://images.unsplash.com/photo-1558788353-f76d92427f16?auto=format&fit=crop&w=900&q=80"
+      )
+      60% center / cover;
+  }
+
+  .hero h1 {
+    font-size: clamp(2rem, 11vw, 2.8rem);
+    line-height: 1.06;
+  }
+
+  .hero-text {
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  .hero-actions {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .hero-actions .button {
+    width: 100%;
+  }
+
+  .stats-wrap {
+    padding: 0 12px;
+    margin-bottom: 26px;
+  }
+
+  .stats {
+    grid-template-columns: 1fr 1fr;
+    padding: 12px 6px;
+    border-radius: 0 0 14px 14px;
+  }
+
+  .stat {
+    align-items: flex-start;
+    gap: 7px;
+    padding: 8px 6px;
+  }
+
+  .stat-icon {
+    font-size: 22px;
+  }
+
+  .stat strong {
+    font-size: 16px;
+  }
+
+  .stat small {
+    font-size: 9px;
+    line-height: 1.35;
+  }
+
+  .section {
+    margin: 24px 10px;
+    padding: 24px 14px;
+    border-radius: 16px;
+  }
+
+  .section-heading {
+    margin-bottom: 20px;
+  }
+
+  .section-heading h2,
+  .section h2 {
+    font-size: clamp(1.65rem, 8vw, 2.1rem);
+  }
+
+  .about-points div {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .about-points strong {
+    min-width: 0;
+  }
+
+  .filter-row,
+  .lost-found-filters,
+  .wiki-filters {
+    width: 100%;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 6px;
+    scrollbar-width: thin;
+  }
+
+  .filter,
+  .lost-filter,
+  .wiki-filter {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  .pet-grid,
+  .report-grid,
+  .wiki-grid,
+  .partner-cards {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .pet-card,
+  .report-card {
+    width: 100%;
+  }
+
+  .pet-image {
+    aspect-ratio: 16 / 10;
+  }
+
+  .campaign {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .campaign-image {
+    min-height: 190px;
+  }
+
+  .testimonial {
+    padding: 21px 16px;
+  }
+
+  .testimonial-actions {
+    width: 100%;
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .partner-card,
+  .partner-form,
+  .auth-form,
+  .logged-user {
+    padding: 20px 16px;
+  }
+
+  .partner-item {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .status-badge {
+    align-self: flex-start;
+  }
+
+  .event-card {
+    align-items: flex-start;
+    padding: 15px;
+  }
+
+  .event-date {
+    min-width: 56px;
+    width: 56px;
+    height: 56px;
+  }
+
+  .form-row,
+  .report-type {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .modal {
+    align-items: flex-end;
+    padding: 8px;
+  }
+
+  .modal-box {
+    width: 100%;
+    max-width: none;
+    max-height: calc(100vh - 16px);
+
+    padding: 24px 15px 18px;
+
+    border-radius: 18px 18px 10px 10px;
+  }
+
+  .modal-close {
+    top: 7px;
+    right: 8px;
+  }
+
+  .amounts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .toast {
+    left: 12px !important;
+    right: 12px !important;
+    bottom: 12px !important;
+
+    width: auto !important;
+    max-width: none !important;
+
+    padding: 13px 15px;
+    font-size: 14px;
+  }
+
+  footer {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 25px;
+    padding: 32px 18px 18px;
+  }
+
+  .footer-brand,
+  .footer-bottom {
+    grid-column: auto;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  footer .newsletter {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+/* =========================================================
+   CELULARES MUITO ESTREITOS
+========================================================= */
+
+@media (max-width: 380px) {
+  .brand strong {
+    font-size: 15px;
+  }
+
+  .menu-toggle {
+    font-size: 23px;
+  }
+
+  .hero {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .hero h1 {
+    font-size: 2rem;
+  }
+
+  .section {
+    margin-left: 7px;
+    margin-right: 7px;
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .stats {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .stat {
+    align-items: center;
+  }
+}
