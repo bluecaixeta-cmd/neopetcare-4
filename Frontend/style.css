@@ -516,16 +516,14 @@ textarea:focus-visible {
   color: white;
 
   background:
-    linear-gradient(
-      90deg,
-      rgba(2, 37, 55, 0.93) 0%,
-      rgba(5, 57, 81, 0.78) 44%,
-      rgba(5, 57, 81, 0.15) 100%
-    ),
-    url(
-      "https://images.unsplash.com/photo-1558788353-f76d92427f16?auto=format&fit=crop&w=1800&q=85"
-    )
-    center / cover;
+  linear-gradient(
+    90deg,
+    rgba(2, 37, 55, 0.93) 0%,
+    rgba(5, 57, 81, 0.78) 44%,
+    rgba(5, 57, 81, 0.15) 100%
+  ),
+  url("https://images.unsplash.com/photo-1558788353-f76d92427f16?auto=format&fit=crop&w=1800&q=85")
+  center / cover no-repeat;
 
   border-radius:
     0 0
