@@ -1,20 +1,19 @@
 import dotenv from 'dotenv';
 
-const envResult = dotenv.config({
-  path: new URL('./.env', import.meta.url)
+dotenv.config({
+  path: new URL('./.env', import.meta.url),
+  quiet: true
 });
 
-if (envResult.error) {
-  console.error(
-    'Não foi possível carregar o arquivo .env:',
-    envResult.error.message
-  );
-}
+const { default: app } =
+  await import('./src/app.js');
 
-const { default: app } = await import('./src/app.js');
-const { applySchema, pool } = await import('./src/database.js');
+const { applySchema, pool } =
+  await import('./src/database.js');
 
-const port = Number(process.env.PORT || 3000);
+const port = Number(
+  process.env.PORT || 3000
+);
 
 async function start() {
   if (!process.env.DATABASE_URL) {
@@ -25,14 +24,20 @@ async function start() {
 
   await applySchema();
 
-  const server = app.listen(port, '0.0.0.0', () => {
-    console.log(
-      `NeoPetCare API executando na porta ${port}`
-    );
-  });
+  const server = app.listen(
+    port,
+    '0.0.0.0',
+    () => {
+      console.log(
+        `NeoPetCare API executando na porta ${port}`
+      );
+    }
+  );
 
   async function shutdown(signal) {
-    console.log(`${signal} recebido. Encerrando...`);
+    console.log(
+      `${signal} recebido. Encerrando...`
+    );
 
     server.close(async () => {
       await pool.end();
@@ -40,8 +45,15 @@ async function start() {
     });
   }
 
-  process.on('SIGTERM', () => shutdown('SIGTERM'));
-  process.on('SIGINT', () => shutdown('SIGINT'));
+  process.on(
+    'SIGTERM',
+    () => shutdown('SIGTERM')
+  );
+
+  process.on(
+    'SIGINT',
+    () => shutdown('SIGINT')
+  );
 }
 
 start().catch((error) => {
