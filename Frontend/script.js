@@ -140,6 +140,9 @@ function showToast(message, type = 'success') {
 
   toastElement.textContent = message;
 
+  toastElement.hidden = false;
+  toastElement.style.display = 'block';
+
   toastElement.style.background =
     type === 'error' ? '#842029' : '#073b5c';
 
@@ -156,10 +159,11 @@ function showToast(message, type = 'success') {
     toastElement.style.opacity = '0';
     toastElement.style.transform = 'translateY(18px)';
 
-    window.setTimeout(() => {
-      toastElement.style.visibility = 'hidden';
-    }, 250);
-  }, 4000);
+   window.setTimeout(() => {
+  toastElement.style.visibility = 'hidden';
+  toastElement.style.display = 'none';
+  }, 250);
+ }, 4000);
 }
 
 /* =========================================================
