@@ -101,19 +101,65 @@ function escapeHtml(value) {
   );
 }
 
-function showToast(message) {
-  if (!toast) {
-    console.log(message);
-    return;
+let toastTimeoutId;
+
+function showToast(message, type = 'success') {
+  let toastElement = document.querySelector('.toast');
+
+  if (!toastElement) {
+    toastElement = document.createElement('div');
+
+    toastElement.className = 'toast';
+    toastElement.setAttribute('role', 'status');
+    toastElement.setAttribute('aria-live', 'polite');
+    toastElement.setAttribute('aria-atomic', 'true');
+
+    Object.assign(toastElement.style, {
+      position: 'fixed',
+      right: '24px',
+      bottom: '24px',
+      zIndex: '99999',
+      maxWidth: '380px',
+      padding: '14px 18px',
+      borderRadius: '12px',
+      color: '#ffffff',
+      fontWeight: '700',
+      lineHeight: '1.4',
+      boxShadow: '0 12px 32px rgba(0,0,0,0.25)',
+      opacity: '0',
+      visibility: 'hidden',
+      transform: 'translateY(18px)',
+      transition:
+        'opacity 0.25s ease, transform 0.25s ease, visibility 0.25s ease'
+    });
+
+    document.body.appendChild(toastElement);
   }
 
-  toast.textContent = message;
+  window.clearTimeout(toastTimeoutId);
 
-  toast.classList.add('show');
+  toastElement.textContent = message;
 
-  window.setTimeout(() => {
-    toast.classList.remove('show');
-  }, 3200);
+  toastElement.style.background =
+    type === 'error' ? '#842029' : '#073b5c';
+
+  toastElement.style.borderLeft =
+    type === 'error'
+      ? '5px solid #ff6b6b'
+      : '5px solid #17c77b';
+
+  toastElement.style.visibility = 'visible';
+  toastElement.style.opacity = '1';
+  toastElement.style.transform = 'translateY(0)';
+
+  toastTimeoutId = window.setTimeout(() => {
+    toastElement.style.opacity = '0';
+    toastElement.style.transform = 'translateY(18px)';
+
+    window.setTimeout(() => {
+      toastElement.style.visibility = 'hidden';
+    }, 250);
+  }, 4000);
 }
 
 /* =========================================================
