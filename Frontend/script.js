@@ -915,79 +915,381 @@ if (logoutButton) {
    ADOÇÃO
 ========================================================= */
 /* =========================================================
-   DETALHES DOS PETS
+   FICHA REUTILIZÁVEL DOS PETS
 ========================================================= */
 
-const lunaDetailsModal =
+const petDetailsModal =
   document.querySelector(
-    '#luna-details-modal'
+    '#pet-details-modal'
   );
 
-const lunaDetailsButton =
-  document.querySelector(
-    '[data-pet-details="Luna"]'
-  );
-
-const lunaDetailsClose =
-  lunaDetailsModal?.querySelector(
+const petDetailsClose =
+  petDetailsModal?.querySelector(
     '.pet-details-close'
   );
 
-function openLunaDetails() {
-  if (!lunaDetailsModal) {
+const petDetailsAdoptionButton =
+  document.querySelector(
+    '#pet-details-adoption-button'
+  );
+
+const petDetailsDonationButton =
+  document.querySelector(
+    '#pet-details-donation-button'
+  );
+
+
+/* =========================================================
+   DADOS DOS ANIMAIS
+========================================================= */
+
+const petsData = {
+  Luna: {
+    name: 'Luna',
+    status: 'Disponível para adoção',
+    imageClass: 'image-luna',
+
+    species: 'Cão',
+    breed: 'Sem raça definida',
+    color: 'Caramelo',
+    sex: 'Fêmea',
+    age: '3 anos',
+    size: 'Médio',
+    weight: 'Não informado',
+    identification: 'Não informada',
+
+    location: 'Minas Gerais',
+
+    vaccination: 'A confirmar',
+    deworming: 'A confirmar',
+    neutering: 'A confirmar',
+    microchip: 'A confirmar',
+
+    specialNeeds:
+      'Nenhuma informação cadastrada',
+
+    livesWithDogs: 'A confirmar',
+    livesWithCats: 'A confirmar',
+    livesWithChildren: 'A confirmar',
+
+    temperament:
+      'Informações em atualização',
+
+    guardian:
+      'As informações sobre quem está acolhendo Luna serão cadastradas nesta ficha.',
+
+    story:
+      'Luna procura uma família responsável para começar uma nova história. Nesta ficha poderão aparecer informações sobre sua rotina, comportamento e cuidados especiais.'
+  }
+};
+
+
+/* =========================================================
+   AUXILIAR PARA PREENCHER TEXTO
+========================================================= */
+
+function setPetDetailsText(
+  selector,
+  value,
+  fallback = 'Não informado'
+) {
+  const element =
+    document.querySelector(
+      selector
+    );
+
+  if (!element) {
     return;
   }
 
-  lunaDetailsModal.classList.add(
+  element.textContent =
+    value || fallback;
+}
+
+
+/* =========================================================
+   ABRIR FICHA DO ANIMAL
+========================================================= */
+
+function openPetDetails(petName) {
+  if (!petDetailsModal) {
+    return;
+  }
+
+  const pet =
+    petsData[petName];
+
+  if (!pet) {
+    showToast(
+      'As informações deste animal ainda não estão disponíveis.',
+      'error'
+    );
+
+    return;
+  }
+
+  setPetDetailsText(
+    '#pet-details-status',
+    pet.status,
+    'Disponível para adoção'
+  );
+
+  setPetDetailsText(
+    '#pet-details-title',
+    pet.name,
+    'Animal'
+  );
+
+  setPetDetailsText(
+    '#pet-details-profile',
+    [
+      pet.species,
+      pet.sex,
+      pet.age,
+      pet.size
+    ]
+      .filter(Boolean)
+      .join(' · '),
+    'Informações em atualização'
+  );
+
+  setPetDetailsText(
+    '#pet-details-location',
+    pet.location
+      ? `📍 ${pet.location}`
+      : 'Localização não informada'
+  );
+
+  setPetDetailsText(
+    '#pet-details-species',
+    pet.species
+  );
+
+  setPetDetailsText(
+    '#pet-details-breed',
+    pet.breed,
+    'Não informada'
+  );
+
+  setPetDetailsText(
+    '#pet-details-color',
+    pet.color,
+    'Não informada'
+  );
+
+  setPetDetailsText(
+    '#pet-details-sex',
+    pet.sex
+  );
+
+  setPetDetailsText(
+    '#pet-details-age',
+    pet.age,
+    'Não informada'
+  );
+
+  setPetDetailsText(
+    '#pet-details-size',
+    pet.size
+  );
+
+  setPetDetailsText(
+    '#pet-details-weight',
+    pet.weight
+  );
+
+  setPetDetailsText(
+    '#pet-details-identification',
+    pet.identification,
+    'Não informada'
+  );
+
+  setPetDetailsText(
+    '#pet-details-vaccination',
+    pet.vaccination,
+    'A confirmar'
+  );
+
+  setPetDetailsText(
+    '#pet-details-deworming',
+    pet.deworming,
+    'A confirmar'
+  );
+
+  setPetDetailsText(
+    '#pet-details-neutering',
+    pet.neutering,
+    'A confirmar'
+  );
+
+  setPetDetailsText(
+    '#pet-details-microchip',
+    pet.microchip,
+    'A confirmar'
+  );
+
+  setPetDetailsText(
+    '#pet-details-special-needs',
+    pet.specialNeeds,
+    'Nenhuma informação cadastrada'
+  );
+
+  setPetDetailsText(
+    '#pet-details-dogs',
+    pet.livesWithDogs,
+    'A confirmar'
+  );
+
+  setPetDetailsText(
+    '#pet-details-cats',
+    pet.livesWithCats,
+    'A confirmar'
+  );
+
+  setPetDetailsText(
+    '#pet-details-children',
+    pet.livesWithChildren,
+    'A confirmar'
+  );
+
+  setPetDetailsText(
+    '#pet-details-temperament',
+    pet.temperament
+  );
+
+  setPetDetailsText(
+    '#pet-details-guardian',
+    pet.guardian,
+    'Responsável atual não informado.'
+  );
+
+  setPetDetailsText(
+    '#pet-details-story',
+    pet.story,
+    'A história deste animal ainda não foi cadastrada.'
+  );
+
+  const detailsPhoto =
+    document.querySelector(
+      '#pet-details-photo'
+    );
+
+  if (detailsPhoto) {
+    detailsPhoto.className =
+      'pet-details-photo';
+
+    if (pet.imageClass) {
+      detailsPhoto.classList.add(
+        pet.imageClass
+      );
+    }
+
+    detailsPhoto.setAttribute(
+      'aria-label',
+      `Foto de ${pet.name}`
+    );
+  }
+
+  if (petDetailsAdoptionButton) {
+    petDetailsAdoptionButton.dataset.pet =
+      pet.name;
+
+    petDetailsAdoptionButton.textContent =
+      `🏡 Quero adotar ${pet.name}`;
+  }
+
+  petDetailsModal.classList.add(
     'open'
   );
 
-  lunaDetailsModal.setAttribute(
+  petDetailsModal.setAttribute(
     'aria-hidden',
     'false'
   );
 }
 
-function closeLunaDetails() {
-  if (!lunaDetailsModal) {
+
+/* =========================================================
+   FECHAR FICHA DO ANIMAL
+========================================================= */
+
+function closePetDetails() {
+  if (!petDetailsModal) {
     return;
   }
 
-  lunaDetailsModal.classList.remove(
+  petDetailsModal.classList.remove(
     'open'
   );
 
-  lunaDetailsModal.setAttribute(
+  petDetailsModal.setAttribute(
     'aria-hidden',
     'true'
   );
 }
 
-if (lunaDetailsButton) {
-  lunaDetailsButton.addEventListener(
+
+/* =========================================================
+   BOTÕES VER DETALHES
+========================================================= */
+
+document
+  .querySelectorAll(
+    '[data-pet-details]'
+  )
+  .forEach((button) => {
+    button.addEventListener(
+      'click',
+      () => {
+        openPetDetails(
+          button.dataset.petDetails
+        );
+      }
+    );
+  });
+
+
+/* =========================================================
+   FECHAR PELO BOTÃO OU FUNDO
+========================================================= */
+
+if (petDetailsClose) {
+  petDetailsClose.addEventListener(
     'click',
-    openLunaDetails
+    closePetDetails
   );
 }
 
-if (lunaDetailsClose) {
-  lunaDetailsClose.addEventListener(
-    'click',
-    closeLunaDetails
-  );
-}
-
-if (lunaDetailsModal) {
-  lunaDetailsModal.addEventListener(
+if (petDetailsModal) {
+  petDetailsModal.addEventListener(
     'click',
     (event) => {
       if (
         event.target ===
-        lunaDetailsModal
+        petDetailsModal
       ) {
-        closeLunaDetails();
+        closePetDetails();
       }
     }
+  );
+}
+
+
+/* =========================================================
+   ADOÇÃO E APOIO PELA FICHA
+========================================================= */
+
+if (petDetailsAdoptionButton) {
+  petDetailsAdoptionButton.addEventListener(
+    'click',
+    closePetDetails
+  );
+}
+
+if (petDetailsDonationButton) {
+  petDetailsDonationButton.addEventListener(
+    'click',
+    closePetDetails
   );
 }
 
