@@ -1351,3 +1351,15 @@ footer .newsletter button {
       no-repeat !important;
   }
 }
+
+.hero {
+  background:
+    linear-gradient(
+      90deg,
+      rgba(2, 37, 55, 0.93) 0%,
+      rgba(5, 57, 81, 0.78) 44%,
+      rgba(5, 57, 81, 0.15) 100%
+    ),
+    url("/imagens/hero-pets.jpg.jpeg")
+    center / cover no-repeat !important;
+}
