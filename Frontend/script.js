@@ -104,66 +104,115 @@ function escapeHtml(value) {
 let toastTimeoutId;
 
 function showToast(message, type = 'success') {
-  let toastElement = document.querySelector('.toast');
+  let toastElement =
+    document.getElementById('neopetcare-toast-message');
 
   if (!toastElement) {
     toastElement = document.createElement('div');
 
-    toastElement.className = 'toast';
-    toastElement.setAttribute('role', 'status');
-    toastElement.setAttribute('aria-live', 'polite');
-    toastElement.setAttribute('aria-atomic', 'true');
+    toastElement.id = 'neopetcare-toast-message';
 
-    Object.assign(toastElement.style, {
-      position: 'fixed',
-      right: '24px',
-      bottom: '24px',
-      zIndex: '99999',
-      maxWidth: '380px',
-      padding: '14px 18px',
-      borderRadius: '12px',
-      color: '#ffffff',
-      fontWeight: '700',
-      lineHeight: '1.4',
-      boxShadow: '0 12px 32px rgba(0,0,0,0.25)',
-      opacity: '0',
-      visibility: 'hidden',
-      transform: 'translateY(18px)',
-      transition:
-        'opacity 0.25s ease, transform 0.25s ease, visibility 0.25s ease'
-    });
+    toastElement.setAttribute(
+      'role',
+      'status'
+    );
 
-    document.body.appendChild(toastElement);
+    toastElement.setAttribute(
+      'aria-live',
+      'polite'
+    );
+
+    toastElement.setAttribute(
+      'aria-atomic',
+      'true'
+    );
+
+    document.body.appendChild(
+      toastElement
+    );
   }
 
-  window.clearTimeout(toastTimeoutId);
+  window.clearTimeout(
+    toastTimeoutId
+  );
 
-  toastElement.textContent = message;
+  toastElement.textContent =
+    String(
+      message ||
+      'Operação concluída.'
+    );
 
-  toastElement.hidden = false;
-  toastElement.style.display = 'block';
+  Object.assign(
+    toastElement.style,
+    {
+      position: 'fixed',
+      left: '50%',
+      bottom: '24px',
+      zIndex: '999999',
 
-  toastElement.style.background =
-    type === 'error' ? '#842029' : '#073b5c';
+      display: 'block',
+      visibility: 'visible',
 
-  toastElement.style.borderLeft =
-    type === 'error'
-      ? '5px solid #ff6b6b'
-      : '5px solid #17c77b';
+      width: 'max-content',
+      maxWidth: 'calc(100vw - 32px)',
 
-  toastElement.style.visibility = 'visible';
-  toastElement.style.opacity = '1';
-  toastElement.style.transform = 'translateY(0)';
+      padding: '14px 18px',
 
-  toastTimeoutId = window.setTimeout(() => {
-    toastElement.style.opacity = '0';
-    toastElement.style.transform = 'translateY(18px)';
+      background:
+        type === 'error'
+          ? '#842029'
+          : '#073b5c',
 
-   window.setTimeout(() => {
-  toastElement.style.visibility = 'hidden';
-  toastElement.style.display = 'none';
-  }, 250);
- }, 4000);
+      color: '#ffffff',
+
+      borderLeft:
+        type === 'error'
+          ? '5px solid #ff6b6b'
+          : '5px solid #17c77b',
+
+      borderRadius: '12px',
+
+      boxShadow:
+        '0 12px 32px rgba(0,0,0,0.28)',
+
+      fontSize: '15px',
+      fontWeight: '700',
+      lineHeight: '1.4',
+
+      opacity: '1',
+
+      pointerEvents: 'none',
+
+      transform:
+        'translateX(-50%) translateY(0)',
+
+      transition:
+        'opacity 0.25s ease, transform 0.25s ease'
+    }
+  );
+
+  toastTimeoutId =
+    window.setTimeout(
+      () => {
+        toastElement.style.opacity =
+          '0';
+
+        toastElement.style.transform =
+          'translateX(-50%) translateY(18px)';
+
+        window.setTimeout(
+          () => {
+            toastElement.style.display =
+              'none';
+
+            toastElement.style.visibility =
+              'hidden';
+          },
+          300
+        );
+      },
+      4000
+    );
 }
 
 /* =========================================================
