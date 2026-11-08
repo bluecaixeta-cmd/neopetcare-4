@@ -167,3 +167,120 @@ ADD COLUMN IF NOT EXISTS distinctive_features TEXT;
 
 CREATE INDEX IF NOT EXISTS idx_reports_animal_type
 ON reports(animal_type);
+
+/* =========================================================
+   MODERACAO DE IMAGENS - FASE 1
+========================================================= */
+
+/* ---------------------------------------------------------
+   PETS
+--------------------------------------------------------- */
+
+ALTER TABLE pets
+ADD COLUMN IF NOT EXISTS image_status VARCHAR(20);
+
+ALTER TABLE pets
+ADD COLUMN IF NOT EXISTS image_moderation_reason VARCHAR(150);
+
+/*
+ * Registros que ja existiam antes da moderacao
+ * permanecem aprovados.
+ */
+UPDATE pets
+SET image_status = 'approved'
+WHERE image_status IS NULL;
+
+ALTER TABLE pets
+ALTER COLUMN image_status
+SET DEFAULT 'pending';
+
+ALTER TABLE pets
+ALTER COLUMN image_status
+SET NOT NULL;
+
+
+/* ---------------------------------------------------------
+   ACHADOS E PERDIDOS
+--------------------------------------------------------- */
+
+ALTER TABLE reports
+ADD COLUMN IF NOT EXISTS image_status VARCHAR(20);
+
+ALTER TABLE reports
+ADD COLUMN IF NOT EXISTS image_moderation_reason VARCHAR(150);
+
+/*
+ * Registros que ja existiam antes da moderacao
+ * permanecem aprovados.
+ */
+UPDATE reports
+SET image_status = 'approved'
+WHERE image_status IS NULL;
+
+ALTER TABLE reports
+ALTER COLUMN image_status
+SET DEFAULT 'pending';
+
+ALTER TABLE reports
+ALTER COLUMN image_status
+SET NOT NULL;
+
+
+/* ---------------------------------------------------------
+   INDICES
+--------------------------------------------------------- */
+
+CREATE INDEX IF NOT EXISTS idx_pets_image_status
+ON pets(image_status);
+
+CREATE INDEX IF NOT EXISTS idx_reports_image_status
+ON reports(image_status);
+
+/* =========================================================
+   VALIDAR ESTADOS DE MODERACAO
+========================================================= */
+
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1
+        FROM pg_constraint
+        WHERE conname = 'pets_image_status_check'
+          AND conrelid = 'pets'::regclass
+    ) THEN
+        ALTER TABLE pets
+        ADD CONSTRAINT pets_image_status_check
+        CHECK (
+            image_status IN (
+                'pending',
+                'approved',
+                'review',
+                'blocked'
+            )
+        );
+    END IF;
+END
+$$;
+
+
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1
+        FROM pg_constraint
+        WHERE conname = 'reports_image_status_check'
+          AND conrelid = 'reports'::regclass
+    ) THEN
+        ALTER TABLE reports
+        ADD CONSTRAINT reports_image_status_check
+        CHECK (
+            image_status IN (
+                'pending',
+                'approved',
+                'review',
+                'blocked'
+            )
+        );
+    END IF;
+END
+$$;

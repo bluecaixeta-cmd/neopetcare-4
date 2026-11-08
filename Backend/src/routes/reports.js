@@ -39,14 +39,21 @@ router.get(
              event_date AS date,
 
              description,
-             contact,
-             photo,
+contact,
+photo,
 
-             created_at AS "createdAt"
+image_status AS "imageStatus",
 
-           FROM reports
+image_moderation_reason
+  AS "imageModerationReason",
 
-           ORDER BY created_at DESC`
+created_at AS "createdAt"
+
+FROM reports
+
+WHERE image_status = 'approved'
+
+ORDER BY created_at DESC`
         );
 
       return res.json({
@@ -179,6 +186,17 @@ router.post(
           )
       };
 
+      /*
+ * Foto enviada:
+ * aguarda moderacao antes da publicacao.
+ *
+ * Sem foto:
+ * pode ser publicada imediatamente.
+ */
+const imageStatus =
+  report.photo
+    ? 'pending'
+    : 'approved';
 
       /* =====================================================
          VALIDAR TIPO DA OCORRÊNCIA
@@ -225,110 +243,119 @@ router.post(
       ===================================================== */
 
       const result =
-        await pool.query(
-          `INSERT INTO reports
-           (
-             report_type,
-             pet_name,
-             animal_type,
+  await pool.query(
+    `INSERT INTO reports
+     (
+       report_type,
+       pet_name,
+       animal_type,
 
-             breed,
-             color,
-             sex,
-             age,
-             size,
+       breed,
+       color,
+       sex,
+       age,
+       size,
 
-             identification,
-             microchip,
-             neutering,
-             distinctive_features,
+       identification,
+       microchip,
+       neutering,
+       distinctive_features,
 
-             location,
-             event_date,
+       location,
+       event_date,
 
-             description,
-             contact,
-             photo
-           )
+       description,
+       contact,
+       photo,
+       image_status
+     )
 
-           VALUES
-           (
-             $1,
-             $2,
-             $3,
-             $4,
-             $5,
-             $6,
-             $7,
-             $8,
-             $9,
-             $10,
-             $11,
-             $12,
-             $13,
-             NULLIF($14, '')::date,
-             $15,
-             $16,
-             $17
-           )
+     VALUES
+     (
+       $1,
+       $2,
+       $3,
+       $4,
+       $5,
+       $6,
+       $7,
+       $8,
+       $9,
+       $10,
+       $11,
+       $12,
+       $13,
+       NULLIF($14, '')::date,
+       $15,
+       $16,
+       $17,
+       $18
+     )
 
-           RETURNING
-             id,
+     RETURNING
+       id,
 
-             report_type AS status,
-             pet_name AS name,
-             animal_type AS animal,
+       report_type AS status,
+       pet_name AS name,
+       animal_type AS animal,
 
-             breed,
-             color,
-             sex,
-             age,
-             size,
+       breed,
+       color,
+       sex,
+       age,
+       size,
 
-             identification,
-             microchip,
-             neutering,
+       identification,
+       microchip,
+       neutering,
 
-             distinctive_features
-               AS "distinctiveFeatures",
+       distinctive_features
+         AS "distinctiveFeatures",
 
-             location,
-             event_date AS date,
+       location,
+       event_date AS date,
 
-             description,
-             contact,
-             photo,
+       description,
+       contact,
+       photo,
 
-             created_at AS "createdAt"`,
-          [
-            report.status,
-            report.name,
-            report.animal,
+       image_status
+         AS "imageStatus",
 
-            report.breed || null,
-            report.color || null,
-            report.sex || null,
-            report.age || null,
-            report.size || null,
+       image_moderation_reason
+         AS "imageModerationReason",
 
-            report.identification || null,
-            report.microchip || null,
-            report.neutering || null,
+       created_at AS "createdAt"`,
+    [
+      report.status,
+      report.name,
+      report.animal,
 
-            report.distinctiveFeatures ||
-              null,
+      report.breed || null,
+      report.color || null,
+      report.sex || null,
+      report.age || null,
+      report.size || null,
 
-            report.location,
+      report.identification || null,
+      report.microchip || null,
+      report.neutering || null,
 
-            report.date,
+      report.distinctiveFeatures || null,
 
-            report.description,
+      report.location,
 
-            report.contact || null,
+      report.date,
 
-            report.photo || null
-          ]
-        );
+      report.description,
+
+      report.contact || null,
+
+      report.photo || null,
+
+      imageStatus
+    ]
+  );
 
 
       /* =====================================================

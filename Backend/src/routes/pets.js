@@ -101,10 +101,16 @@ function formatPet(row) {
       row.story,
 
     photo:
-      row.photo,
+  row.photo,
 
-    status:
-      row.adoption_status,
+imageStatus:
+  row.image_status,
+
+imageModerationReason:
+  row.image_moderation_reason,
+
+status:
+  row.adoption_status,
 
     createdAt:
       row.created_at,
@@ -151,11 +157,14 @@ router.get(
              guardian,
              story,
              photo,
-             adoption_status,
-             created_at,
-             updated_at
-           FROM pets
-           ORDER BY created_at DESC`
+image_status,
+image_moderation_reason,
+adoption_status,
+created_at,
+updated_at
+FROM pets
+WHERE image_status = 'approved'
+ORDER BY created_at DESC`
         );
 
       return res.json({
@@ -344,6 +353,17 @@ router.post(
           ) || 'disponivel'
       };
 
+      /*
+ * Foto enviada:
+ * aguarda moderacao antes da publicacao.
+ *
+ * Sem foto:
+ * pode ser publicada imediatamente.
+ */
+const imageStatus =
+  pet.photo
+    ? 'pending'
+    : 'approved';
 
       /* =====================================================
          CAMPOS OBRIGATÓRIOS
@@ -420,7 +440,8 @@ router.post(
              guardian,
              story,
              photo,
-             adoption_status
+            image_status,
+            adoption_status
            )
            VALUES
            (
@@ -447,7 +468,8 @@ router.post(
              $21,
              $22,
              $23,
-             $24
+             $24,
+             $25
            )
            RETURNING
              id,
@@ -474,9 +496,11 @@ router.post(
              guardian,
              story,
              photo,
-             adoption_status,
-             created_at,
-             updated_at`,
+image_status,
+image_moderation_reason,
+adoption_status,
+created_at,
+updated_at`,
           [
             user.id,
 
@@ -509,9 +533,11 @@ router.post(
 
             pet.story,
 
-            pet.photo || null,
+pet.photo || null,
 
-            pet.status
+imageStatus,
+
+pet.status
           ]
         );
 

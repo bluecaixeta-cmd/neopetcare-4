@@ -1265,7 +1265,9 @@ if (petRegisterForm) {
           );
         }
 
-        renderPetCard(result.pet);
+        if (result.pet.imageStatus === 'approved') {
+  renderPetCard(result.pet);
+}
 
         petRegisterForm.reset();
 
@@ -1273,9 +1275,15 @@ if (petRegisterForm) {
 
         closePetRegisterModal();
 
-        showToast(
-          `${result.pet.name} foi cadastrado com sucesso!`
-        );
+        if (result.pet.imageStatus === 'pending') {
+  showToast(
+    `${result.pet.name} foi cadastrado. A foto está aguardando análise.`
+  );
+} else {
+  showToast(
+    `${result.pet.name} foi cadastrado com sucesso!`
+  );
+}
 
       } catch (error) {
         console.error(
@@ -3585,9 +3593,14 @@ if (reportForm) {
 
         if (result.report) {
 
-          renderReport(
-            result.report
-          );
+          if (
+  result.report &&
+  result.report.imageStatus === 'approved'
+) {
+  renderReport(
+    result.report
+  );
+}
 
         }
 
@@ -3645,9 +3658,17 @@ if (reportForm) {
            CONFIRMAÇÃO
         =================================================== */
 
-        showToast(
-          'Ocorrência publicada com sucesso!'
-        );
+        if (
+  result.report?.imageStatus === 'pending'
+) {
+  showToast(
+    'Ocorrência recebida. A foto está aguardando análise.'
+  );
+} else {
+  showToast(
+    'Ocorrência publicada com sucesso!'
+  );
+}
 
 
       } catch (error) {
