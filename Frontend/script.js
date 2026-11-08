@@ -89,13 +89,13 @@ async function apiRequest(path, options = {}) {
 ========================================================= */
 
 function escapeHtml(value) {
-  return String(value).replace(
+  return String(value ?? '').replace(
     /[&<>'"]/g,
     (character) => ({
       '&': '&amp;',
       '<': '&lt;',
       '>': '&gt;',
-      "'": '&#39;',
+      "'": '&#039;',
       '"': '&quot;'
     })[character]
   );
@@ -1259,11 +1259,13 @@ if (petRegisterForm) {
             }
           );
 
-        if (!result.pet) {
-          throw new Error(
-            'O servidor não retornou o animal cadastrado.'
+         if (!result.pet) {
+            throw new Error(
+             'O servidor não retornou o animal cadastrado.'
           );
         }
+
+        renderPetCard(result.pet);
 
         petRegisterForm.reset();
 
@@ -2349,7 +2351,17 @@ if (petDetailsModal) {
 if (petDetailsAdoptionButton) {
   petDetailsAdoptionButton.addEventListener(
     'click',
-    closePetDetails
+    () => {
+      const petName =
+        petDetailsAdoptionButton.dataset.pet ||
+        'este pet';
+
+      closePetDetails();
+
+      openAdoptionModal(
+        petName
+      );
+    }
   );
 }
 

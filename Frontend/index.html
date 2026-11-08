@@ -234,8 +234,16 @@
           <p>
             Conheça animais que precisam de um lar
             e de uma nova oportunidade.
-          </p>
+                  </p>
         </div>
+
+        <button
+          class="button button-small open-pet-register"
+          type="button"
+        >
+          + Cadastrar animal
+        </button>
+
       </div>
 
       <div class="filter-row">
@@ -258,7 +266,7 @@
 
       </div>
 
-      <div class="pet-grid">
+      <div class="pet-grid" id="pet-grid">
 
         <article class="pet-card" data-type="tratamento cao">
           <div class="card-content">
@@ -293,6 +301,14 @@
               type="button"
               data-pet="Luna"
             >
+            <button
+  class="card-button pet-details-button"
+  type="button"
+  data-pet-details="Luna"
+>
+  🐾 Ver detalhes
+</button>
+
               🏡 Quero adotar
             </button>
 
@@ -339,6 +355,14 @@
               type="button"
               data-pet="Mingau"
             >
+            <button
+  class="card-button pet-details-button"
+  type="button"
+  data-pet-details="Mingau"
+>
+  🐾 Ver detalhes
+</button>
+
               🏡 Quero adotar
             </button>
 
@@ -385,6 +409,14 @@
               type="button"
               data-pet="Thor"
             >
+            <button
+  class="card-button pet-details-button"
+  type="button"
+  data-pet-details="Thor"
+>
+  🐾 Ver detalhes
+</button>
+
               🏡 Quero adotar
             </button>
 
@@ -430,6 +462,14 @@
               type="button"
               data-pet="Mel"
             >
+            <button
+  class="card-button pet-details-button"
+  type="button"
+  data-pet-details="Mel"
+>
+  🐾 Ver detalhes
+</button>
+
               🏡 Quero adotar
             </button>
 
@@ -1112,6 +1152,610 @@
 
     </section>
 
+        <!-- ======================================================
+         FICHA DE DETALHES DO PET
+    ======================================================= -->
+
+    <div
+      class="modal pet-details-modal"
+      id="pet-details-modal"
+      aria-hidden="true"
+    >
+      <div
+        class="modal-box pet-details-box"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="pet-details-title"
+      >
+
+        <button
+          class="modal-close pet-details-close"
+          type="button"
+          aria-label="Fechar detalhes do animal"
+        >
+          ×
+        </button>
+
+        <div class="pet-details-header">
+
+          <div
+            class="pet-details-photo"
+            id="pet-details-photo"
+            role="img"
+            aria-label="Foto do animal"
+          ></div>
+
+          <div class="pet-details-title">
+
+            <p
+              class="eyebrow"
+              id="pet-details-status"
+            >
+              Disponível para adoção
+            </p>
+
+            <h2 id="pet-details-title">
+              Animal
+            </h2>
+
+            <p id="pet-details-profile">
+              Informações do animal
+            </p>
+
+            <p id="pet-details-location">
+              Localização não informada
+            </p>
+
+          </div>
+
+        </div>
+
+        <div class="pet-details-content">
+
+          <section class="pet-details-group">
+
+            <h3>🐾 Características</h3>
+
+            <div class="pet-details-grid">
+
+              <div>
+                <strong>Espécie</strong>
+                <span id="pet-details-species">
+                  Não informado
+                </span>
+              </div>
+
+              <div>
+                <strong>Raça</strong>
+                <span id="pet-details-breed">
+                  Não informada
+                </span>
+              </div>
+
+              <div>
+                <strong>Cor ou pelagem</strong>
+                <span id="pet-details-color">
+                  Não informada
+                </span>
+              </div>
+
+              <div>
+                <strong>Sexo</strong>
+                <span id="pet-details-sex">
+                  Não informado
+                </span>
+              </div>
+
+              <div>
+                <strong>Idade</strong>
+                <span id="pet-details-age">
+                  Não informada
+                </span>
+              </div>
+
+              <div>
+                <strong>Porte</strong>
+                <span id="pet-details-size">
+                  Não informado
+                </span>
+              </div>
+
+              <div>
+                <strong>Peso</strong>
+                <span id="pet-details-weight">
+                  Não informado
+                </span>
+              </div>
+
+              <div>
+                <strong>Identificação</strong>
+                <span id="pet-details-identification">
+                  Não informada
+                </span>
+              </div>
+
+            </div>
+
+          </section>
+
+          <section class="pet-details-group">
+
+            <h3>❤️ Saúde</h3>
+
+            <div class="pet-details-grid">
+
+              <div>
+                <strong>Vacinação</strong>
+                <span id="pet-details-vaccination">
+                  A confirmar
+                </span>
+              </div>
+
+              <div>
+                <strong>Vermifugação</strong>
+                <span id="pet-details-deworming">
+                  A confirmar
+                </span>
+              </div>
+
+              <div>
+                <strong>Castração</strong>
+                <span id="pet-details-neutering">
+                  A confirmar
+                </span>
+              </div>
+
+              <div>
+                <strong>Microchip</strong>
+                <span id="pet-details-microchip">
+                  A confirmar
+                </span>
+              </div>
+
+              <div class="pet-details-wide">
+                <strong>Necessidades especiais</strong>
+                <span id="pet-details-special-needs">
+                  Nenhuma informação cadastrada
+                </span>
+              </div>
+
+            </div>
+
+          </section>
+
+          <section class="pet-details-group">
+
+            <h3>🤝 Convivência</h3>
+
+            <div class="pet-details-grid">
+
+              <div>
+                <strong>Com cães</strong>
+                <span id="pet-details-dogs">
+                  A confirmar
+                </span>
+              </div>
+
+              <div>
+                <strong>Com gatos</strong>
+                <span id="pet-details-cats">
+                  A confirmar
+                </span>
+              </div>
+
+              <div>
+                <strong>Com crianças</strong>
+                <span id="pet-details-children">
+                  A confirmar
+                </span>
+              </div>
+
+              <div>
+                <strong>Temperamento</strong>
+                <span id="pet-details-temperament">
+                  Não informado
+                </span>
+              </div>
+
+            </div>
+
+          </section>
+
+          <section class="pet-details-group">
+
+            <h3>🏠 Acolhimento atual</h3>
+
+            <p id="pet-details-guardian">
+              Informações sobre o responsável atual
+              não foram cadastradas.
+            </p>
+
+          </section>
+
+          <section class="pet-details-group">
+
+            <h3>📖 História do animal</h3>
+
+            <p id="pet-details-story">
+              A história deste animal será apresentada aqui.
+            </p>
+
+          </section>
+
+          <div class="pet-details-actions">
+
+            <button
+              class="button adoption-button"
+              id="pet-details-adoption-button"
+              type="button"
+              data-pet=""
+            >
+              🏡 Quero adotar
+            </button>
+
+            <button
+              class="button open-donation"
+              id="pet-details-donation-button"
+              type="button"
+            >
+              ❤️ Apoiar este animal
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+        <!-- ======================================================
+         CADASTRAR ANIMAL PARA ADOÇÃO
+    ======================================================= -->
+
+    <div
+      class="modal"
+      id="pet-register-modal"
+      aria-hidden="true"
+    >
+      <div
+        class="modal-box pet-register-box"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="pet-register-title"
+      >
+
+        <button
+          class="modal-close pet-register-close"
+          type="button"
+          aria-label="Fechar cadastro de animal"
+        >
+          ×
+        </button>
+
+        <p class="eyebrow">
+          Adoção responsável
+        </p>
+
+        <h2 id="pet-register-title">
+          Cadastrar animal
+        </h2>
+
+        <p>
+          Preencha as informações do animal.
+          Os dados poderão ser exibidos na ficha de adoção.
+        </p>
+
+        <form
+          id="pet-register-form"
+          class="report-form pet-register-form"
+        >
+
+          <h3>🐾 Informações básicas</h3>
+
+          <div class="form-row">
+
+            <label>
+              Nome *
+              <input
+                name="name"
+                type="text"
+                maxlength="100"
+                required
+                placeholder="Nome do animal"
+              >
+            </label>
+
+            <label>
+              Espécie *
+              <select name="species" required>
+                <option value="">Selecione</option>
+                <option value="Cão">Cão</option>
+                <option value="Gato">Gato</option>
+                <option value="Ave">Ave</option>
+                <option value="Coelho">Coelho</option>
+                <option value="Hamster">Hamster</option>
+                <option value="Porquinho-da-índia">Porquinho-da-índia</option>
+                <option value="Furão">Furão</option>
+                <option value="Chinchila">Chinchila</option>
+                <option value="Tartaruga/Jabuti">Tartaruga / Jabuti</option>
+                <option value="Lagarto/Iguana">Lagarto / Iguana</option>
+                <option value="Serpente">Serpente</option>
+                <option value="Cavalo">Cavalo</option>
+                <option value="Outro">Outro</option>
+              </select>
+            </label>
+
+          </div>
+
+          <div class="form-row">
+
+            <label>
+              Raça
+              <input
+                name="breed"
+                type="text"
+                maxlength="100"
+                placeholder="Ex.: SRD"
+              >
+            </label>
+
+            <label>
+              Cor / pelagem
+              <input
+                name="color"
+                type="text"
+                maxlength="100"
+                placeholder="Ex.: caramelo"
+              >
+            </label>
+
+          </div>
+
+          <div class="form-row">
+
+            <label>
+              Sexo
+              <select name="sex">
+                <option value="">Não informado</option>
+                <option value="Fêmea">Fêmea</option>
+                <option value="Macho">Macho</option>
+                <option value="Não identificado">Não identificado</option>
+              </select>
+            </label>
+
+            <label>
+              Idade
+              <input
+                name="age"
+                type="text"
+                maxlength="50"
+                placeholder="Ex.: 2 anos"
+              >
+            </label>
+
+          </div>
+
+          <div class="form-row">
+
+            <label>
+              Porte
+              <select name="size">
+                <option value="">Não informado</option>
+                <option value="Muito pequeno">Muito pequeno</option>
+                <option value="Pequeno">Pequeno</option>
+                <option value="Médio">Médio</option>
+                <option value="Grande">Grande</option>
+                <option value="Muito grande">Muito grande</option>
+                <option value="Não se aplica">Não se aplica</option>
+              </select>
+            </label>
+
+            <label>
+              Peso
+              <input
+                name="weight"
+                type="text"
+                maxlength="30"
+                placeholder="Ex.: 12 kg"
+              >
+            </label>
+
+          </div>
+
+          <label>
+            Localização *
+            <input
+              name="location"
+              type="text"
+              maxlength="150"
+              required
+              placeholder="Cidade / Estado"
+            >
+          </label>
+
+          <label>
+            Identificação
+            <input
+              name="identification"
+              type="text"
+              maxlength="150"
+              placeholder="Coleira, identificação, características..."
+            >
+          </label>
+
+          <h3>❤️ Saúde</h3>
+
+          <div class="form-row">
+
+            <label>
+              Vacinação
+              <select name="vaccination">
+                <option value="">A confirmar</option>
+                <option value="Em dia">Em dia</option>
+                <option value="Parcial">Parcial</option>
+                <option value="Não vacinado">Não vacinado</option>
+                <option value="Não se aplica">Não se aplica</option>
+              </select>
+            </label>
+
+            <label>
+              Vermifugação
+              <select name="deworming">
+                <option value="">A confirmar</option>
+                <option value="Em dia">Em dia</option>
+                <option value="Pendente">Pendente</option>
+                <option value="Não se aplica">Não se aplica</option>
+              </select>
+            </label>
+
+          </div>
+
+          <div class="form-row">
+
+            <label>
+              Castração
+              <select name="neutering">
+                <option value="">A confirmar</option>
+                <option value="Castrado">Castrado</option>
+                <option value="Não castrado">Não castrado</option>
+                <option value="Agendada">Agendada</option>
+                <option value="Não se aplica">Não se aplica</option>
+              </select>
+            </label>
+
+            <label>
+              Microchip
+              <select name="microchip">
+                <option value="">A confirmar</option>
+                <option value="Possui">Possui</option>
+                <option value="Não possui">Não possui</option>
+                <option value="Não se aplica">Não se aplica</option>
+              </select>
+            </label>
+
+          </div>
+
+          <label>
+            Necessidades especiais
+            <textarea
+              name="specialNeeds"
+              maxlength="2000"
+              placeholder="Tratamentos, medicamentos, limitações ou cuidados especiais"
+            ></textarea>
+          </label>
+
+          <h3>🤝 Comportamento e convivência</h3>
+
+          <div class="form-row">
+
+            <label>
+              Convive com cães?
+              <select name="livesWithDogs">
+                <option value="">A confirmar</option>
+                <option value="Sim">Sim</option>
+                <option value="Não">Não</option>
+                <option value="Depende de adaptação">Depende de adaptação</option>
+              </select>
+            </label>
+
+            <label>
+              Convive com gatos?
+              <select name="livesWithCats">
+                <option value="">A confirmar</option>
+                <option value="Sim">Sim</option>
+                <option value="Não">Não</option>
+                <option value="Depende de adaptação">Depende de adaptação</option>
+              </select>
+            </label>
+
+          </div>
+
+          <label>
+            Convive com crianças?
+            <select name="livesWithChildren">
+              <option value="">A confirmar</option>
+              <option value="Sim">Sim</option>
+              <option value="Não">Não</option>
+              <option value="Depende de adaptação">Depende de adaptação</option>
+            </select>
+          </label>
+
+          <label>
+            Temperamento
+            <textarea
+              name="temperament"
+              maxlength="2000"
+              placeholder="Conte como o animal se comporta..."
+            ></textarea>
+          </label>
+
+          <h3>🏠 Acolhimento</h3>
+
+          <label>
+            Com quem o animal está?
+            <textarea
+              name="guardian"
+              maxlength="2000"
+              placeholder="Tutor temporário, ONG, protetor independente..."
+            ></textarea>
+          </label>
+
+          <label>
+            História do animal *
+            <textarea
+              name="story"
+              maxlength="5000"
+              required
+              placeholder="Conte a história do animal e por que está disponível para adoção"
+            ></textarea>
+          </label>
+
+          <label>
+            Situação
+            <select name="status">
+              <option value="disponivel">Disponível para adoção</option>
+              <option value="tratamento">Em tratamento</option>
+              <option value="lar-temporario">Em lar temporário</option>
+              <option value="adotado">Adotado</option>
+            </select>
+          </label>
+
+          <h3>📷 Foto</h3>
+
+          <label>
+            Foto do animal
+
+            <input
+              name="photoFile"
+              id="pet-register-photo"
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+            >
+
+            <small>
+              Envie uma foto JPG, PNG ou WebP de até 2,5 MB.
+            </small>
+          </label>
+
+          <img
+            id="pet-register-photo-preview"
+            class="photo-upload-preview"
+            alt="Prévia da foto do animal"
+            hidden
+          >
+
+          <button
+            class="button full-button"
+            type="submit"
+          >
+            🐾 Cadastrar animal
+          </button>
+
+        </form>
+
+      </div>
+    </div>
+
   </main>
 
   <!-- =====================================================
@@ -1374,10 +2018,12 @@
 
       <h2>Publicar ocorrência</h2>
 
-      <form
+            <form
         id="report-form"
         class="report-form"
       >
+
+        <!-- TIPO DA OCORRÊNCIA -->
 
         <div class="report-type">
 
@@ -1386,7 +2032,7 @@
             class="report-type-button selected"
             data-report-type="perdido"
           >
-            Meu pet está perdido
+            🔎 Meu pet está perdido
           </button>
 
           <button
@@ -1394,34 +2040,183 @@
             class="report-type-button"
             data-report-type="encontrado"
           >
-            Encontrei um pet
+            🐾 Encontrei um animal
           </button>
 
         </div>
 
+        <!-- IDENTIFICAÇÃO DO ANIMAL -->
+
+        <h3>🐾 Identificação do animal</h3>
+
         <label>
-          Nome ou identificação
+          Nome ou identificação *
 
           <input
             name="name"
             type="text"
             maxlength="100"
             required
-            placeholder="Ex.: Mel"
+            placeholder="Ex.: Mel, desconhecido, gato preto..."
           >
         </label>
 
         <div class="form-row">
 
           <label>
-            Animal
+            Espécie *
 
-            <select name="animal" required>
-              <option value="Cachorro">Cachorro</option>
+            <select
+              name="animal"
+              required
+            >
+              <option value="">Selecione</option>
+              <option value="Cão">Cão</option>
               <option value="Gato">Gato</option>
+              <option value="Ave">Ave</option>
+              <option value="Coelho">Coelho</option>
+              <option value="Hamster">Hamster</option>
+              <option value="Porquinho-da-índia">Porquinho-da-índia</option>
+              <option value="Furão">Furão</option>
+              <option value="Chinchila">Chinchila</option>
+              <option value="Tartaruga/Jabuti">Tartaruga / Jabuti</option>
+              <option value="Lagarto/Iguana">Lagarto / Iguana</option>
+              <option value="Serpente">Serpente</option>
+              <option value="Cavalo">Cavalo</option>
               <option value="Outro">Outro</option>
             </select>
           </label>
+
+          <label>
+            Raça
+
+            <input
+              name="breed"
+              type="text"
+              maxlength="100"
+              placeholder="Ex.: SRD, Siamês..."
+            >
+          </label>
+
+        </div>
+
+        <div class="form-row">
+
+          <label>
+            Cor / pelagem
+
+            <input
+              name="color"
+              type="text"
+              maxlength="100"
+              placeholder="Ex.: preto e branco"
+            >
+          </label>
+
+          <label>
+            Sexo
+
+            <select name="sex">
+              <option value="">Não identificado</option>
+              <option value="Fêmea">Fêmea</option>
+              <option value="Macho">Macho</option>
+              <option value="Não identificado">Não identificado</option>
+            </select>
+          </label>
+
+        </div>
+
+        <div class="form-row">
+
+          <label>
+            Idade aproximada
+
+            <input
+              name="age"
+              type="text"
+              maxlength="50"
+              placeholder="Ex.: 2 anos, filhote..."
+            >
+          </label>
+
+          <label>
+            Porte
+
+            <select name="size">
+              <option value="">Não informado</option>
+              <option value="Muito pequeno">Muito pequeno</option>
+              <option value="Pequeno">Pequeno</option>
+              <option value="Médio">Médio</option>
+              <option value="Grande">Grande</option>
+              <option value="Muito grande">Muito grande</option>
+              <option value="Não se aplica">Não se aplica</option>
+            </select>
+          </label>
+
+        </div>
+
+        <!-- CARACTERÍSTICAS PARA RECONHECIMENTO -->
+
+        <h3>🔍 Características para reconhecimento</h3>
+
+        <label>
+          Coleira / identificação
+
+          <input
+            name="identification"
+            type="text"
+            maxlength="150"
+            placeholder="Ex.: coleira azul com medalha"
+          >
+        </label>
+
+        <div class="form-row">
+
+          <label>
+            Microchip
+
+            <select name="microchip">
+              <option value="">Não sei / não informado</option>
+              <option value="Possui">Possui</option>
+              <option value="Não possui">Não possui</option>
+              <option value="Não foi possível verificar">
+                Não foi possível verificar
+              </option>
+              <option value="Não se aplica">Não se aplica</option>
+            </select>
+          </label>
+
+          <label>
+            Castração
+
+            <select name="neutering">
+              <option value="">Não sei / não informado</option>
+              <option value="Castrado">Castrado</option>
+              <option value="Não castrado">Não castrado</option>
+              <option value="Não foi possível verificar">
+                Não foi possível verificar
+              </option>
+              <option value="Não se aplica">Não se aplica</option>
+            </select>
+          </label>
+
+        </div>
+
+        <label>
+          Características marcantes
+
+          <textarea
+            name="distinctiveFeatures"
+            maxlength="2000"
+            placeholder="Ex.: mancha branca no peito, cicatriz, anilha, coleira..."
+          ></textarea>
+        </label>
+
+        <!-- DADOS DA OCORRÊNCIA -->
+
+        <h3>📍 Dados da ocorrência</h3>
+
+        <div class="form-row">
 
           <label>
             Data
@@ -1432,10 +2227,21 @@
             >
           </label>
 
+          <label>
+            Contato
+
+            <input
+              name="contact"
+              type="text"
+              maxlength="254"
+              placeholder="WhatsApp ou e-mail"
+            >
+          </label>
+
         </div>
 
         <label>
-          Localização
+          Localização *
 
           <input
             name="location"
@@ -1447,32 +2253,47 @@
         </label>
 
         <label>
-          Contato
-
-          <input
-            name="contact"
-            type="text"
-            maxlength="254"
-            placeholder="E-mail ou WhatsApp"
-          >
-        </label>
-
-        <label>
-          Descrição
+          Descrição *
 
           <textarea
             name="description"
             maxlength="2000"
             required
-            placeholder="Detalhes que ajudem no reconhecimento"
+            placeholder="Conte onde o animal foi visto pela última vez, onde foi encontrado e outras informações importantes"
           ></textarea>
         </label>
+
+        <!-- FOTO -->
+
+        <h3>📷 Foto</h3>
+
+        <label class="photo-upload-field">
+          Foto do animal
+
+          <input
+            name="photoFile"
+            id="report-photo"
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+          >
+
+          <small>
+            Envie uma foto JPG, PNG ou WebP de até 2,5 MB.
+          </small>
+        </label>
+
+        <img
+          id="report-photo-preview"
+          class="photo-upload-preview"
+          alt="Prévia da foto da ocorrência"
+          hidden
+        >
 
         <button
           class="button full-button"
           type="submit"
         >
-          Publicar →
+          📢 Publicar ocorrência
         </button>
 
       </form>
