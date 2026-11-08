@@ -1695,3 +1695,666 @@ body.contrast-mode #neopetcare-toast-message {
     grid-template-columns: 1fr;
   }
 }
+
+/* =========================================================
+   PAINEL DE MODERACAO
+========================================================= */
+
+.moderation-section {
+  background: #f6f9fb;
+}
+
+.moderation-section .section-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+
+/* =========================================================
+   RESUMO DA MODERACAO
+========================================================= */
+
+.moderation-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+
+  margin: 28px 0;
+}
+
+.moderation-summary-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 5px;
+
+  min-height: 100px;
+  padding: 18px;
+
+  background: #ffffff;
+
+  border: 1px solid #d9e4ea;
+  border-radius: 16px;
+
+  color: #073b5c;
+
+  font: inherit;
+  text-align: left;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 5px 18px rgba(7, 59, 92, 0.07);
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.moderation-summary-card:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 8px 24px rgba(7, 59, 92, 0.11);
+}
+
+.moderation-summary-card strong {
+  font-size: 28px;
+  line-height: 1;
+}
+
+.moderation-summary-card span {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.moderation-summary-card.active {
+  border-color: #17c77b;
+
+  box-shadow:
+    0 0 0 3px rgba(23, 199, 123, 0.13);
+}
+
+
+/* =========================================================
+   FILTROS
+========================================================= */
+
+.moderation-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-bottom: 24px;
+}
+
+.moderation-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.moderation-filter {
+  padding: 9px 16px;
+
+  background: #ffffff;
+  color: #073b5c;
+
+  border: 1px solid #bed0da;
+  border-radius: 999px;
+
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.moderation-filter:hover {
+  border-color: #073b5c;
+}
+
+.moderation-filter.active {
+  background: #073b5c;
+  border-color: #073b5c;
+  color: #ffffff;
+}
+
+
+/* =========================================================
+   FILA DE MODERACAO
+========================================================= */
+
+.moderation-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(280px, 1fr)
+    );
+
+  gap: 20px;
+}
+
+
+/* =========================================================
+   CARD DA FILA
+========================================================= */
+
+.moderation-item {
+  overflow: hidden;
+
+  background: #ffffff;
+
+  border: 1px solid #dbe5ea;
+  border-radius: 18px;
+
+  box-shadow:
+    0 8px 26px rgba(7, 59, 92, 0.08);
+}
+
+.moderation-item-image {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  aspect-ratio: 4 / 3;
+
+  overflow: hidden;
+
+  background: #e8f0f4;
+}
+
+.moderation-item-image img {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+}
+
+.moderation-item-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  height: 100%;
+
+  color: #6d8795;
+
+  font-size: 44px;
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.moderation-status {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+
+  padding: 6px 10px;
+
+  border-radius: 999px;
+
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.moderation-status-pending {
+  background: #fff3cd;
+  color: #725500;
+}
+
+.moderation-status-review {
+  background: #e9ddff;
+  color: #5a2d91;
+}
+
+.moderation-status-approved {
+  background: #d8f6e7;
+  color: #087347;
+}
+
+.moderation-status-blocked {
+  background: #ffe0e0;
+  color: #9a2222;
+}
+
+
+/* =========================================================
+   CONTEUDO DO CARD
+========================================================= */
+
+.moderation-item-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  padding: 18px;
+}
+
+.moderation-item-type {
+  display: inline-flex;
+  align-self: flex-start;
+
+  padding: 5px 9px;
+
+  border-radius: 999px;
+
+  background: #eaf2f6;
+  color: #073b5c;
+
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.moderation-item-body h3 {
+  margin: 0;
+
+  color: #073b5c;
+
+  font-size: 21px;
+}
+
+.moderation-item-info {
+  display: grid;
+  gap: 7px;
+
+  color: #506b79;
+
+  font-size: 14px;
+}
+
+.moderation-item-info p {
+  margin: 0;
+}
+
+.moderation-item-info strong {
+  color: #173c50;
+}
+
+.moderation-item-reason {
+  padding: 10px 12px;
+
+  background: #fff6df;
+
+  border-left: 4px solid #e6a700;
+  border-radius: 8px;
+
+  color: #684f0a;
+
+  font-size: 13px;
+}
+
+
+/* =========================================================
+   ACOES DOS CARDS
+========================================================= */
+
+.moderation-item-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+
+  margin-top: 4px;
+}
+
+.moderation-item-actions button {
+  min-height: 42px;
+
+  padding: 9px 12px;
+
+  border: none;
+  border-radius: 10px;
+
+  font: inherit;
+  font-size: 13px;
+  font-weight: 800;
+
+  cursor: pointer;
+}
+
+.moderation-card-review {
+  background: #073b5c;
+  color: #ffffff;
+}
+
+.moderation-card-review:hover {
+  background: #0b527c;
+}
+
+.moderation-card-approve {
+  background: #17a968;
+  color: #ffffff;
+}
+
+.moderation-card-approve:hover {
+  background: #128553;
+}
+
+
+/* =========================================================
+   CARREGAMENTO
+========================================================= */
+
+.moderation-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 180px;
+
+  color: #506b79;
+}
+
+.moderation-loading span {
+  font-size: 30px;
+}
+
+.moderation-loading p {
+  margin: 10px 0 0;
+
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   FILA VAZIA
+========================================================= */
+
+.moderation-empty {
+  padding: 44px 20px;
+
+  background: #ffffff;
+
+  border: 1px dashed #bdcfd8;
+  border-radius: 18px;
+
+  text-align: center;
+}
+
+.moderation-empty span {
+  display: block;
+
+  margin-bottom: 10px;
+
+  color: #17a968;
+
+  font-size: 38px;
+}
+
+.moderation-empty h3 {
+  margin: 0 0 8px;
+
+  color: #073b5c;
+}
+
+.moderation-empty p {
+  margin: 0;
+
+  color: #617b89;
+}
+
+
+/* =========================================================
+   ERRO
+========================================================= */
+
+.moderation-error {
+  margin-top: 20px;
+  padding: 14px 16px;
+
+  background: #ffe4e4;
+  color: #842029;
+
+  border-left: 5px solid #dc3545;
+  border-radius: 10px;
+
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   MODAL DE DECISAO
+========================================================= */
+
+#moderation-decision-modal
+.moderation-decision-box {
+  width: min(92vw, 600px);
+
+  max-height: 88vh;
+  overflow-y: auto;
+
+  padding: 28px;
+
+  background: #ffffff;
+
+  border-radius: 18px;
+}
+
+.moderation-decision-pet {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  margin: 18px 0;
+  padding: 14px;
+
+  background: #eef5f8;
+
+  border-radius: 12px;
+}
+
+.moderation-decision-pet strong {
+  color: #073b5c;
+
+  font-size: 18px;
+}
+
+.moderation-decision-pet span {
+  color: #607d8b;
+
+  font-size: 13px;
+}
+
+
+/* =========================================================
+   CAMPO DE MOTIVO
+========================================================= */
+
+#moderation-decision-modal label {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+
+  color: #073b5c;
+
+  font-weight: 700;
+}
+
+#moderation-decision-reason {
+  width: 100%;
+  min-height: 110px;
+
+  box-sizing: border-box;
+
+  padding: 12px 14px;
+
+  border: 1px solid #b9ccd6;
+  border-radius: 10px;
+
+  color: #173c50;
+  background: #ffffff;
+
+  font: inherit;
+
+  resize: vertical;
+}
+
+#moderation-decision-reason:focus {
+  outline:
+    3px solid rgba(23, 199, 123, 0.18);
+
+  border-color: #17c77b;
+}
+
+
+/* =========================================================
+   ACOES DO MODAL
+========================================================= */
+
+.moderation-decision-actions {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+
+  margin-top: 22px;
+}
+
+.moderation-decision-actions .button {
+  width: 100%;
+  min-height: 45px;
+
+  border: none;
+  border-radius: 10px;
+
+  font-weight: 800;
+
+  cursor: pointer;
+}
+
+.moderation-approve-button {
+  background: #17a968;
+  color: #ffffff;
+}
+
+.moderation-approve-button:hover {
+  background: #128553;
+}
+
+.moderation-review-button {
+  background: #073b5c;
+  color: #ffffff;
+}
+
+.moderation-review-button:hover {
+  background: #0b527c;
+}
+
+.moderation-block-button {
+  background: #c93636;
+  color: #ffffff;
+}
+
+.moderation-block-button:hover {
+  background: #a92d2d;
+}
+
+
+/* =========================================================
+   FOCO PARA ACESSIBILIDADE
+========================================================= */
+
+.moderation-summary-card:focus-visible,
+.moderation-filter:focus-visible,
+.moderation-item-actions button:focus-visible,
+.moderation-decision-actions button:focus-visible,
+#moderation-refresh:focus-visible {
+  outline: 3px solid #17c77b;
+  outline-offset: 3px;
+}
+
+
+/* =========================================================
+   ALTO CONTRASTE
+========================================================= */
+
+.contrast-mode .moderation-item,
+.contrast-mode .moderation-summary-card,
+.contrast-mode .moderation-empty,
+.contrast-mode
+#moderation-decision-modal
+.moderation-decision-box {
+  border-color: currentColor;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+  .moderation-summary {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+}
+
+
+/* =========================================================
+   CELULAR
+========================================================= */
+
+@media (max-width: 600px) {
+
+  .moderation-section .section-heading {
+    flex-direction: column;
+  }
+
+  #moderation-refresh {
+    width: 100%;
+  }
+
+  .moderation-summary {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .moderation-summary-card {
+    min-height: 88px;
+    padding: 14px;
+  }
+
+  .moderation-summary-card strong {
+    font-size: 24px;
+  }
+
+  .moderation-filters {
+    width: 100%;
+  }
+
+  .moderation-filter {
+    flex: 1 1 100%;
+  }
+
+  .moderation-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .moderation-item-actions {
+    grid-template-columns: 1fr;
+  }
+
+  #moderation-decision-modal
+  .moderation-decision-box {
+    width: calc(100% - 24px);
+    padding: 20px;
+  }
+
+}

@@ -3983,6 +3983,1180 @@ if (partnerForm) {
 }
 
 /* =========================================================
+   MODERACAO DE IMAGENS
+========================================================= */
+
+const moderationSection =
+  document.querySelector(
+    '#moderacao'
+  );
+
+const moderationGrid =
+  document.querySelector(
+    '#moderation-grid'
+  );
+
+const moderationLoading =
+  document.querySelector(
+    '#moderation-loading'
+  );
+
+const moderationEmpty =
+  document.querySelector(
+    '#moderation-empty'
+  );
+
+const moderationError =
+  document.querySelector(
+    '#moderation-error'
+  );
+
+const moderationRefreshButton =
+  document.querySelector(
+    '#moderation-refresh'
+  );
+
+const moderationDecisionModal =
+  document.querySelector(
+    '#moderation-decision-modal'
+  );
+
+const moderationDecisionClose =
+  document.querySelector(
+    '.moderation-decision-close'
+  );
+
+const moderationDecisionPetName =
+  document.querySelector(
+    '#moderation-decision-pet-name'
+  );
+
+const moderationDecisionType =
+  document.querySelector(
+    '#moderation-decision-type'
+  );
+
+const moderationDecisionReason =
+  document.querySelector(
+    '#moderation-decision-reason'
+  );
+
+const moderationDecisionEntityType =
+  document.querySelector(
+    '#moderation-decision-entity-type'
+  );
+
+const moderationDecisionEntityId =
+  document.querySelector(
+    '#moderation-decision-entity-id'
+  );
+
+const moderationApproveButton =
+  document.querySelector(
+    '#moderation-approve'
+  );
+
+const moderationReviewButton =
+  document.querySelector(
+    '#moderation-review'
+  );
+
+const moderationBlockButton =
+  document.querySelector(
+    '#moderation-block'
+  );
+
+
+let moderationSelectedStatus =
+  'pending';
+
+let moderationSelectedType =
+  'all';
+
+  /* =========================================================
+   CARREGAR FILA DE MODERACAO
+========================================================= */
+
+async function loadModerationQueue() {
+  if (
+    !moderationSection ||
+    !moderationGrid
+  ) {
+    return;
+  }
+
+  if (moderationLoading) {
+    moderationLoading.hidden = false;
+  }
+
+  if (moderationEmpty) {
+    moderationEmpty.hidden = true;
+  }
+
+  if (moderationError) {
+    moderationError.hidden = true;
+  }
+
+  moderationGrid.innerHTML = '';
+
+  try {
+    const result =
+      await apiRequest(
+        `/api/moderation/images?status=${encodeURIComponent(
+          moderationSelectedStatus
+        )}&type=${encodeURIComponent(
+          moderationSelectedType
+        )}`
+      );
+
+    const items =
+      Array.isArray(result.items)
+        ? result.items
+        : [];
+
+    if (!items.length) {
+      if (moderationEmpty) {
+        moderationEmpty.hidden = false;
+      }
+
+      return;
+    }
+
+    items.forEach(
+      (item) => {
+        renderModerationItem(item);
+      }
+    );
+
+  } catch (error) {
+    console.error(
+      'Erro ao carregar moderação:',
+      error
+    );
+
+    if (moderationError) {
+      moderationError.textContent =
+        error.message ||
+        'Não foi possível carregar a fila de moderação.';
+
+      moderationError.hidden = false;
+    }
+
+  } finally {
+    if (moderationLoading) {
+      moderationLoading.hidden = true;
+    }
+  }
+}
+
+/* =========================================================
+   CRIAR CARD DA FILA DE MODERACAO
+========================================================= */
+
+function renderModerationItem(item) {
+  if (
+    !moderationGrid ||
+    !item
+  ) {
+    return;
+  }
+
+  const entityType =
+    item.entityType === 'report'
+      ? 'report'
+      : 'pet';
+
+  const typeLabel =
+    entityType === 'pet'
+      ? 'Adoção'
+      : 'Achados e perdidos';
+
+  const status =
+    item.imageStatus ||
+    'pending';
+
+  const statusLabels = {
+    pending: 'Pendente',
+    review: 'Em revisão',
+    approved: 'Aprovada',
+    blocked: 'Bloqueada'
+  };
+
+  const statusLabel =
+    statusLabels[status] ||
+    'Pendente';
+
+
+  /* =====================================================
+     FOTO
+  ===================================================== */
+
+  const photo =
+    typeof item.photo === 'string'
+      ? item.photo.trim()
+      : '';
+
+  const validPhoto =
+    photo.startsWith('data:image/') ||
+    photo.startsWith('https://');
+
+  const photoHtml =
+    validPhoto
+      ? `
+        <img
+          src="${escapeHtml(photo)}"
+          alt="Imagem enviada para moderação"
+        >
+      `
+      : `
+        <div class="moderation-item-placeholder">
+          🐾
+        </div>
+      `;
+
+
+  /* =====================================================
+     RESPONSAVEL / CONTATO
+  ===================================================== */
+
+  const responsible =
+    item.userName ||
+    item.userEmail ||
+    'Não informado';
+
+
+  /* =====================================================
+     DATA
+  ===================================================== */
+
+  let createdAt =
+    'Data não informada';
+
+  if (item.createdAt) {
+    const date =
+      new Date(
+        item.createdAt
+      );
+
+    if (
+      !Number.isNaN(
+        date.getTime()
+      )
+    ) {
+      createdAt =
+        date.toLocaleDateString(
+          'pt-BR'
+        );
+    }
+  }
+
+
+  /* =====================================================
+     MOTIVO
+  ===================================================== */
+
+  const reasonHtml =
+    item.imageModerationReason
+      ? `
+        <div class="moderation-item-reason">
+          <strong>
+            Motivo:
+          </strong>
+
+          ${escapeHtml(
+            item.imageModerationReason
+          )}
+        </div>
+      `
+      : '';
+
+
+  /* =====================================================
+     CRIAR CARD
+  ===================================================== */
+
+  const card =
+    document.createElement(
+      'article'
+    );
+
+  card.className =
+    'moderation-item';
+
+  card.dataset.entityType =
+    entityType;
+
+  card.dataset.entityId =
+    String(
+      item.id
+    );
+
+
+  card.innerHTML = `
+    <div class="moderation-item-image">
+
+      ${photoHtml}
+
+      <span
+        class="moderation-status moderation-status-${escapeHtml(
+          status
+        )}"
+      >
+        ${escapeHtml(
+          statusLabel
+        )}
+      </span>
+
+    </div>
+
+
+    <div class="moderation-item-body">
+
+      <span class="moderation-item-type">
+        ${escapeHtml(
+          typeLabel
+        )}
+      </span>
+
+
+      <h3>
+        ${escapeHtml(
+          item.name ||
+          'Animal'
+        )}
+      </h3>
+
+
+      <div class="moderation-item-info">
+
+        <p>
+          <strong>Espécie:</strong>
+          ${escapeHtml(
+            item.animalType ||
+            'Não informada'
+          )}
+        </p>
+
+        <p>
+          <strong>Localização:</strong>
+          ${escapeHtml(
+            item.location ||
+            'Não informada'
+          )}
+        </p>
+
+        <p>
+          <strong>Responsável / contato:</strong>
+          ${escapeHtml(
+            responsible
+          )}
+        </p>
+
+        <p>
+          <strong>Enviado em:</strong>
+          ${escapeHtml(
+            createdAt
+          )}
+        </p>
+
+      </div>
+
+
+      ${reasonHtml}
+
+
+      <div class="moderation-item-actions">
+
+        <button
+          class="moderation-card-approve"
+          type="button"
+        >
+          ✓ Aprovar
+        </button>
+
+        <button
+          class="moderation-card-review"
+          type="button"
+        >
+          Revisar
+        </button>
+
+      </div>
+
+    </div>
+  `;
+
+
+  /* =====================================================
+     APROVAR DIRETAMENTE
+  ===================================================== */
+
+  const approveButton =
+    card.querySelector(
+      '.moderation-card-approve'
+    );
+
+  if (approveButton) {
+    approveButton.addEventListener(
+      'click',
+      () => {
+        moderateImage(
+          entityType,
+          item.id,
+          'approved',
+          ''
+        );
+      }
+    );
+  }
+
+
+  /* =====================================================
+     ABRIR MODAL PARA REVISAO / BLOQUEIO
+  ===================================================== */
+
+  const reviewButton =
+    card.querySelector(
+      '.moderation-card-review'
+    );
+
+  if (reviewButton) {
+    reviewButton.addEventListener(
+      'click',
+      () => {
+        openModerationDecision(
+          item
+        );
+      }
+    );
+  }
+
+
+  moderationGrid.appendChild(
+    card
+  );
+}
+
+/* =========================================================
+   ABRIR MODAL DE DECISAO DA MODERACAO
+========================================================= */
+
+function openModerationDecision(item) {
+  if (
+    !moderationDecisionModal ||
+    !item
+  ) {
+    return;
+  }
+
+  const entityType =
+    item.entityType === 'report'
+      ? 'report'
+      : 'pet';
+
+  const typeLabel =
+    entityType === 'pet'
+      ? 'Adoção'
+      : 'Achados e perdidos';
+
+
+  if (moderationDecisionPetName) {
+    moderationDecisionPetName.textContent =
+      item.name ||
+      'Animal';
+  }
+
+
+  if (moderationDecisionType) {
+    moderationDecisionType.textContent =
+      typeLabel;
+  }
+
+
+  if (moderationDecisionReason) {
+    moderationDecisionReason.value =
+      item.imageModerationReason ||
+      '';
+  }
+
+
+  if (moderationDecisionEntityType) {
+    moderationDecisionEntityType.value =
+      entityType;
+  }
+
+
+  if (moderationDecisionEntityId) {
+    moderationDecisionEntityId.value =
+      String(
+        item.id
+      );
+  }
+
+
+  moderationDecisionModal.classList.add(
+    'open'
+  );
+
+  moderationDecisionModal.setAttribute(
+    'aria-hidden',
+    'false'
+  );
+
+
+  window.setTimeout(
+    () => {
+      moderationDecisionReason?.focus();
+    },
+    50
+  );
+}
+
+
+/* =========================================================
+   FECHAR MODAL DE DECISAO
+========================================================= */
+
+function closeModerationDecision() {
+  if (!moderationDecisionModal) {
+    return;
+  }
+
+  moderationDecisionModal.classList.remove(
+    'open'
+  );
+
+  moderationDecisionModal.setAttribute(
+    'aria-hidden',
+    'true'
+  );
+
+
+  if (moderationDecisionReason) {
+    moderationDecisionReason.value = '';
+  }
+
+
+  if (moderationDecisionEntityType) {
+    moderationDecisionEntityType.value = '';
+  }
+
+
+  if (moderationDecisionEntityId) {
+    moderationDecisionEntityId.value = '';
+  }
+}
+
+
+/* =========================================================
+   BOTAO FECHAR
+========================================================= */
+
+if (moderationDecisionClose) {
+  moderationDecisionClose.addEventListener(
+    'click',
+    closeModerationDecision
+  );
+}
+
+
+/* =========================================================
+   FECHAR CLICANDO NO FUNDO
+========================================================= */
+
+if (moderationDecisionModal) {
+  moderationDecisionModal.addEventListener(
+    'click',
+    (event) => {
+      if (
+        event.target ===
+        moderationDecisionModal
+      ) {
+        closeModerationDecision();
+      }
+    }
+  );
+}
+
+/* =========================================================
+   EXECUTAR DECISAO DE MODERACAO
+========================================================= */
+
+async function moderateImage(
+  entityType,
+  entityId,
+  status,
+  reason = ''
+) {
+  const allowedTypes = [
+    'pet',
+    'report'
+  ];
+
+  const allowedStatuses = [
+    'approved',
+    'review',
+    'blocked'
+  ];
+
+
+  /* =====================================================
+     VALIDAR DADOS
+  ===================================================== */
+
+  if (
+    !allowedTypes.includes(
+      entityType
+    )
+  ) {
+    showToast(
+      'Tipo de publicação inválido.',
+      'error'
+    );
+
+    return;
+  }
+
+
+  const numericId =
+    Number(entityId);
+
+  if (
+    !Number.isSafeInteger(
+      numericId
+    ) ||
+    numericId <= 0
+  ) {
+    showToast(
+      'Identificador da publicação inválido.',
+      'error'
+    );
+
+    return;
+  }
+
+
+  if (
+    !allowedStatuses.includes(
+      status
+    )
+  ) {
+    showToast(
+      'Decisão de moderação inválida.',
+      'error'
+    );
+
+    return;
+  }
+
+
+  const cleanReason =
+    String(
+      reason || ''
+    ).trim();
+
+
+  if (
+    status !== 'approved' &&
+    !cleanReason
+  ) {
+    showToast(
+      'Informe o motivo da revisão ou do bloqueio.',
+      'error'
+    );
+
+    moderationDecisionReason?.focus();
+
+    return;
+  }
+
+
+  /* =====================================================
+     DESABILITAR BOTOES
+  ===================================================== */
+
+  const actionButtons = [
+    moderationApproveButton,
+    moderationReviewButton,
+    moderationBlockButton
+  ];
+
+
+  actionButtons.forEach(
+    (button) => {
+      if (button) {
+        button.disabled = true;
+      }
+    }
+  );
+
+
+  try {
+
+    /* ===================================================
+       ENVIAR DECISAO AO BACKEND
+    =================================================== */
+
+    const result =
+      await apiRequest(
+        `/api/moderation/images/${encodeURIComponent(
+          entityType
+        )}/${encodeURIComponent(
+          String(numericId)
+        )}`,
+        {
+          method: 'PATCH',
+
+          body:
+            JSON.stringify({
+              status,
+              reason:
+                cleanReason
+            })
+        }
+      );
+
+
+    /* ===================================================
+       FECHAR MODAL
+    =================================================== */
+
+    closeModerationDecision();
+
+
+    /* ===================================================
+       CONFIRMACAO
+    =================================================== */
+
+    showToast(
+      result.message ||
+      (
+        status === 'approved'
+          ? 'Imagem aprovada com sucesso.'
+          : status === 'blocked'
+            ? 'Imagem bloqueada com sucesso.'
+            : 'Imagem enviada para revisão.'
+      )
+    );
+
+
+    /* ===================================================
+       ATUALIZAR FILA
+    =================================================== */
+
+    await refreshModerationPanel();
+
+  } catch (error) {
+
+    console.error(
+      'Erro ao moderar imagem:',
+      error
+    );
+
+    showToast(
+      error.message ||
+      'Não foi possível concluir a moderação.',
+      'error'
+    );
+
+  } finally {
+
+    actionButtons.forEach(
+      (button) => {
+        if (button) {
+          button.disabled = false;
+        }
+      }
+    );
+  }
+}
+
+/* =========================================================
+   CONECTAR BOTOES DO MODAL DE MODERACAO
+========================================================= */
+
+/* =========================================================
+   APROVAR
+========================================================= */
+
+if (moderationApproveButton) {
+  moderationApproveButton.addEventListener(
+    'click',
+    async () => {
+      const entityType =
+        moderationDecisionEntityType?.value;
+
+      const entityId =
+        moderationDecisionEntityId?.value;
+
+      await moderateImage(
+        entityType,
+        entityId,
+        'approved',
+        ''
+      );
+    }
+  );
+}
+
+
+/* =========================================================
+   ENVIAR PARA REVISAO
+========================================================= */
+
+if (moderationReviewButton) {
+  moderationReviewButton.addEventListener(
+    'click',
+    async () => {
+      const entityType =
+        moderationDecisionEntityType?.value;
+
+      const entityId =
+        moderationDecisionEntityId?.value;
+
+      const reason =
+        moderationDecisionReason?.value ||
+        '';
+
+      await moderateImage(
+        entityType,
+        entityId,
+        'review',
+        reason
+      );
+    }
+  );
+}
+
+
+/* =========================================================
+   BLOQUEAR
+========================================================= */
+
+if (moderationBlockButton) {
+  moderationBlockButton.addEventListener(
+    'click',
+    async () => {
+      const entityType =
+        moderationDecisionEntityType?.value;
+
+      const entityId =
+        moderationDecisionEntityId?.value;
+
+      const reason =
+        moderationDecisionReason?.value ||
+        '';
+
+      await moderateImage(
+        entityType,
+        entityId,
+        'blocked',
+        reason
+      );
+    }
+  );
+}
+
+/* =========================================================
+   FILTROS DA FILA DE MODERACAO
+========================================================= */
+
+const moderationStatusButtons = [
+  ...document.querySelectorAll(
+    '[data-moderation-status]'
+  )
+];
+
+const moderationTypeButtons = [
+  ...document.querySelectorAll(
+    '[data-moderation-type]'
+  )
+];
+
+
+/* =========================================================
+   FILTRAR POR STATUS
+========================================================= */
+
+moderationStatusButtons.forEach(
+  (button) => {
+    button.addEventListener(
+      'click',
+      async () => {
+        const status =
+          button.dataset.moderationStatus;
+
+        if (!status) {
+          return;
+        }
+
+        moderationSelectedStatus =
+          status;
+
+        moderationStatusButtons.forEach(
+          (item) => {
+            item.classList.toggle(
+              'active',
+              item === button
+            );
+          }
+        );
+
+        await loadModerationQueue();
+      }
+    );
+  }
+);
+
+
+/* =========================================================
+   FILTRAR POR TIPO
+========================================================= */
+
+moderationTypeButtons.forEach(
+  (button) => {
+    button.addEventListener(
+      'click',
+      async () => {
+        const type =
+          button.dataset.moderationType;
+
+        if (!type) {
+          return;
+        }
+
+        moderationSelectedType =
+          type;
+
+        moderationTypeButtons.forEach(
+          (item) => {
+            item.classList.toggle(
+              'active',
+              item === button
+            );
+          }
+        );
+
+        await loadModerationQueue();
+      }
+    );
+  }
+);
+
+
+/* =========================================================
+   ATUALIZAR FILA
+========================================================= */
+
+if (moderationRefreshButton) {
+  moderationRefreshButton.addEventListener(
+    'click',
+    async () => {
+      moderationRefreshButton.disabled =
+        true;
+
+      const originalText =
+        moderationRefreshButton.textContent;
+
+      moderationRefreshButton.textContent =
+        '↻ Atualizando...';
+
+      try {
+        await loadModerationQueue();
+
+        showToast(
+          'Fila de moderação atualizada.'
+        );
+
+      } finally {
+        moderationRefreshButton.disabled =
+          false;
+
+        moderationRefreshButton.textContent =
+          originalText;
+      }
+    }
+  );
+}
+
+/* =========================================================
+   CONTADORES DA MODERACAO
+========================================================= */
+
+const moderationPendingCount =
+  document.querySelector(
+    '#moderation-pending-count'
+  );
+
+const moderationReviewCount =
+  document.querySelector(
+    '#moderation-review-count'
+  );
+
+const moderationApprovedCount =
+  document.querySelector(
+    '#moderation-approved-count'
+  );
+
+const moderationBlockedCount =
+  document.querySelector(
+    '#moderation-blocked-count'
+  );
+
+
+/* =========================================================
+   ATUALIZAR CONTADORES
+========================================================= */
+
+async function updateModerationCounts() {
+  if (!moderationSection) {
+    return;
+  }
+
+  const statuses = [
+    {
+      status: 'pending',
+      element: moderationPendingCount
+    },
+    {
+      status: 'review',
+      element: moderationReviewCount
+    },
+    {
+      status: 'approved',
+      element: moderationApprovedCount
+    },
+    {
+      status: 'blocked',
+      element: moderationBlockedCount
+    }
+  ];
+
+
+  await Promise.all(
+    statuses.map(
+      async ({
+        status,
+        element
+      }) => {
+        if (!element) {
+          return;
+        }
+
+        try {
+          const result =
+            await apiRequest(
+              `/api/moderation/images?status=${encodeURIComponent(
+                status
+              )}&type=all`
+            );
+
+          const items =
+            Array.isArray(result.items)
+              ? result.items
+              : [];
+
+          element.textContent =
+            String(
+              items.length
+            );
+
+        } catch (error) {
+          console.error(
+            `Erro ao contar imagens ${status}:`,
+            error
+          );
+
+          element.textContent = '0';
+        }
+      }
+    )
+  );
+}
+
+
+/* =========================================================
+   ATUALIZAR PAINEL COMPLETO
+========================================================= */
+
+async function refreshModerationPanel() {
+  await Promise.all([
+    loadModerationQueue(),
+    updateModerationCounts()
+  ]);
+}
+
+
+/* =========================================================
+   INICIALIZAR PAINEL DE MODERACAO
+========================================================= */
+
+async function initializeModerationPanel() {
+  if (!moderationSection) {
+    return;
+  }
+
+  moderationSection.hidden = true;
+
+  moderationSelectedStatus =
+    'pending';
+
+  moderationSelectedType =
+    'all';
+
+  moderationStatusButtons.forEach(
+    (button) => {
+      button.classList.toggle(
+        'active',
+        button.dataset.moderationStatus ===
+          'pending'
+      );
+    }
+  );
+
+  moderationTypeButtons.forEach(
+    (button) => {
+      button.classList.toggle(
+        'active',
+        button.dataset.moderationType ===
+          'all'
+      );
+    }
+  );
+
+  try {
+    /*
+     * A própria rota protegida confirma
+     * se a sessão atual pertence a um admin.
+     */
+    await apiRequest(
+      '/api/moderation/images?status=pending&type=all'
+    );
+
+    /*
+     * Se chegou até aqui, o backend
+     * autorizou a conta.
+     */
+    moderationSection.hidden = false;
+
+    await refreshModerationPanel();
+
+  } catch (error) {
+    /*
+     * Usuário comum continua sem visualizar
+     * o painel administrativo.
+     */
+    moderationSection.hidden = true;
+
+    console.log(
+      'Painel de moderação não disponível para esta conta.'
+    );
+  }
+}
+
+initializeModerationPanel();
+
+/* =========================================================
    INICIALIZAÇÃO DAS INFORMAÇÕES DA API
 ========================================================= */
 const savedUser = getSavedUser();

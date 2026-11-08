@@ -1151,6 +1151,324 @@
 
     </section>
 
+        <!-- =====================================================
+         MODERACAO DE IMAGENS
+    ====================================================== -->
+
+    <section
+      class="moderation-section section"
+      id="moderacao"
+      hidden
+    >
+
+      <div class="section-heading">
+
+        <div>
+          <p class="eyebrow">
+            Administração
+          </p>
+
+          <h2>
+            Moderação de imagens
+          </h2>
+
+          <p>
+            Analise as fotos enviadas antes que sejam
+            exibidas publicamente na plataforma.
+          </p>
+        </div>
+
+        <button
+          class="button button-small"
+          id="moderation-refresh"
+          type="button"
+        >
+          ↻ Atualizar fila
+        </button>
+
+      </div>
+
+
+      <!-- =================================================
+           RESUMO
+      ================================================== -->
+
+      <div class="moderation-summary">
+
+        <button
+          class="moderation-summary-card active"
+          type="button"
+          data-moderation-status="pending"
+        >
+          <strong id="moderation-pending-count">
+            0
+          </strong>
+
+          <span>
+            Pendentes
+          </span>
+        </button>
+
+
+        <button
+          class="moderation-summary-card"
+          type="button"
+          data-moderation-status="review"
+        >
+          <strong id="moderation-review-count">
+            0
+          </strong>
+
+          <span>
+            Em revisão
+          </span>
+        </button>
+
+
+        <button
+          class="moderation-summary-card"
+          type="button"
+          data-moderation-status="approved"
+        >
+          <strong id="moderation-approved-count">
+            0
+          </strong>
+
+          <span>
+            Aprovadas
+          </span>
+        </button>
+
+
+        <button
+          class="moderation-summary-card"
+          type="button"
+          data-moderation-status="blocked"
+        >
+          <strong id="moderation-blocked-count">
+            0
+          </strong>
+
+          <span>
+            Bloqueadas
+          </span>
+        </button>
+
+      </div>
+
+
+      <!-- =================================================
+           FILTROS
+      ================================================== -->
+
+      <div class="moderation-toolbar">
+
+        <div class="moderation-filters">
+
+          <button
+            class="moderation-filter active"
+            type="button"
+            data-moderation-type="all"
+          >
+            Todas
+          </button>
+
+          <button
+            class="moderation-filter"
+            type="button"
+            data-moderation-type="pet"
+          >
+            Adoção
+          </button>
+
+          <button
+            class="moderation-filter"
+            type="button"
+            data-moderation-type="report"
+          >
+            Achados e perdidos
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <!-- =================================================
+           ESTADO DE CARREGAMENTO
+      ================================================== -->
+
+      <div
+        class="moderation-loading"
+        id="moderation-loading"
+        hidden
+      >
+        <span>
+          ⏳
+        </span>
+
+        <p>
+          Carregando fila de moderação...
+        </p>
+      </div>
+
+
+      <!-- =================================================
+           FILA
+      ================================================== -->
+
+      <div
+        class="moderation-grid"
+        id="moderation-grid"
+      ></div>
+
+
+      <!-- =================================================
+           FILA VAZIA
+      ================================================== -->
+
+      <div
+        class="moderation-empty"
+        id="moderation-empty"
+        hidden
+      >
+        <span>
+          ✓
+        </span>
+
+        <h3>
+          Nenhuma imagem nesta fila
+        </h3>
+
+        <p>
+          Quando houver novas imagens com este status,
+          elas aparecerão aqui.
+        </p>
+      </div>
+
+
+      <!-- =================================================
+           MENSAGEM DE ERRO
+      ================================================== -->
+
+      <div
+        class="moderation-error"
+        id="moderation-error"
+        role="alert"
+        hidden
+      >
+        Não foi possível carregar a fila de moderação.
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         MODAL DE DECISAO DA MODERACAO
+    ====================================================== -->
+
+    <div
+      class="modal"
+      id="moderation-decision-modal"
+      aria-hidden="true"
+    >
+
+      <div
+        class="modal-box moderation-decision-box"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="moderation-decision-title"
+      >
+
+        <button
+          class="modal-close moderation-decision-close"
+          type="button"
+          aria-label="Fechar moderação"
+        >
+          ×
+        </button>
+
+
+        <p class="eyebrow">
+          Moderação
+        </p>
+
+
+        <h2 id="moderation-decision-title">
+          Revisar imagem
+        </h2>
+
+
+        <div class="moderation-decision-pet">
+
+          <strong id="moderation-decision-pet-name">
+            Animal
+          </strong>
+
+          <span id="moderation-decision-type">
+            Publicação
+          </span>
+
+        </div>
+
+
+        <label>
+          Motivo ou observação
+
+          <textarea
+            id="moderation-decision-reason"
+            maxlength="150"
+            placeholder="Informe o motivo da revisão ou do bloqueio"
+          ></textarea>
+        </label>
+
+
+        <input
+          id="moderation-decision-entity-type"
+          type="hidden"
+        >
+
+
+        <input
+          id="moderation-decision-entity-id"
+          type="hidden"
+        >
+
+
+        <div class="moderation-decision-actions">
+
+          <button
+            class="button moderation-approve-button"
+            id="moderation-approve"
+            type="button"
+          >
+            ✓ Aprovar imagem
+          </button>
+
+
+          <button
+            class="button moderation-review-button"
+            id="moderation-review"
+            type="button"
+          >
+            ◷ Enviar para revisão
+          </button>
+
+
+          <button
+            class="button moderation-block-button"
+            id="moderation-block"
+            type="button"
+          >
+            ⛔ Bloquear imagem
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
         <!-- ======================================================
          FICHA DE DETALHES DO PET
     ======================================================= -->
