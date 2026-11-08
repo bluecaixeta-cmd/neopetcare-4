@@ -12,6 +12,7 @@ import adoptionRoutes from './routes/adoptions.js';
 import reportRoutes from './routes/reports.js';
 import partnerRoutes from './routes/partners.js';
 import petRoutes from './routes/pets.js';
+import moderationRoutes from './routes/moderation.js';
 
 const app = express();
 
@@ -158,14 +159,23 @@ app.use(
   partnerRoutes
 );
 
-
-/* =========================================================
-   ROTA NÃO ENCONTRADA
-========================================================= */
 app.use(
   '/api/pets',
   petRoutes
 );
+
+/* =========================================================
+   MODERACAO DE IMAGENS
+========================================================= */
+
+app.use(
+  '/api/moderation',
+  moderationRoutes
+);
+
+/* =========================================================
+   ROTA NÃO ENCONTRADA
+========================================================= */
 
 app.use(
   '/api',
@@ -179,7 +189,6 @@ app.use(
       });
   }
 );
-
 
 /* =========================================================
    TRATAMENTO DE ERROS

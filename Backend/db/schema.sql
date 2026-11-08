@@ -284,3 +284,51 @@ BEGIN
     END IF;
 END
 $$;
+
+/* =========================================================
+   FUNCAO ADMINISTRATIVA DOS USUARIOS
+========================================================= */
+
+ALTER TABLE users
+ADD COLUMN IF NOT EXISTS role VARCHAR(20);
+
+/*
+ * Usuarios que ja existiam antes desta alteracao
+ * permanecem como usuarios comuns.
+ */
+UPDATE users
+SET role = 'user'
+WHERE role IS NULL;
+
+ALTER TABLE users
+ALTER COLUMN role
+SET DEFAULT 'user';
+
+ALTER TABLE users
+ALTER COLUMN role
+SET NOT NULL;
+
+
+/* =========================================================
+   VALIDAR FUNCOES PERMITIDAS
+========================================================= */
+
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1
+        FROM pg_constraint
+        WHERE conname = 'users_role_check'
+          AND conrelid = 'users'::regclass
+    ) THEN
+        ALTER TABLE users
+        ADD CONSTRAINT users_role_check
+        CHECK (
+            role IN (
+                'user',
+                'admin'
+            )
+        );
+    END IF;
+END
+$$;
