@@ -1478,6 +1478,578 @@ const petsData = {
   }
 };
 
+/* =========================================================
+   ANIMAIS CARREGADOS DO POSTGRESQL
+========================================================= */
+
+const petGrid =
+  document.querySelector(
+    '#pet-grid'
+  );
+
+
+function getPetDataKey(pet) {
+  if (pet?.id) {
+    return `db-${pet.id}`;
+  }
+
+  return pet?.name || '';
+}
+
+
+function getPetStatusLabel(status) {
+  const statuses = {
+    disponivel:
+      'Disponível para adoção',
+
+    tratamento:
+      'Em tratamento',
+
+    'lar-temporario':
+      'Em lar temporário',
+
+    adotado:
+      'Adotado'
+  };
+
+  return (
+    statuses[status] ||
+    'Disponível para adoção'
+  );
+}
+
+
+function normalizePetFromApi(pet) {
+  return {
+    id:
+      pet.id,
+
+    name:
+      pet.name ||
+      'Animal',
+
+    status:
+      getPetStatusLabel(
+        pet.status
+      ),
+
+    species:
+      pet.species ||
+      'Não informado',
+
+    breed:
+      pet.breed ||
+      'A confirmar',
+
+    color:
+      pet.color ||
+      'A confirmar',
+
+    sex:
+      pet.sex ||
+      'A confirmar',
+
+    age:
+      pet.age ||
+      'A confirmar',
+
+    size:
+      pet.size ||
+      'A confirmar',
+
+    weight:
+      pet.weight ||
+      'A confirmar',
+
+    identification:
+      pet.identification ||
+      'A confirmar',
+
+    location:
+      pet.location ||
+      'Local não informado',
+
+    vaccination:
+      pet.vaccination ||
+      'A confirmar',
+
+    deworming:
+      pet.deworming ||
+      'A confirmar',
+
+    neutering:
+      pet.neutering ||
+      'A confirmar',
+
+    microchip:
+      pet.microchip ||
+      'A confirmar',
+
+    specialNeeds:
+      pet.specialNeeds ||
+      'Nenhuma informação cadastrada',
+
+    livesWithDogs:
+      pet.livesWithDogs ||
+      'A confirmar',
+
+    livesWithCats:
+      pet.livesWithCats ||
+      'A confirmar',
+
+    livesWithChildren:
+      pet.livesWithChildren ||
+      'A confirmar',
+
+    temperament:
+      pet.temperament ||
+      'A confirmar',
+
+    guardian:
+      pet.guardian ||
+      'Responsável atual não informado',
+
+    story:
+      pet.story ||
+      'História não cadastrada',
+
+    photo:
+      pet.photo ||
+      '',
+
+    databasePet:
+      true
+  };
+}
+
+/* =========================================================
+   CRIAR CARD DE ANIMAL VINDO DO BANCO
+========================================================= */
+
+function renderPetCard(pet) {
+  if (!petGrid || !pet) {
+    return;
+  }
+
+  const normalizedPet =
+    normalizePetFromApi(pet);
+
+  const petKey =
+    getPetDataKey(pet);
+
+  if (!petKey) {
+    return;
+  }
+
+  /*
+   * Evita duplicar o mesmo animal
+   * caso loadPets() seja executado novamente.
+   */
+  const existingCard =
+    petGrid.querySelector(
+      `[data-database-pet="${pet.id}"]`
+    );
+
+  if (existingCard) {
+    return;
+  }
+
+  /*
+   * Coloca o animal dentro do mesmo catálogo
+   * usado pela ficha "Ver detalhes".
+   */
+  petsData[petKey] =
+    normalizedPet;
+
+
+  /* =====================================================
+     ESPÉCIE PARA FILTROS
+  ===================================================== */
+
+  const speciesFilter =
+    String(
+      pet.species || ''
+    )
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(
+        /[\u0300-\u036f]/g,
+        ''
+      )
+      .replace(
+        /\s+/g,
+        '-'
+      );
+
+
+  /* =====================================================
+     FOTO
+  ===================================================== */
+
+  const photo =
+    typeof pet.photo === 'string'
+      ? pet.photo.trim()
+      : '';
+
+  const validPhoto =
+    photo.startsWith(
+      'data:image/'
+    ) ||
+    photo.startsWith(
+      'https://'
+    );
+
+  const photoStyle =
+    validPhoto
+      ? `style="background-image:url('${photo.replace(
+          /'/g,
+          '%27'
+        )}')"`
+      : '';
+
+
+  /* =====================================================
+     STATUS
+  ===================================================== */
+
+  const statusLabels = {
+    disponivel:
+      'Adoção',
+
+    tratamento:
+      'Tratamento',
+
+    'lar-temporario':
+      'Lar temporário',
+
+    adotado:
+      'Adotado'
+  };
+
+  const statusLabel =
+    statusLabels[pet.status] ||
+    'Adoção';
+
+
+  /* =====================================================
+     CRIAR CARD
+  ===================================================== */
+
+  const card =
+    document.createElement(
+      'article'
+    );
+
+  card.className =
+    'pet-card';
+
+  card.dataset.type =
+    [
+      speciesFilter,
+      pet.status ===
+        'tratamento'
+        ? 'tratamento'
+        : ''
+    ]
+      .filter(Boolean)
+      .join(' ');
+
+  card.dataset.databasePet =
+    String(pet.id);
+
+
+  card.innerHTML = `
+    <div class="card-content">
+
+      <h3>
+        ${escapeHtml(
+          normalizedPet.name
+        )}
+      </h3>
+
+      <p class="pet-profile">
+        ${escapeHtml(
+          normalizedPet.species
+        )}
+        ·
+        ${escapeHtml(
+          normalizedPet.age
+        )}
+        ·
+        ${escapeHtml(
+          normalizedPet.size
+        )}
+      </p>
+
+
+      <div
+        class="pet-image pet-database-image"
+        ${photoStyle}
+      >
+
+        <span class="tag green">
+          ${escapeHtml(
+            statusLabel
+          )}
+        </span>
+
+        <button
+          class="favorite"
+          type="button"
+          aria-label="Favoritar ${escapeHtml(
+            normalizedPet.name
+          )}"
+        >
+          ♡
+        </button>
+
+      </div>
+
+
+      <div class="pet-summary">
+
+        <span>
+          🐾 ${escapeHtml(
+            normalizedPet.species
+          )}
+        </span>
+
+        <span>
+          ${escapeHtml(
+            normalizedPet.sex
+          )}
+        </span>
+
+        <span>
+          🎂 ${escapeHtml(
+            normalizedPet.age
+          )}
+        </span>
+
+        <span>
+          📏 ${escapeHtml(
+            normalizedPet.size
+          )}
+        </span>
+
+      </div>
+
+
+      <p class="pet-health">
+        ${escapeHtml(
+          normalizedPet.story
+        )}
+      </p>
+
+
+      <div class="pet-quick-info">
+
+        <span>
+          <strong>Raça:</strong>
+          ${escapeHtml(
+            normalizedPet.breed
+          )}
+        </span>
+
+        <span>
+          <strong>Cor:</strong>
+          ${escapeHtml(
+            normalizedPet.color
+          )}
+        </span>
+
+        <span>
+          <strong>Vacinas:</strong>
+          ${escapeHtml(
+            normalizedPet.vaccination
+          )}
+        </span>
+
+        <span>
+          <strong>Castração:</strong>
+          ${escapeHtml(
+            normalizedPet.neutering
+          )}
+        </span>
+
+      </div>
+
+
+      <p class="pet-location">
+        📍
+        ${escapeHtml(
+          normalizedPet.location
+        )}
+      </p>
+
+
+      <button
+        class="card-button pet-details-button"
+        type="button"
+        data-pet-details="${escapeHtml(
+          petKey
+        )}"
+      >
+        🐾 Ver detalhes
+      </button>
+
+
+      <button
+        class="card-button adoption-button"
+        type="button"
+        data-pet="${escapeHtml(
+          normalizedPet.name
+        )}"
+      >
+        🏡 Quero adotar
+      </button>
+
+
+      <button
+        class="card-button open-donation"
+        type="button"
+      >
+        ❤️ Apoiar agora
+      </button>
+
+    </div>
+  `;
+
+
+  /* =====================================================
+     VER DETALHES
+  ===================================================== */
+
+  const detailsButton =
+    card.querySelector(
+      '.pet-details-button'
+    );
+
+  if (detailsButton) {
+    detailsButton.addEventListener(
+      'click',
+      () => {
+        openPetDetails(
+          petKey
+        );
+      }
+    );
+  }
+
+
+  /* =====================================================
+     ADOÇÃO
+  ===================================================== */
+
+  const adoptionButton =
+    card.querySelector(
+      '.adoption-button'
+    );
+
+  if (adoptionButton) {
+    adoptionButton.addEventListener(
+      'click',
+      () => {
+        openAdoptionModal(
+          normalizedPet.name
+        );
+      }
+    );
+  }
+
+
+  /* =====================================================
+     FAVORITO
+  ===================================================== */
+
+  const favoriteButton =
+    card.querySelector(
+      '.favorite'
+    );
+
+  if (favoriteButton) {
+    favoriteButton.addEventListener(
+      'click',
+      () => {
+        favoriteButton.classList.toggle(
+          'saved'
+        );
+
+        favoriteButton.textContent =
+          favoriteButton.classList.contains(
+            'saved'
+          )
+            ? '♥'
+            : '♡';
+      }
+    );
+  }
+
+
+  /* =====================================================
+     DOAÇÃO
+  ===================================================== */
+
+  const donationButton =
+    card.querySelector(
+      '.open-donation'
+    );
+
+  if (donationButton) {
+    donationButton.addEventListener(
+      'click',
+      openDonationModal
+    );
+  }
+
+
+  petGrid.appendChild(
+    card
+  );
+}
+
+
+/* =========================================================
+   CARREGAR ANIMAIS DO POSTGRESQL
+========================================================= */
+
+async function loadPets() {
+  if (!petGrid) {
+    return;
+  }
+
+  try {
+    const result =
+      await apiRequest(
+        '/api/pets'
+      );
+
+    if (
+      !Array.isArray(
+        result.pets
+      )
+    ) {
+      return;
+    }
+
+    result.pets.forEach(
+      (pet) => {
+        renderPetCard(pet);
+      }
+    );
+
+  } catch (error) {
+    console.error(
+      'Erro ao carregar animais:',
+      error
+    );
+
+    showToast(
+      'Não foi possível carregar os animais cadastrados.',
+      'error'
+    );
+  }
+}
 
 /* =========================================================
    AUXILIAR PARA PREENCHER TEXTO
@@ -3388,6 +3960,7 @@ if (savedUser) {
 
 loadReports();
 loadPartners();
+loadPets();
 /* =========================================================
    FECHAR MODAIS COM ESC
 ========================================================= */
