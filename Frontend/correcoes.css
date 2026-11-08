@@ -1544,3 +1544,12 @@ body.contrast-mode #neopetcare-toast-message {
   background: #ffbf47 !important;
   color: #000000 !important;
 }
+
+/* TESTE - botão Cadastrar animal */
+#adote .open-pet-register {
+  display: inline-flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  position: relative !important;
+  z-index: 50 !important;
+}
