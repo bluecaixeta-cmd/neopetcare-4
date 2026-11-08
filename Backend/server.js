@@ -24,7 +24,37 @@ async function start() {
 
   await applySchema();
 
-  const server = app.listen(
+const adminEmail =
+  String(
+    process.env.ADMIN_EMAIL || ''
+  )
+    .trim()
+    .toLowerCase();
+
+if (adminEmail) {
+  const result =
+    await pool.query(
+      `UPDATE users
+       SET role = 'admin'
+       WHERE LOWER(email) = $1
+       RETURNING id, email, role`,
+      [
+        adminEmail
+      ]
+    );
+
+  if (result.rows[0]) {
+    console.log(
+      'Conta administrativa configurada.'
+    );
+  } else {
+    console.warn(
+      'ADMIN_EMAIL não corresponde a uma conta cadastrada.'
+    );
+  }
+}
+
+const server = app.listen(
     port,
     '0.0.0.0',
     () => {
