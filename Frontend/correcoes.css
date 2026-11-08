@@ -1402,3 +1402,145 @@ footer .newsletter button {
     background-position: 60% center !important;
   }
 }
+
+/* =========================================================
+   ALTO CONTRASTE - REGRA FINAL
+========================================================= */
+
+body.contrast-mode {
+  --navy: #000000;
+  --navy-dark: #000000;
+  --text: #ffffff;
+  --muted: #f1f1f1;
+  --green: #ffbf47;
+  --green-dark: #ffbf47;
+  --border: #777777;
+
+  background: #000000 !important;
+  color: #ffffff !important;
+}
+
+body.contrast-mode .site-header,
+body.contrast-mode .main-nav,
+body.contrast-mode .nav-more-menu {
+  background: #111111 !important;
+  color: #ffffff !important;
+  border-color: #666666 !important;
+}
+
+body.contrast-mode .brand,
+body.contrast-mode .brand small,
+body.contrast-mode .main-nav > a,
+body.contrast-mode .nav-more-toggle {
+  color: #ffffff !important;
+}
+
+body.contrast-mode .contrast-toggle {
+  background: #ffbf47 !important;
+  color: #000000 !important;
+}
+
+body.contrast-mode .hero {
+  background-image:
+    linear-gradient(
+      rgba(0, 0, 0, 0.82),
+      rgba(0, 0, 0, 0.82)
+    ),
+    url("/imagens/hero-pets.jpg.jpeg") !important;
+
+  background-color: #000000 !important;
+  color: #ffffff !important;
+}
+
+body.contrast-mode .about-section,
+body.contrast-mode .adoption-section,
+body.contrast-mode .lost-found,
+body.contrast-mode .testimonials,
+body.contrast-mode .partners,
+body.contrast-mode .events-section,
+body.contrast-mode footer {
+  background: #111111 !important;
+  color: #ffffff !important;
+  border-color: #666666 !important;
+}
+
+body.contrast-mode .section:not(.about-section):not(.adoption-section):not(.lost-found):not(.testimonials):not(.partners):not(.events-section) {
+  background: #000000 !important;
+  color: #ffffff !important;
+  border-color: #666666 !important;
+}
+
+body.contrast-mode .pet-card,
+body.contrast-mode .report-card,
+body.contrast-mode .campaign,
+body.contrast-mode .testimonial,
+body.contrast-mode .wiki-card,
+body.contrast-mode .partner-card,
+body.contrast-mode .partner-form,
+body.contrast-mode .auth-form,
+body.contrast-mode .logged-user,
+body.contrast-mode .modal-box,
+body.contrast-mode .event-card,
+body.contrast-mode .pet-details-group,
+body.contrast-mode .pet-quick-info,
+body.contrast-mode .report-identification {
+  background: #181818 !important;
+  color: #ffffff !important;
+  border-color: #666666 !important;
+}
+
+body.contrast-mode h1,
+body.contrast-mode h2,
+body.contrast-mode h3,
+body.contrast-mode h4,
+body.contrast-mode p,
+body.contrast-mode label,
+body.contrast-mode small,
+body.contrast-mode span {
+  color: #ffffff !important;
+}
+
+body.contrast-mode input,
+body.contrast-mode select,
+body.contrast-mode textarea,
+body.contrast-mode .search-box {
+  background: #111111 !important;
+  color: #ffffff !important;
+  border-color: #888888 !important;
+}
+
+body.contrast-mode input::placeholder,
+body.contrast-mode textarea::placeholder {
+  color: #dddddd !important;
+}
+
+body.contrast-mode .filter,
+body.contrast-mode .lost-filter,
+body.contrast-mode .wiki-filter,
+body.contrast-mode .auth-tab {
+  background: #222222 !important;
+  color: #ffffff !important;
+  border: 1px solid #777777 !important;
+}
+
+body.contrast-mode .filter.active,
+body.contrast-mode .lost-filter.active,
+body.contrast-mode .wiki-filter.active,
+body.contrast-mode .auth-tab.active {
+  background: #ffbf47 !important;
+  color: #000000 !important;
+}
+
+body.contrast-mode .button,
+body.contrast-mode .card-button,
+body.contrast-mode .mini-button,
+body.contrast-mode .newsletter button {
+  background: #ffbf47 !important;
+  color: #000000 !important;
+}
+
+body.contrast-mode .toast,
+body.contrast-mode #neopetcare-toast-message {
+  background: #ffbf47 !important;
+  color: #000000 !important;
+}
