@@ -5700,6 +5700,57 @@ async function initializeMyPublications() {
   await loadMyPublications();
 }
 
+/* =========================================================
+   ABAS - MINHAS PUBLICACOES
+========================================================= */
+
+function setMyPublicationsTab(selectedTab) {
+  const showPets =
+    selectedTab !== 'reports';
+
+  if (myPublicationsPetsPanel) {
+    myPublicationsPetsPanel.hidden =
+      !showPets;
+  }
+
+  if (myPublicationsReportsPanel) {
+    myPublicationsReportsPanel.hidden =
+      showPets;
+  }
+
+  myPublicationsTabs.forEach(
+    (button) => {
+      const isActive =
+        button.dataset.publicationTab ===
+        selectedTab;
+
+      button.classList.toggle(
+        'active',
+        isActive
+      );
+
+      button.setAttribute(
+        'aria-selected',
+        String(isActive)
+      );
+    }
+  );
+}
+
+
+myPublicationsTabs.forEach(
+  (button) => {
+    button.addEventListener(
+      'click',
+      () => {
+        setMyPublicationsTab(
+          button.dataset.publicationTab
+        );
+      }
+    );
+  }
+);
+
 initializeMyPublications();
 
 /* =========================================================
@@ -5809,6 +5860,25 @@ function renderMyPetPublication(pet) {
       `
       : '';
 
+      /* =====================================================
+   ACAO - MARCAR COMO ADOTADO
+===================================================== */
+
+const finishActionHtml =
+  pet.status !== 'adotado'
+    ? `
+      <div class="my-publication-actions">
+
+        <button
+          class="my-publication-finish"
+          type="button"
+        >
+          🏡 Marcar como adotado
+        </button>
+
+      </div>
+    `
+    : '';
 
   const card =
     document.createElement(
@@ -5896,9 +5966,54 @@ function renderMyPetPublication(pet) {
 
       ${reasonHtml}
 
-    </div>
-  `;
+${finishActionHtml}
 
+</div>
+`;
+
+const finishButton =
+  card.querySelector(
+    '.my-publication-finish'
+  );
+
+if (finishButton) {
+  finishButton.addEventListener(
+    'click',
+    async () => {
+      finishButton.disabled = true;
+
+      try {
+        const result =
+          await apiRequest(
+            `/api/my-publications/pets/${encodeURIComponent(
+              String(pet.id)
+            )}/status`,
+            {
+              method: 'PATCH',
+              body: JSON.stringify({})
+            }
+          );
+
+        showToast(
+          result.message ||
+          'Animal marcado como adotado.'
+        );
+
+        await loadMyPublications();
+
+      } catch (error) {
+        showToast(
+          error.message ||
+          'Não foi possível atualizar a publicação.',
+          'error'
+        );
+
+      } finally {
+        finishButton.disabled = false;
+      }
+    }
+  );
+}
 
   myPublicationsPetsGrid.appendChild(
     card
@@ -6009,6 +6124,34 @@ function renderMyReportPublication(report) {
       `
       : '';
 
+/* =====================================================
+   ACAO - ENCERRAR OCORRENCIA
+===================================================== */
+
+const publicationStatus =
+  report.publicationStatus ||
+  'active';
+
+const finishLabel =
+  report.status === 'encontrado'
+    ? '✓ Entregue ao responsável'
+    : '✓ Reencontrado';
+
+const finishActionHtml =
+  publicationStatus === 'active'
+    ? `
+      <div class="my-publication-actions">
+
+        <button
+          class="my-publication-finish"
+          type="button"
+        >
+          ${finishLabel}
+        </button>
+
+      </div>
+    `
+    : '';
 
   const card =
     document.createElement(
@@ -6093,21 +6236,80 @@ function renderMyReportPublication(report) {
 
 
       <div class="my-publication-public-status">
-        ${escapeHtml(
-          reportStatusLabel
-        )}
-      </div>
+  ${escapeHtml(
+    reportStatusLabel
+  )}
+  ·
+  ${publicationStatus === 'resolved'
+    ? 'Resolvida'
+    : 'Ativa'}
+</div>
 
 
       ${reasonHtml}
 
+      ${finishActionHtml}
+
     </div>
-  `;
+    `;
 
 
-  myPublicationsReportsGrid.appendChild(
-    card
+/* =====================================================
+   BOTAO - ENCERRAR OCORRENCIA
+===================================================== */
+
+const finishButton =
+  card.querySelector(
+    '.my-publication-finish'
   );
+
+if (finishButton) {
+  finishButton.addEventListener(
+    'click',
+    async () => {
+
+      finishButton.disabled = true;
+
+      try {
+
+        const result =
+          await apiRequest(
+            `/api/my-publications/reports/${encodeURIComponent(
+              String(report.id)
+            )}/status`,
+            {
+              method: 'PATCH',
+              body: JSON.stringify({})
+            }
+          );
+
+        showToast(
+          result.message ||
+          'Ocorrência encerrada com sucesso.'
+        );
+
+        await loadMyPublications();
+
+      } catch (error) {
+
+        showToast(
+          error.message ||
+          'Não foi possível encerrar a ocorrência.',
+          'error'
+        );
+
+      } finally {
+
+        finishButton.disabled = false;
+      }
+    }
+  );
+}
+
+
+myPublicationsReportsGrid.appendChild(
+  card
+);
 }
 
 /* =========================================================

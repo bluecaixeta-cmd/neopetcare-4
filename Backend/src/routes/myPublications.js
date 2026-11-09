@@ -132,10 +132,13 @@ router.get(
              id,
 
              report_type
-               AS status,
+  AS status,
 
-             pet_name
-               AS name,
+publication_status
+  AS "publicationStatus",
+
+pet_name
+  AS name,
 
              animal_type
                AS animal,
@@ -205,6 +208,382 @@ router.get(
   }
 );
 
+/* =========================================================
+   MARCAR ANIMAL COMO ADOTADO
+
+   PATCH /api/my-publications/pets/:id/status
+========================================================= */
+
+router.patch(
+  '/pets/:id/status',
+  async (req, res, next) => {
+    try {
+      const user =
+        await getAuthenticatedUser(req);
+
+      if (!user) {
+        return res
+          .status(401)
+          .json({
+            error:
+              'Faça login para atualizar esta publicação.'
+          });
+      }
+
+
+      const petId =
+        Number(
+          req.params.id
+        );
+
+
+      if (
+        !Number.isSafeInteger(petId) ||
+        petId <= 0
+      ) {
+        return res
+          .status(400)
+          .json({
+            error:
+              'Identificador do animal inválido.'
+          });
+      }
+
+
+      /*
+       * O user_id da sessão é usado na consulta.
+       * Assim, uma pessoa não consegue alterar
+       * uma publicação pertencente a outra conta.
+       */
+      const result =
+        await pool.query(
+          `UPDATE pets
+
+           SET
+             adoption_status = 'adotado',
+             updated_at = NOW()
+
+           WHERE id = $1
+             AND user_id = $2
+
+           RETURNING
+             id,
+             name,
+
+             adoption_status
+               AS status,
+
+             updated_at
+               AS "updatedAt"`,
+          [
+            petId,
+            user.id
+          ]
+        );
+
+
+      if (!result.rows[0]) {
+        return res
+          .status(404)
+          .json({
+            error:
+              'Animal não encontrado ou publicação sem autorização.'
+          });
+      }
+
+
+      return res.json({
+        pet:
+          result.rows[0],
+
+        message:
+          'Animal marcado como adotado.'
+      });
+
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+/* =========================================================
+   ENCERRAR OCORRENCIA
+
+   PATCH /api/my-publications/reports/:id/status
+========================================================= */
+
+router.patch(
+  '/reports/:id/status',
+  async (req, res, next) => {
+    try {
+      const user =
+        await getAuthenticatedUser(req);
+
+      if (!user) {
+        return res
+          .status(401)
+          .json({
+            error:
+              'Faça login para atualizar esta publicação.'
+          });
+      }
+
+
+      const reportId =
+        Number(
+          req.params.id
+        );
+
+
+      if (
+        !Number.isSafeInteger(reportId) ||
+        reportId <= 0
+      ) {
+        return res
+          .status(400)
+          .json({
+            error:
+              'Identificador da ocorrência inválido.'
+          });
+      }
+
+
+      /*
+       * A ocorrência só será atualizada se
+       * pertencer ao usuário da sessão atual.
+       */
+      const result =
+        await pool.query(
+          `UPDATE reports
+
+           SET
+             publication_status = 'resolved'
+
+           WHERE id = $1
+             AND user_id = $2
+
+           RETURNING
+             id,
+
+             pet_name
+               AS name,
+
+             report_type
+               AS status,
+
+             publication_status
+               AS "publicationStatus",
+
+             created_at
+               AS "createdAt"`,
+          [
+            reportId,
+            user.id
+          ]
+        );
+
+
+      if (!result.rows[0]) {
+        return res
+          .status(404)
+          .json({
+            error:
+              'Ocorrência não encontrada ou publicação sem autorização.'
+          });
+      }
+
+
+      const report =
+        result.rows[0];
+
+
+      const resolvedMessage =
+        report.status === 'perdido'
+          ? 'Ocorrência encerrada como animal reencontrado.'
+          : 'Ocorrência encerrada como animal entregue ao responsável.';
+
+
+      return res.json({
+        report,
+
+        message:
+          resolvedMessage
+      });
+
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+/* =========================================================
+EXCLUIR MEU ANIMAL
+ 
+DELETE /api/my-publications/pets/:id
+========================================================= */
+ 
+router.delete(
+'/pets/:id',
+async (req, res, next) => {
+try {
+const user =
+await getAuthenticatedUser(req);
+ 
+if (!user) {
+return res
+.status(401)
+.json({
+error:
+'Faça login para excluir esta publicação.'
+});
+}
+ 
+const petId =
+Number(
+req.params.id
+);
+ 
+if (
+!Number.isSafeInteger(petId) ||
+petId <= 0
+) {
+return res
+.status(400)
+.json({
+error:
+'Identificador do animal inválido.'
+});
+}
+ 
+/*
+* Só exclui se o animal pertencer
+* ao usuário da sessão atual.
+*/
+const result =
+await pool.query(
+`DELETE FROM pets
+ 
+WHERE id = $1
+AND user_id = $2
+ 
+RETURNING
+id,
+name`,
+[
+petId,
+user.id
+]
+);
+ 
+if (!result.rows[0]) {
+return res
+.status(404)
+.json({
+error:
+'Animal não encontrado ou publicação sem autorização.'
+});
+}
+ 
+return res.json({
+pet:
+result.rows[0],
+ 
+message:
+'Publicação do animal excluída com sucesso.'
+});
+ 
+} catch (error) {
+next(error);
+}
+}
+);
+
+/* =========================================================
+   EXCLUIR MINHA OCORRENCIA
+
+   DELETE /api/my-publications/reports/:id
+========================================================= */
+
+router.delete(
+  '/reports/:id',
+  async (req, res, next) => {
+    try {
+      const user =
+        await getAuthenticatedUser(req);
+
+      if (!user) {
+        return res
+          .status(401)
+          .json({
+            error:
+              'Faça login para excluir esta publicação.'
+          });
+      }
+
+      const reportId =
+        Number(
+          req.params.id
+        );
+
+      if (
+        !Number.isSafeInteger(reportId) ||
+        reportId <= 0
+      ) {
+        return res
+          .status(400)
+          .json({
+            error:
+              'Identificador da ocorrência inválido.'
+          });
+      }
+
+      /*
+       * Só exclui se a ocorrência pertencer
+       * ao usuário da sessão atual.
+       */
+      const result =
+        await pool.query(
+          `DELETE FROM reports
+
+           WHERE id = $1
+             AND user_id = $2
+
+           RETURNING
+             id,
+
+             pet_name
+               AS name,
+
+             report_type
+               AS status`,
+          [
+            reportId,
+            user.id
+          ]
+        );
+
+      if (!result.rows[0]) {
+        return res
+          .status(404)
+          .json({
+            error:
+              'Ocorrência não encontrada ou publicação sem autorização.'
+          });
+      }
+
+      return res.json({
+        report:
+          result.rows[0],
+
+        message:
+          'Ocorrência excluída com sucesso.'
+      });
+
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 export default router;
 

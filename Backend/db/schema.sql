@@ -359,3 +359,98 @@ $$;
 
 CREATE INDEX IF NOT EXISTS idx_reports_user_id
 ON reports(user_id);
+
+/* =========================================================
+   STATUS DAS OCORRENCIAS
+========================================================= */
+
+ALTER TABLE reports
+ADD COLUMN IF NOT EXISTS publication_status VARCHAR(20);
+
+UPDATE reports
+SET publication_status = 'active'
+WHERE publication_status IS NULL;
+
+ALTER TABLE reports
+ALTER COLUMN publication_status
+SET DEFAULT 'active';
+
+ALTER TABLE reports
+ALTER COLUMN publication_status
+SET NOT NULL;
+
+
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1
+        FROM pg_constraint
+        WHERE conname = 'reports_publication_status_check'
+          AND conrelid = 'reports'::regclass
+    ) THEN
+        ALTER TABLE reports
+        ADD CONSTRAINT reports_publication_status_check
+        CHECK (
+            publication_status IN (
+                'active',
+                'resolved'
+            )
+        );
+    END IF;
+END
+$$;
+
+
+CREATE INDEX IF NOT EXISTS idx_reports_publication_status
+ON reports(publication_status);
+
+/* =========================================================
+   STATUS DAS OCORRENCIAS
+========================================================= */
+
+ALTER TABLE reports
+ADD CO*UMN IF NOT EXISTS publication_status VARCHAR(20);
+
+UPDATE reports
+SET publication_status = 'active'
+WHERE publication_status IS NULL;
+
+ALTER TABLE reports
+ALTER COLUMN publication_status
+SET DEFAULT 'active';
+
+ALTER TABLE reports
+ALTER COLUMN publication_status
+SET NOT NULL;
+
+
+/* =========================================================
+   VALIDAR STATUS DAS OCORRENCIAS
+========================================================= */
+
+DO $$
+BEGIN
+    IF NOT EXISTS (*        SELECT 1
+        FROM pg_c*nstraint
+        WHERE conname = '*eports_publication_status_check'
+ *        AND conrelid = 'reports'::*egclass
+    ) THEN
+        ALTER TABLE reports
+        ADD CONSTRAINT reports_publication_status_check
+        CHECK (
+            publication_status IN (
+                'active',
+                'resolved'
+            )
+        );
+    END IF;
+END
+$$;
+
+
+/* =========================================================
+   INDICE DO STATUS
+========================================================= */
+
+CREATE INDEX IF NOT EXISTS idx_*eports_publication_status
+ON repor*s(publication_status);
