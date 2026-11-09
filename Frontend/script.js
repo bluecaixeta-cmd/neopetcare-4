@@ -6137,21 +6137,38 @@ const finishLabel =
     ? '✓ Entregue ao responsável'
     : '✓ Reencontrado';
 
-const finishActionHtml =
-  publicationStatus === 'active'
-    ? `
-      <div class="my-publication-actions">
+const finishActionHtml = `
+  <div class="my-publication-actions">
 
-        <button
-          class="my-publication-finish"
-          type="button"
-        >
-          ${finishLabel}
-        </button>
+    <button
+      class="my-publication-edit"
+      type="button"
+    >
+      ✏️ Editar
+    </button>
 
-      </div>
-    `
-    : '';
+    ${
+      publicationStatus === 'active'
+        ? `
+          <button
+            class="my-publication-finish"
+            type="button"
+          >
+            ${finishLabel}
+          </button>
+        `
+        : ''
+    }
+
+    <button
+      class="my-publication-delete"
+      type="button"
+    >
+      🗑 Excluir
+    </button>
+
+  </div>
+`;
 
   const card =
     document.createElement(
@@ -6310,6 +6327,67 @@ if (finishButton) {
 myPublicationsReportsGrid.appendChild(
   card
 );
+}
+
+/* =====================================================
+   BOTAO - EXCLUIR OCORRENCIA
+===================================================== */
+
+const deleteButton =
+  card.querySelector(
+    '.my-publication-delete'
+  );
+
+if (deleteButton) {
+  deleteButton.addEventListener(
+    'click',
+    async () => {
+
+      const confirmed =
+        window.confirm(
+          `Tem certeza de que deseja excluir a ocorrência de ${report.name || 'este animal'}?`
+        );
+
+      if (!confirmed) {
+        return;
+      }
+
+      deleteButton.disabled = true;
+
+      try {
+
+        const result =
+          await apiRequest(
+            `/api/my-publications/reports/${encodeURIComponent(
+              String(report.id)
+            )}`,
+            {
+              method: 'DELETE',
+              body: JSON.stringify({})
+            }
+          );
+
+        showToast(
+          result.message ||
+          'Ocorrência excluída com sucesso.'
+        );
+
+        await loadMyPublications();
+
+      } catch (error) {
+
+        showToast(
+          error.message ||
+          'Não foi possível excluir a ocorrência.',
+          'error'
+        );
+
+      } finally {
+
+        deleteButton.disabled = false;
+      }
+    }
+  );
 }
 
 /* =========================================================
