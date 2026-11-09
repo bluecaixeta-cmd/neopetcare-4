@@ -2573,6 +2573,56 @@ footer a:hover {
   color: white;
 }
 
+/* =========================================================
+   MODAL DE DOACAO - VALORES
+========================================================= */
+
+.amounts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 20px 0;
+  width: 100%;
+}
+
+.amounts button {
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 10px;
+
+  border: 2px solid #d7ebe5;
+  border-radius: 10px;
+
+  background: #edf7f4;
+  color: var(--green-dark);
+
+  font-size: 15px;
+  font-weight: 800;
+
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.amounts button:hover,
+.amounts button.selected {
+  border-color: var(--green);
+  background: var(--green);
+  color: #ffffff;
+}
+
+.amounts button:focus-visible {
+  outline: 3px solid rgba(20, 190, 110, 0.3);
+  outline-offset: 2px;
+}
+
+.modal-box .full-button {
+  width: 100%;
+  min-height: 52px;
+}
 
 /* =========================================================
    FORMULÁRIOS DE MODAIS

@@ -3,6 +3,7 @@ import { Router } from 'express';
 import { pool } from '../database.js';
 
 import {
+  cleanText,
   hashToken
 } from '../security.js';
 

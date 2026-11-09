@@ -953,6 +953,7 @@ const petRegisterPhotoPreview =
   );
 
 let petRegisterPhotoData = '';
+let editingPetId = null;
 
 
 /* =========================================================
@@ -986,6 +987,72 @@ function openPetRegisterModal() {
   );
 }
 
+function openPetEditModal(pet) {
+  if (
+    !petRegisterForm ||
+    !pet
+  ) {
+    return;
+  }
+
+  editingPetId = pet.id;
+
+  const values = {
+    name: pet.name,
+    species: pet.species,
+    breed: pet.breed,
+    color: pet.color,
+    sex: pet.sex,
+    age: pet.age,
+    size: pet.size,
+    weight: pet.weight,
+    identification: pet.identification,
+    location: pet.location,
+    vaccination: pet.vaccination,
+    deworming: pet.deworming,
+    neutering: pet.neutering,
+    microchip: pet.microchip,
+    specialNeeds: pet.specialNeeds,
+    livesWithDogs: pet.livesWithDogs,
+    livesWithCats: pet.livesWithCats,
+    livesWithChildren: pet.livesWithChildren,
+    temperament: pet.temperament,
+    guardian: pet.guardian,
+    story: pet.story,
+    status: pet.status
+  };
+
+  Object.entries(values)
+    .forEach(
+      ([name, value]) => {
+        const field =
+          petRegisterForm.elements[name];
+
+        if (field) {
+          field.value =
+            value ?? '';
+        }
+      }
+    );
+
+  petRegisterPhotoData =
+    typeof pet.photo === 'string'
+      ? pet.photo
+      : '';
+
+  if (
+    petRegisterPhotoPreview &&
+    petRegisterPhotoData
+  ) {
+    petRegisterPhotoPreview.src =
+      petRegisterPhotoData;
+
+    petRegisterPhotoPreview.hidden =
+      false;
+  }
+
+  openPetRegisterModal();
+}
 
 /* =========================================================
    FECHAR FORMULÁRIO
@@ -1004,6 +1071,8 @@ function closePetRegisterModal() {
     'aria-hidden',
     'true'
   );
+
+  editingPetId = null;
 }
 
 
@@ -1244,24 +1313,44 @@ if (petRegisterForm) {
         submitButton?.textContent;
 
       if (submitButton) {
-        submitButton.disabled = true;
-        submitButton.textContent =
-          'Cadastrando animal...';
-      }
+  submitButton.disabled = true;
+
+  submitButton.textContent =
+    editingPetId
+      ? 'Salvando alterações...'
+      : 'Cadastrando animal...';
+}
 
       try {
-        const result =
-          await apiRequest(
-            '/api/pets',
-            {
-              method: 'POST',
+        const isEditing =
+  Number.isSafeInteger(
+    Number(editingPetId)
+  );
 
-              body:
-                JSON.stringify(
-                  pet
-                )
-            }
-          );
+const endpoint =
+  isEditing
+    ? `/api/my-publications/pets/${encodeURIComponent(
+        String(editingPetId)
+      )}`
+    : '/api/pets';
+
+const method =
+  isEditing
+    ? 'PATCH'
+    : 'POST';
+
+const result =
+  await apiRequest(
+    endpoint,
+    {
+      method,
+
+      body:
+        JSON.stringify(
+          pet
+        )
+    }
+  );
 
          if (!result.pet) {
             throw new Error(
@@ -1269,37 +1358,62 @@ if (petRegisterForm) {
           );
         }
 
-        if (result.pet.imageStatus === 'approved') {
-  renderPetCard(result.pet);
-}
+        if (isEditing) {
 
-        petRegisterForm.reset();
+  await loadMyPublications();
 
-        clearPetRegisterPhoto();
-
-        closePetRegisterModal();
-
-        if (result.pet.imageStatus === 'pending') {
   showToast(
-    `${result.pet.name} foi cadastrado. A foto está aguardando análise.`
+    `${result.pet.name} foi atualizado com sucesso!`
   );
+
 } else {
-  showToast(
-    `${result.pet.name} foi cadastrado com sucesso!`
-  );
+
+  if (
+    result.pet.imageStatus === 'approved'
+  ) {
+    renderPetCard(
+      result.pet
+    );
+  }
+
+  if (
+    result.pet.imageStatus === 'pending'
+  ) {
+    showToast(
+      `${result.pet.name} foi cadastrado. A foto está aguardando análise.`
+    );
+  } else {
+    showToast(
+      `${result.pet.name} foi cadastrado com sucesso!`
+    );
+  }
 }
+
+petRegisterForm.reset();
+
+clearPetRegisterPhoto();
+
+editingPetId = null;
+
+closePetRegisterModal();
 
       } catch (error) {
         console.error(
-          'Erro ao cadastrar animal:',
-          error
-        );
+  editingPetId
+    ? 'Erro ao editar animal:'
+    : 'Erro ao cadastrar animal:',
+  error
+);
 
         showToast(
-          error.message ||
-          'Não foi possível cadastrar o animal.',
-          'error'
-        );
+  error.message ||
+    (
+      editingPetId
+        ? 'Não foi possível editar o animal.'
+        : 'Não foi possível cadastrar o animal.'
+    ),
+  'error'
+);
 
       } finally {
         if (submitButton) {
@@ -2589,6 +2703,7 @@ const reportPhotoPreview =
   );
 
 let reportPhotoData = '';
+let editingReportId = null;
 
 
 function clearReportPhoto() {
@@ -2757,6 +2872,69 @@ function openReportModal() {
   );
 }
 
+function openReportEditModal(report) {
+  if (
+    !reportForm ||
+    !report
+  ) {
+    return;
+  }
+
+  editingReportId =
+    report.id;
+
+  selectedReportStatus =
+    report.status === 'encontrado'
+      ? 'encontrado'
+      : 'perdido';
+
+  const values = {
+    name: report.name,
+    animal: report.animal,
+    breed: report.breed,
+    color: report.color,
+    sex: report.sex,
+    age: report.age,
+    size: report.size,
+    identification:
+      report.identification,
+    microchip:
+      report.microchip,
+    neutering:
+      report.neutering,
+    distinctiveFeatures:
+      report.distinctiveFeatures,
+    date:
+      report.date,
+    location:
+      report.location,
+    contact:
+      report.contact,
+    description:
+      report.description
+  };
+
+  Object.entries(values)
+    .forEach(
+      ([name, value]) => {
+        const field =
+          reportForm.elements[name];
+
+        if (field) {
+          field.value =
+            value ?? '';
+        }
+      }
+    );
+
+  reportPhotoData =
+    typeof report.photo === 'string'
+      ? report.photo
+      : '';
+
+  openReportModal();
+}
+
 function closeReportModal() {
 
   if (!reportModal) {
@@ -2771,6 +2949,8 @@ function closeReportModal() {
     'aria-hidden',
     'true'
   );
+
+  editingReportId = null;
 }
 
 document
@@ -3563,12 +3743,14 @@ if (reportForm) {
       const originalButtonText =
         submitButton?.textContent;
 
-      if (submitButton) {
-        submitButton.disabled = true;
+     if (submitButton) {
+  submitButton.disabled = true;
 
-        submitButton.textContent =
-          'Publicando...';
-      }
+  submitButton.textContent =
+    editingReportId
+      ? 'Salvando alterações...'
+      : 'Publicando...';
+}
 
 
       /* =====================================================
@@ -3577,36 +3759,76 @@ if (reportForm) {
 
       try {
 
-        const result =
-          await apiRequest(
-            '/api/reports',
-            {
-              method: 'POST',
+        const isEditing =
+  Number.isSafeInteger(
+    Number(editingReportId)
+  );
 
-              body:
-                JSON.stringify(
-                  report
-                )
-            }
-          );
+const endpoint =
+  isEditing
+    ? `/api/my-publications/reports/${encodeURIComponent(
+        String(editingReportId)
+      )}`
+    : '/api/reports';
 
+const method =
+  isEditing
+    ? 'PATCH'
+    : 'POST';
+
+const result =
+  await apiRequest(
+    endpoint,
+    {
+      method,
+
+      body:
+        JSON.stringify(
+          report
+        )
+    }
+  );
 
         /* ===================================================
            MOSTRAR NOVA OCORRÊNCIA
         =================================================== */
 
-        if (result.report) {
-
-          if (
-  result.report &&
-  result.report.imageStatus === 'approved'
-) {
-  renderReport(
-    result.report
+        if (!result.report) {
+  throw new Error(
+    'O servidor não retornou a ocorrência.'
   );
 }
 
-        }
+if (isEditing) {
+
+  await loadMyPublications();
+
+  showToast(
+    `${result.report.name} foi atualizado com sucesso!`
+  );
+
+} else {
+
+  if (
+    result.report.imageStatus === 'approved'
+  ) {
+    renderReport(
+      result.report
+    );
+  }
+
+  if (
+    result.report.imageStatus === 'pending'
+  ) {
+    showToast(
+      `${result.report.name} foi cadastrado. A foto está aguardando análise.`
+    );
+  } else {
+    showToast(
+      `${result.report.name} foi publicado com sucesso!`
+    );
+  }
+}
 
 
         /* ===================================================
@@ -3616,6 +3838,8 @@ if (reportForm) {
         reportForm.reset();
 
         clearReportPhoto();
+
+        editingReportId = null;
 
 
         /* ===================================================
@@ -5864,21 +6088,38 @@ function renderMyPetPublication(pet) {
    ACAO - MARCAR COMO ADOTADO
 ===================================================== */
 
-const finishActionHtml =
-  pet.status !== 'adotado'
-    ? `
-      <div class="my-publication-actions">
+const finishActionHtml = `
+  <div class="my-publication-actions">
 
-        <button
-          class="my-publication-finish"
-          type="button"
-        >
-          🏡 Marcar como adotado
-        </button>
+    <button
+      class="my-publication-edit"
+      type="button"
+    >
+      ✏️ Editar
+    </button>
 
-      </div>
-    `
-    : '';
+    ${
+      pet.status !== 'adotado'
+        ? `
+          <button
+            class="my-publication-finish"
+            type="button"
+          >
+            🏡 Marcar como adotado
+          </button>
+        `
+        : ''
+    }
+
+    <button
+      class="my-publication-delete"
+      type="button"
+    >
+      🗑 Excluir
+    </button>
+
+  </div>
+`;
 
   const card =
     document.createElement(
@@ -5971,6 +6212,24 @@ ${finishActionHtml}
 </div>
 `;
 
+/* =====================================================
+   BOTAO - EDITAR ANIMAL
+===================================================== */
+
+const editButton =
+  card.querySelector(
+    '.my-publication-edit'
+  );
+
+if (editButton) {
+  editButton.addEventListener(
+    'click',
+    () => {
+      openPetEditModal(pet);
+    }
+  );
+}
+
 const finishButton =
   card.querySelector(
     '.my-publication-finish'
@@ -6010,6 +6269,64 @@ if (finishButton) {
 
       } finally {
         finishButton.disabled = false;
+      }
+    }
+  );
+}
+
+/* =====================================================
+   BOTAO - EXCLUIR ANIMAL
+===================================================== */
+
+const deleteButton =
+  card.querySelector(
+    '.my-publication-delete'
+  );
+
+if (deleteButton) {
+  deleteButton.addEventListener(
+    'click',
+    async () => {
+
+      const confirmed =
+        window.confirm(
+          `Tem certeza de que deseja excluir a publicação de ${pet.name || 'este animal'}?`
+        );
+
+      if (!confirmed) {
+        return;
+      }
+
+      deleteButton.disabled = true;
+
+      try {
+        const result =
+          await apiRequest(
+            `/api/my-publications/pets/${encodeURIComponent(
+              String(pet.id)
+            )}`,
+            {
+              method: 'DELETE',
+              body: JSON.stringify({})
+            }
+          );
+
+        showToast(
+          result.message ||
+          'Publicação excluída com sucesso.'
+        );
+
+        await loadMyPublications();
+
+      } catch (error) {
+        showToast(
+          error.message ||
+          'Não foi possível excluir a publicação.',
+          'error'
+        );
+
+      } finally {
+        deleteButton.disabled = false;
       }
     }
   );
@@ -6274,6 +6591,25 @@ const finishActionHtml = `
 /* =====================================================
    BOTAO - ENCERRAR OCORRENCIA
 ===================================================== */
+/* =====================================================
+   BOTAO - EDITAR OCORRENCIA
+===================================================== */
+
+const editButton =
+  card.que*ySelector(
+    '.my-publication-ed*t'
+  );
+
+if (editButton) {
+  editButton.addEventListener(
+    'click',
+    () => {
+      openReportEditModal(
+        report
+      );
+    }
+  );
+}
 
 const finishButton =
   card.querySelector(
