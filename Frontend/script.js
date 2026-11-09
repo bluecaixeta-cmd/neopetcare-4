@@ -5676,6 +5676,33 @@ async function loadMyPublications() {
 }
 
 /* =========================================================
+   INICIALIZAR MINHAS PUBLICACOES
+========================================================= */
+
+async function initializeMyPublications() {
+  if (!myPublicationsSection) {
+    return;
+  }
+
+  myPublicationsSection.hidden = true;
+
+  setMyPublicationsTab(
+    'pets'
+  );
+
+  const savedUser =
+    getSavedUser();
+
+  if (!savedUser) {
+    return;
+  }
+
+  await loadMyPublications();
+}
+
+initializeMyPublications();
+
+/* =========================================================
    CARD - MEU ANIMAL
 ========================================================= */
 
@@ -6082,8 +6109,6 @@ function renderMyReportPublication(report) {
     card
   );
 }
-
-initializeMyPublications();
 
 /* =========================================================
    INICIALIZAÇÃO FINAL
