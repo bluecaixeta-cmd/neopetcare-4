@@ -6643,7 +6643,7 @@ if (finishButton) {
 
         await loadMyPublications();
 
-      } catch (error) {
+            } catch (error) {
 
         showToast(
           error.message ||
@@ -6651,8 +6651,9 @@ if (finishButton) {
           'error'
         );
 
-            } finally {
-        deleteButton.disabled = false;
+      } finally {
+
+        finishButton.disabled = false;
       }
     }
   );
@@ -6661,67 +6662,6 @@ if (finishButton) {
 myPublicationsReportsGrid.appendChild(
   card
 );
-}
-
-/* =========================================================
-   INICIALIZAÇÃO FINAL
-========================================================= */
-
-const deleteButton =
-  card.querySelector(
-    '.my-publication-delete'
-  );
-
-if (deleteButton) {
-  deleteButton.addEventListener(
-    'click',
-    async () => {
-
-      const confirmed =
-        window.confirm(
-          `Tem certeza de que deseja excluir a ocorrência de ${report.name || 'este animal'}?`
-        );
-
-      if (!confirmed) {
-        return;
-      }
-
-      deleteButton.disabled = true;
-
-      try {
-
-        const result =
-          await apiRequest(
-            `/api/my-publications/reports/${encodeURIComponent(
-              String(report.id)
-            )}`,
-            {
-              method: 'DELETE',
-              body: JSON.stringify({})
-            }
-          );
-
-        showToast(
-          result.message ||
-          'Ocorrência excluída com sucesso.'
-        );
-
-        await loadMyPublications();
-
-      } catch (error) {
-
-        showToast(
-          error.message ||
-          'Não foi possível excluir a ocorrência.',
-          'error'
-        );
-
-      } finally {
-
-        deleteButton.disabled = false;
-      }
-    }
-  );
 }
 
 /* =========================================================
