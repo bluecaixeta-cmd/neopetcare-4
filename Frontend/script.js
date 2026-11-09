@@ -1345,15 +1345,21 @@ if (petRegisterForm) {
 }
 
       try {
-        const isEditing =
+        const parsedEditingPetId =
+  Number(editingPetId);
+
+const isEditing =
+  editingPetId !== null &&
+  editingPetId !== '' &&
   Number.isSafeInteger(
-    Number(editingPetId)
-  );
+    parsedEditingPetId
+  ) &&
+  parsedEditingPetId > 0;
 
 const endpoint =
   isEditing
     ? `/api/my-publications/pets/${encodeURIComponent(
-        String(editingPetId)
+        String(parsedEditingPetId)
       )}`
     : '/api/pets';
 
@@ -3782,15 +3788,21 @@ if (reportForm) {
 
       try {
 
-        const isEditing =
+        const parsedEditingReportId =
+  Number(editingReportId);
+
+const isEditing =
+  editingReportId !== null &&
+  editingReportId !== '' &&
   Number.isSafeInteger(
-    Number(editingReportId)
-  );
+    parsedEditingReportId
+  ) &&
+  parsedEditingReportId > 0;
 
 const endpoint =
   isEditing
     ? `/api/my-publications/reports/${encodeURIComponent(
-        String(editingReportId)
+        String(parsedEditingReportId)
       )}`
     : '/api/reports';
 
