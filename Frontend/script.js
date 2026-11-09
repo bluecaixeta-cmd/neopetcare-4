@@ -6596,8 +6596,8 @@ const finishActionHtml = `
 ===================================================== */
 
 const editButton =
-  card.que*ySelector(
-    '.my-publication-ed*t'
+  card.querySelector(
+    '.my-publication-edit'
   );
 
 if (editButton) {
