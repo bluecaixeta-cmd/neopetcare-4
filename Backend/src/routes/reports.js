@@ -1,9 +1,43 @@
 import { Router } from 'express';
 import { pool } from '../database.js';
-import { cleanText } from '../security.js';
+import {
+  cleanText,
+  hashToken
+} from '../security.js';
 
 const router = Router();
 
+/* =========================================================
+   IDENTIFICAR USUARIO LOGADO
+========================================================= */
+
+async function getAuthenticatedUser(req) {
+  const token =
+    req.cookies?.sid;
+
+  if (!token) {
+    return null;
+  }
+
+  const result =
+    await pool.query(
+      `SELECT
+         users.id,
+         users.name,
+         users.email
+       FROM sessions
+       INNER JOIN users
+         ON users.id = sessions.user_id
+       WHERE sessions.token_hash = $1
+         AND sessions.expires_at > NOW()
+       LIMIT 1`,
+      [
+        hashToken(token)
+      ]
+    );
+
+  return result.rows[0] || null;
+}
 
 /* =========================================================
    LISTAR ACHADOS E PERDIDOS
@@ -76,6 +110,17 @@ router.post(
   '/',
   async (req, res, next) => {
     try {
+      const user =
+        await getAuthenticatedUser(req);
+
+      if (!user) {
+        return res
+          .status(401)
+          .json({
+            error:
+              'Faça login para publicar uma ocorrência.'
+          });
+      }
 
       /* =====================================================
          LIMPAR DADOS RECEBIDOS
@@ -265,9 +310,10 @@ const imageStatus =
        event_date,
 
        description,
-       contact,
-       photo,
-       image_status
+contact,
+photo,
+image_status,
+user_id
      )
 
      VALUES
@@ -289,11 +335,14 @@ const imageStatus =
        $15,
        $16,
        $17,
-       $18
+       $18,
+       $19
      )
 
      RETURNING
        id,
+
+       user_id AS "userId",
 
        report_type AS status,
        pet_name AS name,
@@ -351,9 +400,11 @@ const imageStatus =
 
       report.contact || null,
 
-      report.photo || null,
+report.photo || null,
 
-      imageStatus
+imageStatus,
+
+user.id
     ]
   );
 

@@ -1362,6 +1362,216 @@
 
     </section>
 
+        <!-- =====================================================
+         MINHAS PUBLICACOES
+    ====================================================== -->
+
+    <section
+      class="my-publications-section section"
+      id="minhas-publicacoes"
+      hidden
+    >
+
+      <div class="section-heading">
+
+        <div>
+          <p class="eyebrow">
+            Minha conta
+          </p>
+
+          <h2>
+            Minhas publicações
+          </h2>
+
+          <p>
+            Acompanhe os animais e ocorrências
+            publicados por você.
+          </p>
+        </div>
+
+        <button
+          class="button button-small"
+          id="my-publications-refresh"
+          type="button"
+        >
+          ↻ Atualizar
+        </button>
+
+      </div>
+
+
+      <!-- =================================================
+           ABAS
+      ================================================== -->
+
+      <div
+        class="my-publications-tabs"
+        role="tablist"
+        aria-label="Tipos de publicação"
+      >
+
+        <button
+          class="my-publications-tab active"
+          id="my-publications-pets-tab"
+          type="button"
+          role="tab"
+          aria-selected="true"
+          aria-controls="my-publications-pets"
+          data-publication-tab="pets"
+        >
+          🐾 Meus animais
+
+          <span
+            class="my-publications-count"
+            id="my-publications-pets-count"
+          >
+            0
+          </span>
+        </button>
+
+
+        <button
+          class="my-publications-tab"
+          id="my-publications-reports-tab"
+          type="button"
+          role="tab"
+          aria-selected="false"
+          aria-controls="my-publications-reports"
+          data-publication-tab="reports"
+        >
+          🔎 Minhas ocorrências
+
+          <span
+            class="my-publications-count"
+            id="my-publications-reports-count"
+          >
+            0
+          </span>
+        </button>
+
+      </div>
+
+
+      <!-- =================================================
+           CARREGAMENTO
+      ================================================== -->
+
+      <div
+        class="my-publications-loading"
+        id="my-publications-loading"
+        hidden
+      >
+        <span>⏳</span>
+
+        <p>
+          Carregando suas publicações...
+        </p>
+      </div>
+
+
+      <!-- =================================================
+           MEUS ANIMAIS
+      ================================================== -->
+
+      <div
+        class="my-publications-panel"
+        id="my-publications-pets"
+        role="tabpanel"
+        aria-labelledby="my-publications-pets-tab"
+      >
+
+        <div
+          class="my-publications-grid"
+          id="my-publications-pets-grid"
+        ></div>
+
+
+        <div
+          class="my-publications-empty"
+          id="my-publications-pets-empty"
+          hidden
+        >
+          <span>🐾</span>
+
+          <h3>
+            Você ainda não cadastrou animais
+          </h3>
+
+          <p>
+            Quando você cadastrar um animal para adoção,
+            ele aparecerá aqui.
+          </p>
+
+          <a
+            class="button button-small"
+            href="#adote"
+          >
+            Cadastrar animal
+          </a>
+        </div>
+
+      </div>
+
+
+      <!-- =================================================
+           MINHAS OCORRENCIAS
+      ================================================== -->
+
+      <div
+        class="my-publications-panel"
+        id="my-publications-reports"
+        role="tabpanel"
+        aria-labelledby="my-publications-reports-tab"
+        hidden
+      >
+
+        <div
+          class="my-publications-grid"
+          id="my-publications-reports-grid"
+        ></div>
+
+
+        <div
+          class="my-publications-empty"
+          id="my-publications-reports-empty"
+          hidden
+        >
+          <span>🔎</span>
+
+          <h3>
+            Você ainda não publicou ocorrências
+          </h3>
+
+          <p>
+            Animais perdidos ou encontrados publicados
+            por você aparecerão aqui.
+          </p>
+
+          <button
+            class="button button-small open-report"
+            type="button"
+          >
+            Publicar ocorrência
+          </button>
+        </div>
+
+      </div>
+
+
+      <!-- =================================================
+           ERRO
+      ================================================== -->
+
+      <div
+        class="my-publications-error"
+        id="my-publications-error"
+        role="alert"
+        hidden
+      >
+        Não foi possível carregar suas publicações.
+      </div>
+
+    </section>
 
     <!-- =====================================================
          MODAL DE DECISAO DA MODERACAO

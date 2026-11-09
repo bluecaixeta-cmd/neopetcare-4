@@ -2358,3 +2358,635 @@ body.contrast-mode #neopetcare-toast-message {
   }
 
 }
+
+/* =========================================================
+   MINHAS PUBLICACOES
+========================================================= */
+
+.my-publications-section {
+  background: #f6f9fb;
+}
+
+
+/* =========================================================
+   CABECALHO
+========================================================= */
+
+.my-publications-section .section-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+
+/* =========================================================
+   ABAS
+========================================================= */
+
+.my-publications-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+
+  margin: 26px 0 24px;
+
+  padding: 6px;
+
+  background: #eaf1f5;
+
+  border-radius: 14px;
+}
+
+
+.my-publications-tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+
+  min-height: 44px;
+
+  padding: 10px 18px;
+
+  background: transparent;
+  color: #073b5c;
+
+  border: none;
+  border-radius: 10px;
+
+  font: inherit;
+  font-size: 14px;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+
+.my-publications-tab:hover {
+  background: rgba(255, 255, 255, 0.7);
+}
+
+
+.my-publications-tab.active {
+  background: #ffffff;
+  color: #073b5c;
+
+  box-shadow:
+    0 4px 14px rgba(7, 59, 92, 0.1);
+}
+
+
+/* =========================================================
+   CONTADORES NAS ABAS
+========================================================= */
+
+.my-publications-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 26px;
+  height: 26px;
+
+  padding: 0 7px;
+
+  background: #d7e4ea;
+  color: #073b5c;
+
+  border-radius: 999px;
+
+  font-size: 12px;
+  font-weight: 800;
+}
+
+
+.my-publications-tab.active
+.my-publications-count {
+  background: #17a968;
+  color: #ffffff;
+}
+
+
+/* =========================================================
+   PAINEIS
+========================================================= */
+
+.my-publications-panel {
+  width: 100%;
+}
+
+
+/* =========================================================
+   GRADE
+========================================================= */
+
+.my-publications-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(280px, 1fr)
+    );
+
+  gap: 20px;
+}
+
+
+/* =========================================================
+   CARD
+========================================================= */
+
+.my-publication-card {
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;
+
+  background: #ffffff;
+
+  border: 1px solid #dbe5ea;
+  border-radius: 18px;
+
+  box-shadow:
+    0 8px 26px rgba(7, 59, 92, 0.08);
+}
+
+
+/* =========================================================
+   FOTO
+========================================================= */
+
+.my-publication-photo {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+
+  aspect-ratio: 4 / 3;
+
+  overflow: hidden;
+
+  background: #e8f0f4;
+}
+
+
+.my-publication-photo img {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+}
+
+
+.my-publication-photo-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  height: 100%;
+
+  color: #6d8795;
+
+  font-size: 44px;
+}
+
+
+/* =========================================================
+   STATUS NA FOTO
+========================================================= */
+
+.my-publication-status {
+  position: absolute;
+
+  top: 12px;
+  left: 12px;
+
+  display: inline-flex;
+  align-items: center;
+
+  padding: 6px 10px;
+
+  border-radius: 999px;
+
+  font-size: 12px;
+  font-weight: 800;
+
+  box-shadow:
+    0 3px 10px rgba(0, 0, 0, 0.08);
+}
+
+
+/* PENDENTE */
+
+.my-publication-status-pending {
+  background: #fff3cd;
+  color: #725500;
+}
+
+
+/* REVISAO */
+
+.my-publication-status-review {
+  background: #eadcff;
+  color: #5b2f91;
+}
+
+
+/* APROVADA */
+
+.my-publication-status-approved {
+  background: #d9f6e8;
+  color: #087347;
+}
+
+
+/* BLOQUEADA */
+
+.my-publication-status-blocked {
+  background: #ffe0e0;
+  color: #922424;
+}
+
+
+/* =========================================================
+   CONTEUDO DO CARD
+========================================================= */
+
+.my-publication-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  flex: 1;
+
+  padding: 18px;
+}
+
+
+.my-publication-type {
+  display: inline-flex;
+  align-self: flex-start;
+
+  padding: 5px 9px;
+
+  background: #eaf2f6;
+  color: #073b5c;
+
+  border-radius: 999px;
+
+  font-size: 12px;
+  font-weight: 800;
+}
+
+
+.my-publication-body h3 {
+  margin: 0;
+
+  color: #073b5c;
+
+  font-size: 21px;
+  line-height: 1.25;
+}
+
+
+/* =========================================================
+   INFORMACOES
+========================================================= */
+
+.my-publication-info {
+  display: grid;
+  gap: 7px;
+
+  color: #526d7b;
+
+  font-size: 14px;
+}
+
+
+.my-publication-info p {
+  margin: 0;
+}
+
+
+.my-publication-info strong {
+  color: #173c50;
+}
+
+
+/* =========================================================
+   MOTIVO DA MODERACAO
+========================================================= */
+
+.my-publication-moderation-reason {
+  padding: 11px 13px;
+
+  background: #fff6df;
+  color: #684f0a;
+
+  border-left: 4px solid #e6a700;
+  border-radius: 8px;
+
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+
+.my-publication-moderation-reason strong {
+  display: block;
+
+  margin-bottom: 3px;
+}
+
+
+/* =========================================================
+   STATUS DA PUBLICACAO
+========================================================= */
+
+.my-publication-public-status {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  padding: 9px 11px;
+
+  background: #f0f5f7;
+  color: #385563;
+
+  border-radius: 9px;
+
+  font-size: 13px;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   ACOES
+========================================================= */
+
+.my-publication-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+
+  margin-top: auto;
+  padding-top: 5px;
+}
+
+
+.my-publication-actions button,
+.my-publication-actions a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 40px;
+
+  padding: 8px 13px;
+
+  border: none;
+  border-radius: 9px;
+
+  font: inherit;
+  font-size: 13px;
+  font-weight: 800;
+
+  text-decoration: none;
+
+  cursor: pointer;
+}
+
+
+/*
+ * Estes estilos ja deixam preparados
+ * os botoes que adicionaremos depois.
+ */
+
+.my-publication-edit {
+  background: #073b5c;
+  color: #ffffff;
+}
+
+
+.my-publication-edit:hover {
+  background: #0b527c;
+}
+
+
+.my-publication-finish {
+  background: #17a968;
+  color: #ffffff;
+}
+
+
+.my-publication-finish:hover {
+  background: #128553;
+}
+
+
+.my-publication-delete {
+  background: #ffe4e4;
+  color: #a02727;
+}
+
+
+.my-publication-delete:hover {
+  background: #ffd2d2;
+}
+
+
+/* =========================================================
+   CARREGANDO
+========================================================= */
+
+.my-publications-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 180px;
+
+  color: #526d7b;
+}
+
+
+.my-publications-loading span {
+  font-size: 30px;
+}
+
+
+.my-publications-loading p {
+  margin: 10px 0 0;
+
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   ESTADO VAZIO
+========================================================= */
+
+.my-publications-empty {
+  padding: 44px 20px;
+
+  background: #ffffff;
+
+  border: 1px dashed #bdcfd8;
+  border-radius: 18px;
+
+  text-align: center;
+}
+
+
+.my-publications-empty span {
+  display: block;
+
+  margin-bottom: 10px;
+
+  color: #17a968;
+
+  font-size: 38px;
+}
+
+
+.my-publications-empty h3 {
+  margin: 0 0 8px;
+
+  color: #073b5c;
+}
+
+
+.my-publications-empty p {
+  max-width: 500px;
+
+  margin:
+    0 auto
+    18px;
+
+  color: #617b89;
+}
+
+
+/* =========================================================
+   ERRO
+========================================================= */
+
+.my-publications-error {
+  margin-top: 20px;
+
+  padding: 14px 16px;
+
+  background: #ffe4e4;
+  color: #842029;
+
+  border-left: 5px solid #dc3545;
+  border-radius: 10px;
+
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   FOCO - ACESSIBILIDADE
+========================================================= */
+
+.my-publications-tab:focus-visible,
+#my-publications-refresh:focus-visible,
+.my-publication-actions button:focus-visible,
+.my-publication-actions a:focus-visible {
+  outline: 3px solid #17c77b;
+  outline-offset: 3px;
+}
+
+
+/* =========================================================
+   ALTO CONTRASTE
+========================================================= */
+
+.contrast-mode
+.my-publication-card,
+.contrast-mode
+.my-publications-empty,
+.contrast-mode
+.my-publications-tab {
+  border-color: currentColor;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+  .my-publications-grid {
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(0, 1fr)
+      );
+  }
+
+}
+
+
+/* =========================================================
+   CELULAR
+========================================================= */
+
+@media (max-width: 600px) {
+
+  .my-publications-section
+  .section-heading {
+    flex-direction: column;
+  }
+
+
+  #my-publications-refresh {
+    width: 100%;
+  }
+
+
+  .my-publications-tabs {
+    flex-direction: column;
+
+    width: 100%;
+  }
+
+
+  .my-publications-tab {
+    justify-content: space-between;
+
+    width: 100%;
+  }
+
+
+  .my-publications-grid {
+    grid-template-columns: 1fr;
+  }
+
+
+  .my-publication-actions {
+    flex-direction: column;
+  }
+
+
+  .my-publication-actions button,
+  .my-publication-actions a {
+    width: 100%;
+  }
+
+}

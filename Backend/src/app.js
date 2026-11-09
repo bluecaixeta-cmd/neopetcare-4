@@ -13,6 +13,7 @@ import reportRoutes from './routes/reports.js';
 import partnerRoutes from './routes/partners.js';
 import petRoutes from './routes/pets.js';
 import moderationRoutes from './routes/moderation.js';
+import myPublicationsRoutes from './routes/myPublications.js';
 
 const app = express();
 
@@ -171,6 +172,15 @@ app.use(
 app.use(
   '/api/moderation',
   moderationRoutes
+);
+
+/* =========================================================
+   MINHAS PUBLICACOES
+========================================================= */
+
+app.use(
+  '/api/my-publications',
+  myPublicationsRoutes
 );
 
 /* =========================================================

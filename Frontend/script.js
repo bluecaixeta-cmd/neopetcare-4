@@ -852,6 +852,8 @@ if (authForm) {
           result.user
         );
 
+        await loadMyPublications();
+
         showToast(
           `Olá, ${result.user.name}! Login realizado com sucesso.`
         );
@@ -893,6 +895,8 @@ if (logoutButton) {
         removeSavedUser();
 
         showLoggedOut();
+
+        hideMyPublications();
 
         showToast(
           'Você saiu da sua conta com sucesso.'
@@ -5469,6 +5473,617 @@ window.addEventListener(
     );
   }
 );
+
+/* =========================================================
+   MINHAS PUBLICACOES
+========================================================= */
+
+const myPublicationsSection =
+  document.querySelector(
+    '#minhas-publicacoes'
+  );
+
+const myPublicationsRefresh =
+  document.querySelector(
+    '#my-publications-refresh'
+  );
+
+const myPublicationsLoading =
+  document.querySelector(
+    '#my-publications-loading'
+  );
+
+const myPublicationsError =
+  document.querySelector(
+    '#my-publications-error'
+  );
+
+const myPublicationsPetsGrid =
+  document.querySelector(
+    '#my-publications-pets-grid'
+  );
+
+const myPublicationsReportsGrid =
+  document.querySelector(
+    '#my-publications-reports-grid'
+  );
+
+const myPublicationsPetsEmpty =
+  document.querySelector(
+    '#my-publications-pets-empty'
+  );
+
+const myPublicationsReportsEmpty =
+  document.querySelector(
+    '#my-publications-reports-empty'
+  );
+
+const myPublicationsPetsCount =
+  document.querySelector(
+    '#my-publications-pets-count'
+  );
+
+const myPublicationsReportsCount =
+  document.querySelector(
+    '#my-publications-reports-count'
+  );
+
+const myPublicationsPetsPanel =
+  document.querySelector(
+    '#my-publications-pets'
+  );
+
+const myPublicationsReportsPanel =
+  document.querySelector(
+    '#my-publications-reports'
+  );
+
+const myPublicationsTabs = [
+  ...document.querySelectorAll(
+    '[data-publication-tab]'
+  )
+];
+
+/* =========================================================
+   CARREGAR MINHAS PUBLICACOES
+========================================================= */
+
+async function loadMyPublications() {
+  function hideMyPublications() {
+  if (myPublicationsSection) {
+    myPublicationsSection.hidden = true;
+  }
+
+  if (myPublicationsPetsGrid) {
+    myPublicationsPetsGrid.innerHTML = '';
+  }
+
+  if (myPublicationsReportsGrid) {
+    myPublicationsReportsGrid.innerHTML = '';
+  }
+
+  if (myPublicationsPetsCount) {
+    myPublicationsPetsCount.textContent = '0';
+  }
+
+  if (myPublicationsReportsCount) {
+    myPublicationsReportsCount.textContent = '0';
+  }
+
+  if (myPublicationsPetsEmpty) {
+    myPublicationsPetsEmpty.hidden = true;
+  }
+
+  if (myPublicationsReportsEmpty) {
+    myPublicationsReportsEmpty.hidden = true;
+  }
+
+  if (myPublicationsError) {
+    myPublicationsError.hidden = true;
+  }
+}
+
+  if (
+    !myPublicationsSection ||
+    !myPublicationsPetsGrid ||
+    !myPublicationsReportsGrid
+  ) {
+    return;
+  }
+
+  if (myPublicationsLoading) {
+    myPublicationsLoading.hidden = false;
+  }
+
+  if (myPublicationsError) {
+    myPublicationsError.hidden = true;
+  }
+
+  if (myPublicationsPetsEmpty) {
+    myPublicationsPetsEmpty.hidden = true;
+  }
+
+  if (myPublicationsReportsEmpty) {
+    myPublicationsReportsEmpty.hidden = true;
+  }
+
+  try {
+    const result =
+      await apiRequest(
+        '/api/my-publications'
+      );
+
+    const pets =
+      Array.isArray(result.pets)
+        ? result.pets
+        : [];
+
+    const reports =
+      Array.isArray(result.reports)
+        ? result.reports
+        : [];
+
+    myPublicationsSection.hidden = false;
+
+    if (myPublicationsPetsCount) {
+      myPublicationsPetsCount.textContent =
+        String(pets.length);
+    }
+
+    if (myPublicationsReportsCount) {
+      myPublicationsReportsCount.textContent =
+        String(reports.length);
+    }
+
+    myPublicationsPetsGrid.innerHTML = '';
+    myPublicationsReportsGrid.innerHTML = '';
+
+    pets.forEach(
+      (pet) => {
+        renderMyPetPublication(pet);
+      }
+    );
+
+    reports.forEach(
+      (report) => {
+        renderMyReportPublication(report);
+      }
+    );
+
+    if (myPublicationsPetsEmpty) {
+      myPublicationsPetsEmpty.hidden =
+        pets.length > 0;
+    }
+
+    if (myPublicationsReportsEmpty) {
+      myPublicationsReportsEmpty.hidden =
+        reports.length > 0;
+    }
+
+  } catch (error) {
+    console.error(
+      'Erro ao carregar minhas publicações:',
+      error
+    );
+
+    myPublicationsSection.hidden = true;
+
+  } finally {
+    if (myPublicationsLoading) {
+      myPublicationsLoading.hidden = true;
+    }
+  }
+}
+
+/* =========================================================
+   CARD - MEU ANIMAL
+========================================================= */
+
+function renderMyPetPublication(pet) {
+  if (
+    !myPublicationsPetsGrid ||
+    !pet
+  ) {
+    return;
+  }
+
+  const imageStatus =
+    pet.imageStatus ||
+    'approved';
+
+  const moderationLabels = {
+    pending: 'Aguardando análise',
+    review: 'Em revisão',
+    approved: 'Publicada',
+    blocked: 'Foto bloqueada'
+  };
+
+  const moderationLabel =
+    moderationLabels[imageStatus] ||
+    'Status não informado';
+
+
+  const adoptionLabels = {
+    disponivel: 'Disponível para adoção',
+    tratamento: 'Em tratamento',
+    'lar-temporario': 'Em lar temporário',
+    adotado: 'Adotado'
+  };
+
+  const adoptionLabel =
+    adoptionLabels[pet.status] ||
+    'Situação não informada';
+
+
+  const photo =
+    typeof pet.photo === 'string'
+      ? pet.photo.trim()
+      : '';
+
+  const validPhoto =
+    photo.startsWith('data:image/') ||
+    photo.startsWith('https://');
+
+  const photoHtml =
+    validPhoto
+      ? `
+        <img
+          src="${escapeHtml(photo)}"
+          alt="Foto de ${escapeHtml(
+            pet.name || 'animal'
+          )}"
+        >
+      `
+      : `
+        <div
+          class="my-publication-photo-placeholder"
+        >
+          🐾
+        </div>
+      `;
+
+
+  let createdAt =
+    'Data não informada';
+
+  if (pet.createdAt) {
+    const date =
+      new Date(
+        pet.createdAt
+      );
+
+    if (
+      !Number.isNaN(
+        date.getTime()
+      )
+    ) {
+      createdAt =
+        date.toLocaleDateString(
+          'pt-BR'
+        );
+    }
+  }
+
+
+  const reasonHtml =
+    pet.imageModerationReason
+      ? `
+        <div
+          class="my-publication-moderation-reason"
+        >
+          <strong>
+            Observação da moderação
+          </strong>
+
+          ${escapeHtml(
+            pet.imageModerationReason
+          )}
+        </div>
+      `
+      : '';
+
+
+  const card =
+    document.createElement(
+      'article'
+    );
+
+  card.className =
+    'my-publication-card';
+
+  card.dataset.petId =
+    String(pet.id);
+
+
+  card.innerHTML = `
+    <div class="my-publication-photo">
+
+      ${photoHtml}
+
+      <span
+        class="my-publication-status
+               my-publication-status-${escapeHtml(
+                 imageStatus
+               )}"
+      >
+        ${escapeHtml(
+          moderationLabel
+        )}
+      </span>
+
+    </div>
+
+    <div class="my-publication-body">
+
+      <span class="my-publication-type">
+        🐾 Adoção
+      </span>
+
+      <h3>
+        ${escapeHtml(
+          pet.name ||
+          'Animal'
+        )}
+      </h3>
+
+      <div class="my-publication-info">
+
+        <p>
+          <strong>Espécie:</strong>
+          ${escapeHtml(
+            pet.species ||
+            'Não informada'
+          )}
+        </p>
+
+        <p>
+          <strong>Raça:</strong>
+          ${escapeHtml(
+            pet.breed ||
+            'Não informada'
+          )}
+        </p>
+
+        <p>
+          <strong>Localização:</strong>
+          ${escapeHtml(
+            pet.location ||
+            'Não informada'
+          )}
+        </p>
+
+        <p>
+          <strong>Cadastrado em:</strong>
+          ${escapeHtml(
+            createdAt
+          )}
+        </p>
+
+      </div>
+
+      <div class="my-publication-public-status">
+        ${escapeHtml(
+          adoptionLabel
+        )}
+      </div>
+
+      ${reasonHtml}
+
+    </div>
+  `;
+
+
+  myPublicationsPetsGrid.appendChild(
+    card
+  );
+}
+
+/* =========================================================
+   CARD - MINHA OCORRENCIA
+========================================================= */
+
+function renderMyReportPublication(report) {
+  if (
+    !myPublicationsReportsGrid ||
+    !report
+  ) {
+    return;
+  }
+
+  const imageStatus =
+    report.imageStatus ||
+    'approved';
+
+  const moderationLabels = {
+    pending: 'Aguardando análise',
+    review: 'Em revisão',
+    approved: 'Publicada',
+    blocked: 'Foto bloqueada'
+  };
+
+  const moderationLabel =
+    moderationLabels[imageStatus] ||
+    'Status não informado';
+
+
+  const reportStatus =
+    report.status === 'encontrado'
+      ? 'encontrado'
+      : 'perdido';
+
+  const reportStatusLabel =
+    reportStatus === 'encontrado'
+      ? 'Animal encontrado'
+      : 'Animal perdido';
+
+
+  const photo =
+    typeof report.photo === 'string'
+      ? report.photo.trim()
+      : '';
+
+  const validPhoto =
+    photo.startsWith('data:image/') ||
+    photo.startsWith('https://');
+
+  const photoHtml =
+    validPhoto
+      ? `
+        <img
+          src="${escapeHtml(photo)}"
+          alt="Foto de ${escapeHtml(
+            report.name || 'animal'
+          )}"
+        >
+      `
+      : `
+        <div
+          class="my-publication-photo-placeholder"
+        >
+          🔎
+        </div>
+      `;
+
+
+  let createdAt =
+    'Data não informada';
+
+  if (report.createdAt) {
+    const date =
+      new Date(report.createdAt);
+
+    if (
+      !Number.isNaN(
+        date.getTime()
+      )
+    ) {
+      createdAt =
+        date.toLocaleDateString(
+          'pt-BR'
+        );
+    }
+  }
+
+
+  const reasonHtml =
+    report.imageModerationReason
+      ? `
+        <div
+          class="my-publication-moderation-reason"
+        >
+          <strong>
+            Observação da moderação
+          </strong>
+
+          ${escapeHtml(
+            report.imageModerationReason
+          )}
+        </div>
+      `
+      : '';
+
+
+  const card =
+    document.createElement(
+      'article'
+    );
+
+  card.className =
+    'my-publication-card';
+
+  card.dataset.reportId =
+    String(report.id);
+
+
+  card.innerHTML = `
+    <div class="my-publication-photo">
+
+      ${photoHtml}
+
+      <span
+        class="my-publication-status
+               my-publication-status-${escapeHtml(
+                 imageStatus
+               )}"
+      >
+        ${escapeHtml(
+          moderationLabel
+        )}
+      </span>
+
+    </div>
+
+
+    <div class="my-publication-body">
+
+      <span class="my-publication-type">
+        🔎 Achados e perdidos
+      </span>
+
+
+      <h3>
+        ${escapeHtml(
+          report.name ||
+          'Animal'
+        )}
+      </h3>
+
+
+      <div class="my-publication-info">
+
+        <p>
+          <strong>Espécie:</strong>
+          ${escapeHtml(
+            report.animal ||
+            'Não informada'
+          )}
+        </p>
+
+        <p>
+          <strong>Raça:</strong>
+          ${escapeHtml(
+            report.breed ||
+            'Não informada'
+          )}
+        </p>
+
+        <p>
+          <strong>Localização:</strong>
+          ${escapeHtml(
+            report.location ||
+            'Não informada'
+          )}
+        </p>
+
+        <p>
+          <strong>Publicado em:</strong>
+          ${escapeHtml(
+            createdAt
+          )}
+        </p>
+
+      </div>
+
+
+      <div class="my-publication-public-status">
+        ${escapeHtml(
+          reportStatusLabel
+        )}
+      </div>
+
+
+      ${reasonHtml}
+
+    </div>
+  `;
+
+
+  myPublicationsReportsGrid.appendChild(
+    card
+  );
+}
+
+initializeMyPublications();
 
 /* =========================================================
    INICIALIZAÇÃO FINAL

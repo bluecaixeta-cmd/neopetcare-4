@@ -332,3 +332,30 @@ BEGIN
     END IF;
 END
 $$;
+
+/* =========================================================
+   USUARIO RESPONSAVEL POR ACHADOS E PERDIDOS
+========================================================= */
+
+ALTER TABLE reports
+ADD COLUMN IF NOT EXISTS user_id BIGINT;
+
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1
+        FROM pg_constraint
+        WHERE conname = 'reports_user_id_fkey'
+          AND conrelid = 'reports'::regclass
+    ) THEN
+        ALTER TABLE reports
+        ADD CONSTRAINT reports_user_id_fkey
+        FOREIGN KEY (user_id)
+        REFERENCES users(id)
+        ON DELETE SET NULL;
+    END IF;
+END
+$$;
+
+CREATE INDEX IF NOT EXISTS idx_reports_user_id
+ON reports(user_id);
