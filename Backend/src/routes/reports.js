@@ -53,6 +53,8 @@ router.get(
           `SELECT
              id,
 
+             user_id AS "userId",
+
              report_type AS status,
              pet_name AS name,
              animal_type AS animal,
@@ -426,5 +428,62 @@ user.id
   }
 );
 
+/* =========================================================
+   EXCLUIR MINHA OCORRENCIA
+   DELETE /api/reports/:id
+========================================================= */
+
+router.delete(
+  '/:id',
+  async (req, res, next) => {
+    try {
+      const user =
+        await getAuthenticatedUser(req);
+
+      if (!user) {
+        return res
+          .status(401)
+          .json({
+            error:
+              'Faça login para excluir uma ocorrência.'
+          });
+      }
+
+      const reportId =
+        req.params.id;
+
+      const result =
+        await pool.query(
+          `DELETE FROM reports
+           WHERE id = $1
+             AND user_id = $2
+           RETURNING id`,
+          [
+            reportId,
+            user.id
+          ]
+        );
+
+      if (
+        result.rowCount === 0
+      ) {
+        return res
+          .status(404)
+          .json({
+            error:
+              'Ocorrência não encontrada ou você não tem permissão para excluí-la.'
+          });
+      }
+
+      return res.json({
+        message:
+          'Publicação excluída com sucesso.'
+      });
+
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 export default router;
