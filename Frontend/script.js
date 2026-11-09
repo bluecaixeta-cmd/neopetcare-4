@@ -987,6 +987,18 @@ function openPetRegisterModal() {
   );
 }
 
+function openNewPetRegisterModal() {
+  editingPetId = null;
+
+  if (petRegisterForm) {
+    petRegisterForm.reset();
+  }
+
+  clearPetRegisterPhoto();
+
+  openPetRegisterModal();
+}
+
 function openPetEditModal(pet) {
   if (
     !petRegisterForm ||
@@ -995,7 +1007,8 @@ function openPetEditModal(pet) {
     return;
   }
 
-  editingPetId = pet.id;
+    editingPetId =
+    Number(pet.id);
 
   const values = {
     name: pet.name,
