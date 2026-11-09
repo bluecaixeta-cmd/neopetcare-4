@@ -409,7 +409,7 @@ ON reports(publication_status);
 ========================================================= */
 
 ALTER TABLE reports
-ADD CO*UMN IF NOT EXISTS publication_status VARCHAR(20);
+ADD COLUMN IF NOT EXISTS publication_status VARCHAR(20);
 
 UPDATE reports
 SET publication_status = 'active'
@@ -430,11 +430,12 @@ SET NOT NULL;
 
 DO $$
 BEGIN
-    IF NOT EXISTS (*        SELECT 1
-        FROM pg_c*nstraint
-        WHERE conname = '*eports_publication_status_check'
- *        AND conrelid = 'reports'::*egclass
-    ) THEN
+    IF NOT EXISTS (
+    SELECT 1
+    FROM pg_constraint
+    WHERE conname = 'reports_publication_status_check'
+      AND conrelid = 'reports'::regclass
+) THEN
         ALTER TABLE reports
         ADD CONSTRAINT reports_publication_status_check
         CHECK (
@@ -452,5 +453,5 @@ $$;
    INDICE DO STATUS
 ========================================================= */
 
-CREATE INDEX IF NOT EXISTS idx_*eports_publication_status
-ON repor*s(publication_status);
+CREATE INDEX IF NOT EXISTS idx_reports_publication_status
+ON reports(publication_status);
