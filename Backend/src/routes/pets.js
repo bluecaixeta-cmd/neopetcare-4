@@ -164,6 +164,7 @@ created_at,
 updated_at
 FROM pets
 WHERE image_status = 'approved'
+  AND adoption_status <> 'adotado'
 ORDER BY created_at DESC`
         );
 

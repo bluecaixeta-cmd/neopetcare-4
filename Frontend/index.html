@@ -1449,6 +1449,25 @@
           </span>
         </button>
 
+        <button
+  class="my-publications-tab"
+  id="my-publications-closed-tab"
+  type="button"
+  role="tab"
+  aria-selected="false"
+  aria-controls="my-publications-closed"
+  data-publication-tab="closed"
+>
+  ✅ Encerradas
+
+  <span
+    class="my-publications-count"
+    id="my-publications-closed-count"
+  >
+    0
+  </span>
+</button>
+
       </div>
 
 
@@ -1557,6 +1576,40 @@
 
       </div>
 
+<!-- =================================================
+     PUBLICACOES ENCERRADAS
+================================================== -->
+
+<div
+  class="my-publications-panel"
+  id="my-publications-closed"
+  role="tabpanel"
+  aria-labelledby="my-publications-closed-tab"
+  hidden
+>
+
+  <div
+    class="my-publications-grid"
+    id="my-publications-closed-grid"
+  ></div>
+
+  <div
+    class="my-publications-empty"
+    id="my-publications-closed-empty"
+    hidden
+  >
+    <span>✅</span>
+
+    <h3>
+      Nenhuma publicação encerrada
+    </h3>
+
+    <p>
+      Animais adotados e ocorrências resolvidas aparecerão aqui.
+    </p>
+  </div>
+
+</div>
 
       <!-- =================================================
            ERRO

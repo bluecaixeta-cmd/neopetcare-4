@@ -86,6 +86,7 @@ created_at AS "createdAt"
 FROM reports
 
 WHERE image_status = 'approved'
+  AND publication_status = 'active'
 
 ORDER BY created_at DESC`
         );

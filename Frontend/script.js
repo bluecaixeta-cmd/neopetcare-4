@@ -5742,6 +5742,26 @@ const myPublicationsReportsGrid =
     '#my-publications-reports-grid'
   );
 
+  const myPublicationsClosedGrid =
+  document.querySelector(
+    '#my-publications-closed-grid'
+  );
+
+const myPublicationsClosedCount =
+  document.querySelector(
+    '#my-publications-closed-count'
+  );
+
+const myPublicationsClosedEmpty =
+  document.querySelector(
+    '#my-publications-closed-empty'
+  );
+
+const myPublicationsClosedPanel =
+  document.querySelector(
+    '#my-publications-closed'
+  );
+
 const myPublicationsPetsEmpty =
   document.querySelector(
     '#my-publications-pets-empty'
@@ -5848,51 +5868,156 @@ async function loadMyPublications() {
       );
 
     const pets =
-      Array.isArray(result.pets)
-        ? result.pets
-        : [];
+  Array.isArray(result.pets)
+    ? result.pets
+    : [];
 
-    const reports =
-      Array.isArray(result.reports)
-        ? result.reports
-        : [];
+const reports =
+  Array.isArray(result.reports)
+    ? result.reports
+    : [];
 
-    myPublicationsSection.hidden = false;
+/* =====================================================
+   SEPARAR ATIVAS E ENCERRADAS
+===================================================== */
 
-    if (myPublicationsPetsCount) {
-      myPublicationsPetsCount.textContent =
-        String(pets.length);
-    }
+const activePets =
+  pets.filter(
+    (pet) =>
+      pet.status !== 'adotado'
+  );
 
-    if (myPublicationsReportsCount) {
-      myPublicationsReportsCount.textContent =
-        String(reports.length);
-    }
+const closedPets =
+  pets.filter(
+    (pet) =>
+      pet.status === 'adotado'
+  );
 
-    myPublicationsPetsGrid.innerHTML = '';
-    myPublicationsReportsGrid.innerHTML = '';
+const activeReports =
+  reports.filter(
+    (report) =>
+      report.publicationStatus !==
+      'resolved'
+  );
 
-    pets.forEach(
-      (pet) => {
-        renderMyPetPublication(pet);
-      }
+const closedReports =
+  reports.filter(
+    (report) =>
+      report.publicationStatus ===
+      'resolved'
+  );
+
+const closedCount =
+  closedPets.length +
+  closedReports.length;
+
+
+/* =====================================================
+   MOSTRAR AREA
+===================================================== */
+
+myPublicationsSection.hidden = false;
+
+
+/* =====================================================
+   CONTADORES
+===================================================== */
+
+if (myPublicationsPetsCount) {
+  myPublicationsPetsCount.textContent =
+    String(activePets.length);
+}
+
+if (myPublicationsReportsCount) {
+  myPublicationsReportsCount.textContent =
+    String(activeReports.length);
+}
+
+if (myPublicationsClosedCount) {
+  myPublicationsClosedCount.textContent =
+    String(closedCount);
+}
+
+
+/* =====================================================
+   LIMPAR GRADES
+===================================================== */
+
+myPublicationsPetsGrid.innerHTML = '';
+myPublicationsReportsGrid.innerHTML = '';
+
+if (myPublicationsClosedGrid) {
+  myPublicationsClosedGrid.innerHTML = '';
+}
+
+
+/* =====================================================
+   ANIMAIS ATIVOS
+===================================================== */
+
+activePets.forEach(
+  (pet) => {
+    renderMyPetPublication(
+      pet
     );
+  }
+);
 
-    reports.forEach(
-      (report) => {
-        renderMyReportPublication(report);
-      }
+
+/* =====================================================
+   OCORRENCIAS ATIVAS
+===================================================== */
+
+activeReports.forEach(
+  (report) => {
+    renderMyReportPublication(
+      report
     );
+  }
+);
 
-    if (myPublicationsPetsEmpty) {
-      myPublicationsPetsEmpty.hidden =
-        pets.length > 0;
-    }
 
-    if (myPublicationsReportsEmpty) {
-      myPublicationsReportsEmpty.hidden =
-        reports.length > 0;
-    }
+/* =====================================================
+   PUBLICACOES ENCERRADAS
+===================================================== */
+
+closedPets.forEach(
+  (pet) => {
+    renderMyPetPublication(
+      pet,
+      myPublicationsClosedGrid
+    );
+  }
+);
+
+closedReports.forEach(
+  (report) => {
+    renderMyReportPublication(
+      report,
+      myPublicationsClosedGrid
+    );
+  }
+);
+
+
+/* =====================================================
+   ESTADOS VAZIOS
+===================================================== */
+
+if (myPublicationsPetsEmpty) {
+  myPublicationsPetsEmpty.hidden =
+    activePets.length > 0;
+}
+
+if (myPublicationsReportsEmpty) {
+  myPublicationsReportsEmpty.hidden =
+    activeReports.length > 0;
+}
+
+if (myPublicationsClosedEmpty) {
+  myPublicationsClosedEmpty.hidden =
+    closedCount > 0;
+}
 
   } catch (error) {
     console.error(
@@ -5901,6 +6026,14 @@ async function loadMyPublications() {
     );
 
     myPublicationsSection.hidden = true;
+
+    if (myPublicationsError) {
+      myPublicationsError.textContent =
+        error.message ||
+        'Não foi possível carregar suas publicações.';
+
+      myPublicationsError.hidden = false;
+    }
 
   } finally {
     if (myPublicationsLoading) {
@@ -5940,7 +6073,13 @@ async function initializeMyPublications() {
 
 function setMyPublicationsTab(selectedTab) {
   const showPets =
-    selectedTab !== 'reports';
+    selectedTab === 'pets';
+
+  const showReports =
+    selectedTab === 'reports';
+
+  const showClosed =
+    selectedTab === 'closed';
 
   if (myPublicationsPetsPanel) {
     myPublicationsPetsPanel.hidden =
@@ -5949,7 +6088,12 @@ function setMyPublicationsTab(selectedTab) {
 
   if (myPublicationsReportsPanel) {
     myPublicationsReportsPanel.hidden =
-      showPets;
+      !showReports;
+  }
+
+  if (myPublicationsClosedPanel) {
+    myPublicationsClosedPanel.hidden =
+      !showClosed;
   }
 
   myPublicationsTabs.forEach(
@@ -5971,7 +6115,6 @@ function setMyPublicationsTab(selectedTab) {
   );
 }
 
-
 myPublicationsTabs.forEach(
   (button) => {
     button.addEventListener(
@@ -5991,7 +6134,10 @@ initializeMyPublications();
    CARD - MEU ANIMAL
 ========================================================= */
 
-function renderMyPetPublication(pet) {
+function renderMyPetPublication(
+  pet,
+  targetGrid = myPublicationsPetsGrid
+) {
   if (
     !myPublicationsPetsGrid ||
     !pet
@@ -6342,16 +6488,19 @@ if (deleteButton) {
   );
 }
 
-  myPublicationsPetsGrid.appendChild(
-    card
-  );
+  targetGrid.appendChild(
+  card
+);
 }
 
 /* =========================================================
    CARD - MINHA OCORRENCIA
 ========================================================= */
 
-function renderMyReportPublication(report) {
+function renderMyReportPublication(
+  report,
+  targetGrid = myPublicationsReportsGrid
+) {
   if (
     !myPublicationsReportsGrid ||
     !report
@@ -6730,7 +6879,7 @@ if (deleteButton) {
    ADICIONAR CARD
 ===================================================== */
 
-myPublicationsReportsGrid.appendChild(
+targetGrid.appendChild(
   card
 );
 }
