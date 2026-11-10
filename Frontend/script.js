@@ -7427,6 +7427,44 @@ function closeWikiCreateModal() {
   editingWikiArticleId = null;
 }
 
+/* =========================================================
+   BOTAO PUBLICAR ARTIGO - WIKIPET PUBLICA
+========================================================= */
+
+if (wikiCreateButton) {
+  wikiCreateButton.addEventListener(
+    'click',
+    () => {
+      editingWikiArticleId = null;
+
+      if (wikiCreateForm) {
+        wikiCreateForm.reset();
+      }
+
+      const title =
+        wikiCreateModal?.querySelector(
+          '#wiki-create-title'
+        );
+
+      if (title) {
+        title.textContent =
+          'Publicar artigo na WikiPet';
+      }
+
+      const submitButton =
+        wikiCreateForm?.querySelector(
+          'button[type="submit"]'
+        );
+
+      if (submitButton) {
+        submitButton.textContent =
+          '✍️ Publicar artigo';
+      }
+
+      openWikiCreateModal();
+    }
+  );
+}
 
 if (wikiCreateClose) {
   wikiCreateClose.addEventListener(
@@ -7455,6 +7493,50 @@ if (wikiCreateModal) {
 ========================================================= */
 
 let editingWikiArticleId = null;
+
+/* =========================================================
+   BOTAO PUBLICAR NOVO ARTIGO
+========================================================= */
+
+if (wikiCreateButton) {
+  wikiCreateButton.addEventListener(
+    'click',
+    () => {
+      /* Garantir modo de nova publicação */
+      editingWikiArticleId = null;
+
+      /* Limpar dados de uma edição anterior */
+      if (wikiCreateForm) {
+        wikiCreateForm.reset();
+      }
+
+      /* Restaurar título do modal */
+      const modalTitle =
+        wikiCreateModal?.querySelector(
+          '#wiki-create-title'
+        );
+
+      if (modalTitle) {
+        modalTitle.textContent =
+          'Publicar artigo na WikiPet';
+      }
+
+      /* Restaurar botão de envio */
+      const submitButton =
+        wikiCreateForm?.querySelector(
+          'button[type="submit"]'
+        );
+
+      if (submitButton) {
+        submitButton.textContent =
+          '✍️ Publicar artigo';
+      }
+
+      /* Abrir como nova publicação */
+      openWikiCreateModal();
+    }
+  );
+}
 
 function openWikiEditModal(article) {
   if (
