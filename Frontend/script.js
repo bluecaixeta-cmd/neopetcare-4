@@ -7338,20 +7338,52 @@ function openWikiCreateModal() {
     return;
   }
 
-  wikiCreateModal.classList.add(
-    'open'
-  );
+  /*
+   * Reativa o modal antes de abri-lo.
+   */
+  wikiCreateModal.inert = false;
 
   wikiCreateModal.setAttribute(
     'aria-hidden',
     'false'
   );
-}
 
+  wikiCreateModal.classList.add(
+    'open'
+  );
+
+  window.setTimeout(
+    () => {
+      const firstField =
+        wikiCreateForm?.querySelector(
+          'input, select, textarea'
+        );
+
+      firstField?.focus();
+    },
+    50
+  );
+}
 
 function closeWikiCreateModal() {
   if (!wikiCreateModal) {
     return;
+  }
+
+  const focusedElement =
+    document.activeElement;
+
+  /*
+   * Remove o foco de qualquer controle
+   * que ainda esteja dentro do modal.
+   */
+  if (
+    focusedElement &&
+    wikiCreateModal.contains(
+      focusedElement
+    )
+  ) {
+    focusedElement.blur();
   }
 
   wikiCreateModal.classList.remove(
@@ -7363,43 +7395,12 @@ function closeWikiCreateModal() {
     'true'
   );
 
+  /*
+   * Impede interação com o modal fechado.
+   */
+  wikiCreateModal.inert = true;
+
   editingWikiArticleId = null;
-}
-
-
-if (wikiCreateButton) {
-  wikiCreateButton.addEventListener(
-    'click',
-    () => {
-      editingWikiArticleId = null;
-
-      if (wikiCreateForm) {
-        wikiCreateForm.reset();
-      }
-
-      const title =
-        wikiCreateModal?.querySelector(
-          '#wiki-create-title'
-        );
-
-      if (title) {
-        title.textContent =
-          'Publicar na WikiPet';
-      }
-
-      const submitButton =
-        wikiCreateForm?.querySelector(
-          'button[type="submit"]'
-        );
-
-      if (submitButton) {
-        submitButton.textContent =
-          '✍️ Publicar artigo';
-      }
-
-      openWikiCreateModal();
-    }
-  );
 }
 
 
