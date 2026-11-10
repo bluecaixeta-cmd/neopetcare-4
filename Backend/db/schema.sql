@@ -455,3 +455,64 @@ $$;
 
 CREATE INDEX IF NOT EXISTS idx_reports_publication_status
 ON reports(publication_status);
+
+/* =========================================================
+   WIKIPET - ARTIGOS DA COMUNIDADE
+========================================================= */
+
+CREATE TABLE IF NOT EXISTS wiki_articles (
+    id BIGSERIAL PRIMARY KEY,
+
+    user_id BIGINT NOT NULL
+        REFERENCES users(id)
+        ON DELETE CASCADE,
+
+    title VARCHAR(120) NOT NULL,
+
+    category VARCHAR(30) NOT NULL,
+
+    summary VARCHAR(500) NOT NULL,
+
+    content TEXT NOT NULL,
+
+    publication_status VARCHAR(20)
+        NOT NULL
+        DEFAULT 'active',
+
+    created_at TIMESTAMPTZ
+        NOT NULL
+        DEFAULT NOW(),
+
+    updated_at TIMESTAMPTZ
+        NOT NULL
+        DEFAULT NOW(),
+
+    CONSTRAINT wiki_articles_category_check
+        CHECK (
+            category IN (
+                'saude',
+                'cuidados',
+                'adocao'
+            )
+        ),
+
+    CONSTRAINT wiki_articles_publication_status_check
+        CHECK (
+            publication_status IN (
+                'active',
+                'archived'
+            )
+        )
+);
+
+CREATE INDEX IF NOT EXISTS idx_wiki_articles_user_id
+ON wiki_articles(user_id);
+
+CREATE INDEX IF NOT EXISTS idx_wiki_articles_category
+ON wiki_articles(category);
+
+CREATE INDEX IF NOT EXISTS idx_wiki_articles_publication_status
+ON wiki_articles(publication_status);
+
+CREATE INDEX IF NOT EXISTS idx_wiki_articles_created_at
+ON wiki_articles(created_at DESC);

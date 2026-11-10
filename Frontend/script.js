@@ -6910,6 +6910,524 @@ targetGrid.appendChild(
 }
 
 /* =========================================================
+   WIKIPET - MODAL DE PUBLICACAO
+========================================================= */
+
+const wikiCreateButton =
+  document.querySelector(
+    '#wiki-create-button'
+  );
+
+const wikiCreateModal =
+  document.querySelector(
+    '#wiki-create-modal'
+  );
+
+const wikiCreateClose =
+  document.querySelector(
+    '.wiki-create-close'
+  );
+
+const wikiCreateForm =
+  document.querySelector(
+    '#wiki-create-form'
+  );
+
+
+function openWikiCreateModal() {
+  if (!wikiCreateModal) {
+    return;
+  }
+
+  wikiCreateModal.classList.add(
+    'open'
+  );
+
+  wikiCreateModal.setAttribute(
+    'aria-hidden',
+    'false'
+  );
+}
+
+
+function closeWikiCreateModal() {
+  if (!wikiCreateModal) {
+    return;
+  }
+
+  wikiCreateModal.classList.remove(
+    'open'
+  );
+
+  wikiCreateModal.setAttribute(
+    'aria-hidden',
+    'true'
+  );
+}
+
+
+if (wikiCreateButton) {
+  wikiCreateButton.addEventListener(
+    'click',
+    openWikiCreateModal
+  );
+}
+
+
+if (wikiCreateClose) {
+  wikiCreateClose.addEventListener(
+    'click',
+    closeWikiCreateModal
+  );
+}
+
+
+if (wikiCreateModal) {
+  wikiCreateModal.addEventListener(
+    'click',
+    (event) => {
+      if (
+        event.target ===
+        wikiCreateModal
+      ) {
+        closeWikiCreateModal();
+      }
+    }
+  );
+}
+
+/* =========================================================
+   WIKIPET - PUBLICAR ARTIGO
+========================================================= */
+
+if (wikiCreateForm) {
+  wikiCreateForm.addEventListener(
+    'submit',
+    async (event) => {
+      event.preventDefault();
+
+      const formData =
+        new FormData(
+          wikiCreateForm
+        );
+
+      const article = {
+        title:
+          String(
+            formData.get('title') || ''
+          ).trim(),
+
+        category:
+          String(
+            formData.get('category') || ''
+          ).trim(),
+
+        summary:
+          String(
+            formData.get('summary') || ''
+          ).trim(),
+
+        content:
+          String(
+            formData.get('content') || ''
+          ).trim()
+      };
+
+      if (
+        !article.title ||
+        !article.category ||
+        !article.summary ||
+        !article.content
+      ) {
+        showToast(
+          'Preencha título, categoria, resumo e conteúdo.',
+          'error'
+        );
+
+        return;
+      }
+
+      const submitButton =
+        wikiCreateForm.querySelector(
+          'button[type="submit"]'
+        );
+
+      const originalButtonText =
+        submitButton?.textContent;
+
+      if (submitButton) {
+        submitButton.disabled = true;
+
+        submitButton.textContent =
+          'Publicando...';
+      }
+
+      try {
+        const result =
+          await apiRequest(
+            '/api/wiki',
+            {
+              method: 'POST',
+
+              body:
+                JSON.stringify(
+                  article
+                )
+            }
+          );
+
+        if (!result.article) {
+          throw new Error(
+            'O servidor não retornou o artigo publicado.'
+          );
+        }
+
+        renderWikiArticle(
+  result.article
+);
+
+filterWikiArticles();
+
+        wikiCreateForm.reset();
+
+        closeWikiCreateModal();
+
+        showToast(
+          result.message ||
+          'Artigo publicado na WikiPet com sucesso!'
+        );
+
+      } catch (error) {
+        console.error(
+          'Erro ao publicar na WikiPet:',
+          error
+        );
+
+        showToast(
+          error.message ||
+          'Não foi possível publicar o artigo.',
+          'error'
+        );
+
+      } finally {
+        if (submitButton) {
+          submitButton.disabled = false;
+
+          submitButton.textContent =
+            originalButtonText ||
+            '✍️ Publicar artigo';
+        }
+      }
+    }
+  );
+}
+
+/* =========================================================
+   WIKIPET - ELEMENTOS DA LISTAGEM
+========================================================= */
+
+const wikiGrid =
+  document.querySelector(
+    '#wiki-grid'
+  );
+
+const wikiSearch =
+  document.querySelector(
+    '#wiki-search'
+  );
+
+const wikiEmpty =
+  document.querySelector(
+    '#wiki-empty'
+  );
+
+const wikiFilters =
+  [
+    ...document.querySelectorAll(
+      '.wiki-filter'
+    )
+  ];
+
+
+/* =========================================================
+   WIKIPET - CRIAR CARD DA COMUNIDADE
+========================================================= */
+
+function renderWikiArticle(article) {
+  if (
+    !wikiGrid ||
+    !article
+  ) {
+    return;
+  }
+
+  const categoryLabels = {
+    saude: 'Saúde',
+    cuidados: 'Cuidados',
+    adocao: 'Adoção'
+  };
+
+  const categoryClasses = {
+    saude: 'category-health',
+    cuidados: 'category-care',
+    adocao: 'category-adoption'
+  };
+
+  const category =
+    article.category ||
+    'cuidados';
+
+  const categoryLabel =
+    categoryLabels[category] ||
+    'Cuidados';
+
+  const categoryClass =
+    categoryClasses[category] ||
+    'category-care';
+
+  const card =
+    document.createElement(
+      'article'
+    );
+
+  card.className =
+    'wiki-card wiki-community-card';
+
+  card.dataset.category =
+    category;
+
+  card.dataset.search =
+    [
+      article.title || '',
+      article.summary || '',
+      article.content || '',
+      article.authorName || '',
+      categoryLabel
+    ]
+      .join(' ')
+      .toLowerCase();
+
+  card.dataset.articleId =
+    String(
+      article.id || ''
+    );
+
+  card.innerHTML = `
+    <span
+      class="wiki-category ${categoryClass}"
+    >
+      ${escapeHtml(
+        categoryLabel
+      )}
+    </span>
+
+    <h3>
+      ${escapeHtml(
+        article.title ||
+        'Artigo'
+      )}
+    </h3>
+
+    <p>
+      ${escapeHtml(
+        article.summary ||
+        ''
+      )}
+    </p>
+
+    <div class="wiki-meta">
+      <span>
+        Por ${escapeHtml(
+          article.authorName ||
+          'Comunidade NeoPetCare'
+        )}
+      </span>
+    </div>
+  `;
+
+  wikiGrid.appendChild(
+    card
+  );
+}
+
+
+/* =========================================================
+   WIKIPET - FILTRAR ARTIGOS
+========================================================= */
+
+function filterWikiArticles() {
+  if (!wikiGrid) {
+    return;
+  }
+
+  const search =
+    wikiSearch
+      ? wikiSearch.value
+          .toLowerCase()
+          .trim()
+      : '';
+
+  const activeFilter =
+    document.querySelector(
+      '.wiki-filter.active'
+    );
+
+  const selectedCategory =
+    activeFilter?.dataset.category ||
+    'todos';
+
+  let visibleCount = 0;
+
+  wikiGrid
+    .querySelectorAll(
+      '.wiki-card'
+    )
+    .forEach((card) => {
+      const category =
+        card.dataset.category ||
+        '';
+
+      const searchableText =
+        (
+          card.dataset.search ||
+          card.textContent ||
+          ''
+        )
+          .toLowerCase();
+
+      const categoryMatches =
+        selectedCategory ===
+          'todos' ||
+        selectedCategory ===
+          category;
+
+      const searchMatches =
+        searchableText.includes(
+          search
+        );
+
+      const visible =
+        categoryMatches &&
+        searchMatches;
+
+      card.hidden =
+        !visible;
+
+      if (visible) {
+        visibleCount += 1;
+      }
+    });
+
+  if (wikiEmpty) {
+    wikiEmpty.hidden =
+      visibleCount > 0;
+  }
+}
+
+
+/* =========================================================
+   WIKIPET - CARREGAR DO POSTGRESQL
+========================================================= */
+
+async function loadWikiArticles() {
+  if (!wikiGrid) {
+    return;
+  }
+
+  try {
+    const result =
+      await apiRequest(
+        '/api/wiki'
+      );
+
+    const articles =
+      Array.isArray(
+        result.articles
+      )
+        ? result.articles
+        : [];
+
+    /*
+     * Remove apenas os cards dinâmicos.
+     * Os três artigos oficiais do HTML
+     * permanecem intactos.
+     */
+    wikiGrid
+      .querySelectorAll(
+        '.wiki-community-card'
+      )
+      .forEach(
+        (card) => {
+          card.remove();
+        }
+      );
+
+    articles.forEach(
+      (article) => {
+        renderWikiArticle(
+          article
+        );
+      }
+    );
+
+    filterWikiArticles();
+
+  } catch (error) {
+    console.error(
+      'Erro ao carregar a WikiPet:',
+      error
+    );
+  }
+}
+
+
+/* =========================================================
+   WIKIPET - BUSCA
+========================================================= */
+
+if (wikiSearch) {
+  wikiSearch.addEventListener(
+    'input',
+    filterWikiArticles
+  );
+}
+
+
+/* =========================================================
+   WIKIPET - FILTROS
+========================================================= */
+
+wikiFilters.forEach(
+  (button) => {
+    button.addEventListener(
+      'click',
+      () => {
+        wikiFilters.forEach(
+          (item) => {
+            item.classList.remove(
+              'active'
+            );
+          }
+        );
+
+        button.classList.add(
+          'active'
+        );
+
+        filterWikiArticles();
+      }
+    );
+  }
+);
+
+
+/* =========================================================
+   WIKIPET - INICIALIZAR
+========================================================= */
+
+loadWikiArticles();
+
+/* =========================================================
    INICIALIZAÇÃO FINAL
 ========================================================= */
 

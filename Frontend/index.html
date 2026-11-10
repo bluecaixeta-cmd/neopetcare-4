@@ -672,6 +672,15 @@
             cada vez melhor dos animais.
           </p>
         </div>
+
+        <button
+  class="button wiki-create-button"
+  id="wiki-create-button"
+  type="button"
+>
+  ✍️ Publicar artigo
+</button>
+
       </div>
 
       <div class="wiki-toolbar">
@@ -794,6 +803,114 @@
       </p>
 
     </section>
+
+    <!-- =====================================================
+     MODAL - PUBLICAR NA WIKIPET
+====================================================== -->
+
+<div
+  class="modal"
+  id="wiki-create-modal"
+  aria-hidden="true"
+>
+  <div
+    class="modal-box wiki-create-box"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="wiki-create-title"
+  >
+    <button
+      class="modal-close wiki-create-close"
+      type="button"
+      aria-label="Fechar publicação da WikiPet"
+    >
+      ×
+    </button>
+
+    <p class="eyebrow">
+      Conhecimento em comunidade
+    </p>
+
+    <h2 id="wiki-create-title">
+      Publicar na WikiPet
+    </h2>
+
+    <p>
+      Compartilhe informações que possam ajudar
+      outros tutores e a comunidade.
+    </p>
+
+    <form id="wiki-create-form">
+
+      <label>
+        Título *
+
+        <input
+          name="title"
+          type="text"
+          maxlength="120"
+          required
+          placeholder="Título do artigo"
+        >
+      </label>
+
+      <label>
+        Categoria *
+
+        <select
+          name="category"
+          required
+        >
+          <option value="">
+            Selecione
+          </option>
+
+          <option value="saude">
+            Saúde
+          </option>
+
+          <option value="cuidados">
+            Cuidados
+          </option>
+
+          <option value="adocao">
+            Adoção
+          </option>
+        </select>
+      </label>
+
+      <label>
+        Resumo *
+
+        <textarea
+          name="summary"
+          maxlength="500"
+          required
+          placeholder="Escreva um pequeno resumo do artigo"
+        ></textarea>
+      </label>
+
+      <label>
+        Conteúdo *
+
+        <textarea
+          name="content"
+          maxlength="10000"
+          required
+          placeholder="Escreva aqui o conteúdo completo"
+        ></textarea>
+      </label>
+
+      <button
+        class="button full-button"
+        type="submit"
+      >
+        ✍️ Publicar artigo
+      </button>
+
+    </form>
+  </div>
+</div>
 
     <!-- ===================================================
          PARCEIROS

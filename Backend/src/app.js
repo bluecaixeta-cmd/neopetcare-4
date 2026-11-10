@@ -14,6 +14,7 @@ import partnerRoutes from './routes/partners.js';
 import petRoutes from './routes/pets.js';
 import moderationRoutes from './routes/moderation.js';
 import myPublicationsRoutes from './routes/myPublications.js';
+import wikiRoutes from './routes/wiki.js';
 
 const app = express();
 
@@ -163,6 +164,11 @@ app.use(
 app.use(
   '/api/pets',
   petRoutes
+);
+
+app.use(
+  '/api/wiki',
+  wikiRoutes
 );
 
 /* =========================================================
