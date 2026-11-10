@@ -200,7 +200,10 @@ pet_name
           petsResult.rows,
 
         reports:
-          reportsResult.rows
+          reportsResult.rows,
+
+          wiki:
+  wikiResult.rows
       });
 
     } catch (error) {
@@ -208,6 +211,42 @@ pet_name
     }
   }
 );
+
+/* =====================================================
+   MEUS ARTIGOS DA WIKIPET
+===================================================== */
+
+const wikiResult =
+  await pool.query(
+    `SELECT
+       id,
+
+       user_id
+         AS "userId",
+
+       title,
+       category,
+       summary,
+       content,
+
+       publication_status
+         AS "publicationStatus",
+
+       created_at
+         AS "createdAt",
+
+       updated_at
+         AS "updatedAt"
+
+     FROM wiki_articles
+
+     WHERE user_id = $1
+
+     ORDER BY created_at DESC`,
+    [
+      user.id
+    ]
+  );
 
 /* =========================================================
    MARCAR ANIMAL COMO ADOTADO

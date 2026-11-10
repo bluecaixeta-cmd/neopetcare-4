@@ -1568,6 +1568,25 @@
 
         <button
   class="my-publications-tab"
+  id="my-publications-wiki-tab"
+  type="button"
+  role="tab"
+  aria-selected="false"
+  aria-controls="my-publications-wiki"
+  data-publication-tab="wiki"
+>
+  📚 WikiPet
+
+  <span
+    class="my-publications-count"
+    id="my-publications-wiki-count"
+  >
+    0
+  </span>
+</button>
+
+        <button
+  class="my-publications-tab"
   id="my-publications-closed-tab"
   type="button"
   role="tab"
@@ -1692,6 +1711,51 @@
         </div>
 
       </div>
+
+      <!-- =================================================
+     MEUS ARTIGOS DA WIKIPET
+================================================== -->
+
+<div
+  class="my-publications-panel"
+  id="my-publications-wiki"
+  role="tabpanel"
+  aria-labelledby="my-publications-wiki-tab"
+  hidden
+>
+
+  <div
+    class="my-publications-grid"
+    id="my-publications-wiki-grid"
+  ></div>
+
+  <div
+    class="my-publications-empty"
+    id="my-publications-wiki-empty"
+    hidden
+  >
+    <span>📚</span>
+
+    <h3>
+      Você ainda não publicou artigos
+    </h3>
+
+    <p>
+      Os artigos publicados por você na WikiPet
+      aparecerão aqui.
+    </p>
+
+    <button
+      class="button button-small"
+      id="my-publications-wiki-create"
+      type="button"
+    >
+      ✍️ Publicar artigo
+    </button>
+
+  </div>
+
+</div>
 
 <!-- =================================================
      PUBLICACOES ENCERRADAS

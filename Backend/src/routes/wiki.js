@@ -267,5 +267,327 @@ router.post(
   }
 );
 
+/* =========================================================
+   EDITAR MEU ARTIGO
+   PATCH /api/wiki/:id
+========================================================= */
+
+router.patch(
+  '/:id',
+  async (req, res, next) => {
+    try {
+      const user =
+        await getAuthenticatedUser(req);
+
+      if (!user) {
+        return res
+          .status(401)
+          .json({
+            error:
+              'Faça login para editar este artigo.'
+          });
+      }
+
+      const articleId =
+        Number(
+          req.params.id
+        );
+
+      if (
+        !Number.isSafeInteger(articleId) ||
+        articleId <= 0
+      ) {
+        return res
+          .status(400)
+          .json({
+            error:
+              'Identificador do artigo inválido.'
+          });
+      }
+
+      const article = {
+        title:
+          cleanText(
+            req.body.title,
+            120
+          ),
+
+        category:
+          cleanText(
+            req.body.category,
+            30
+          ),
+
+        summary:
+          cleanText(
+            req.body.summary,
+            500
+          ),
+
+        content:
+          cleanText(
+            req.body.content,
+            10000
+          )
+      };
+
+      if (
+        !article.title ||
+        !article.category ||
+        !article.summary ||
+        !article.content
+      ) {
+        return res
+          .status(400)
+          .json({
+            error:
+              'Preencha título, categoria, resumo e conteúdo.'
+          });
+      }
+
+      const allowedCategories = [
+        'saude',
+        'cuidados',
+        'adocao'
+      ];
+
+      if (
+        !allowedCategories.includes(
+          article.category
+        )
+      ) {
+        return res
+          .status(400)
+          .json({
+            error:
+              'Categoria da WikiPet inválida.'
+          });
+      }
+
+      const result =
+        await pool.query(
+          `UPDATE wiki_articles
+           SET
+             title = $1,
+             category = $2,
+             summary = $3,
+             content = $4,
+             updated_at = NOW()
+
+           WHERE id = $5
+             AND user_id = $6
+
+           RETURNING
+             id,
+             user_id AS "userId",
+             title,
+             category,
+             summary,
+             content,
+             publication_status
+               AS "publicationStatus",
+             created_at
+               AS "createdAt",
+             updated_at
+               AS "updatedAt"`,
+          [
+            article.title,
+            article.category,
+            article.summary,
+            article.content,
+            articleId,
+            user.id
+          ]
+        );
+
+      if (!result.rows[0]) {
+        return res
+          .status(404)
+          .json({
+            error:
+              'Artigo não encontrado ou publicação sem autorização.'
+          });
+      }
+
+      return res.json({
+        article: {
+          ...result.rows[0],
+
+          authorName:
+            user.name
+        },
+
+        message:
+          'Artigo atualizado com sucesso.'
+      });
+
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+/* =========================================================
+   ARQUIVAR MEU ARTIGO
+   PATCH /api/wiki/:id/status
+========================================================= */
+
+router.patch(
+  '/:id/status',
+  async (req, res, next) => {
+    try {
+      const user =
+        await getAuthenticatedUser(req);
+
+      if (!user) {
+        return res
+          .status(401)
+          .json({
+            error:
+              'Faça login para arquivar este artigo.'
+          });
+      }
+
+      const articleId =
+        Number(
+          req.params.id
+        );
+
+      if (
+        !Number.isSafeInteger(articleId) ||
+        articleId <= 0
+      ) {
+        return res
+          .status(400)
+          .json({
+            error:
+              'Identificador do artigo inválido.'
+          });
+      }
+
+      const result =
+        await pool.query(
+          `UPDATE wiki_articles
+           SET
+             publication_status = 'archived',
+             updated_at = NOW()
+           WHERE id = $1
+             AND user_id = $2
+           RETURNING
+             id,
+             user_id AS "userId",
+             title,
+             category,
+             summary,
+             content,
+             publication_status
+               AS "publicationStatus",
+             created_at
+               AS "createdAt",
+             updated_at
+               AS "updatedAt"`,
+          [
+            articleId,
+            user.id
+          ]
+        );
+
+      if (!result.rows[0]) {
+        return res
+          .status(404)
+          .json({
+            error:
+              'Artigo não encontrado ou publicação sem autorização.'
+          });
+      }
+
+      return res.json({
+        article:
+          result.rows[0],
+
+        message:
+          'Artigo arquivado com sucesso.'
+      });
+
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+/* =========================================================
+   EXCLUIR MEU ARTIGO
+   DELETE /api/wiki/:id
+========================================================= */
+
+router.delete(
+  '/:id',
+  async (req, res, next) => {
+    try {
+      const user =
+        await getAuthenticatedUser(req);
+
+      if (!user) {
+        return res
+          .status(401)
+          .json({
+            error:
+              'Faça login para excluir este artigo.'
+          });
+      }
+
+      const articleId =
+        Number(
+          req.params.id
+        );
+
+      if (
+        !Number.isSafeInteger(articleId) ||
+        articleId <= 0
+      ) {
+        return res
+          .status(400)
+          .json({
+            error:
+              'Identificador do artigo inválido.'
+          });
+      }
+
+      const result =
+        await pool.query(
+          `DELETE FROM wiki_articles
+           WHERE id = $1
+             AND user_id = $2
+           RETURNING
+             id,
+             title`,
+          [
+            articleId,
+            user.id
+          ]
+        );
+
+      if (!result.rows[0]) {
+        return res
+          .status(404)
+          .json({
+            error:
+              'Artigo não encontrado ou publicação sem autorização.'
+          });
+      }
+
+      return res.json({
+        article:
+          result.rows[0],
+
+        message:
+          'Artigo excluído com sucesso.'
+      });
+
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 export default router;

@@ -5823,6 +5823,31 @@ const myPublicationsTabs = [
   )
 ];
 
+const myPublicationsWikiGrid =
+  document.querySelector(
+    '#my-publications-wiki-grid'
+  );
+
+const myPublicationsWikiCount =
+  document.querySelector(
+    '#my-publications-wiki-count'
+  );
+
+const myPublicationsWikiEmpty =
+  document.querySelector(
+    '#my-publications-wiki-empty'
+  );
+
+const myPublicationsWikiPanel =
+  document.querySelector(
+    '#my-publications-wiki'
+  );
+
+const myPublicationsWikiCreate =
+  document.querySelector(
+    '#my-publications-wiki-create'
+  );
+
 /* =========================================================
    CARREGAR MINHAS PUBLICACOES
 ========================================================= */
@@ -5886,6 +5911,13 @@ async function loadMyPublications() {
     myPublicationsReportsEmpty.hidden = true;
   }
 
+  if (myPublicationsWikiCreate) {
+  myPublicationsWikiCreate.addEventListener(
+    'click',
+    openWikiCreateModal
+  );
+}
+
   try {
     const result =
       await apiRequest(
@@ -5900,6 +5932,11 @@ async function loadMyPublications() {
 const reports =
   Array.isArray(result.reports)
     ? result.reports
+    : [];
+
+    const wiki =
+  Array.isArray(result.wiki)
+    ? result.wiki
     : [];
 
 /* =====================================================
@@ -5932,9 +5969,24 @@ const closedReports =
       'resolved'
   );
 
+  const activeWiki =
+  wiki.filter(
+    (article) =>
+      article.publicationStatus !==
+      'archived'
+  );
+
+const closedWiki =
+  wiki.filter(
+    (article) =>
+      article.publicationStatus ===
+      'archived'
+  );
+
 const closedCount =
   closedPets.length +
-  closedReports.length;
+  closedReports.length +
+  closedWiki.length;
 
 
 /* =====================================================
@@ -5958,6 +6010,11 @@ if (myPublicationsReportsCount) {
     String(activeReports.length);
 }
 
+if (myPublicationsWikiCount) {
+  myPublicationsWikiCount.textContent =
+    String(activeWiki.length);
+}
+
 if (myPublicationsClosedCount) {
   myPublicationsClosedCount.textContent =
     String(closedCount);
@@ -5970,6 +6027,10 @@ if (myPublicationsClosedCount) {
 
 myPublicationsPetsGrid.innerHTML = '';
 myPublicationsReportsGrid.innerHTML = '';
+
+if (myPublicationsWikiGrid) {
+  myPublicationsWikiGrid.innerHTML = '';
+}
 
 if (myPublicationsClosedGrid) {
   myPublicationsClosedGrid.innerHTML = '';
@@ -6001,6 +6062,17 @@ activeReports.forEach(
   }
 );
 
+/* =====================================================
+   ARTIGOS ATIVOS DA WIKIPET
+===================================================== */
+
+activeWiki.forEach(
+  (article) => {
+    renderMyWikiPublication(
+      article
+    );
+  }
+);
 
 /* =====================================================
    PUBLICACOES ENCERRADAS
@@ -6024,6 +6096,14 @@ closedReports.forEach(
   }
 );
 
+closedWiki.forEach(
+  (article) => {
+    renderMyWikiPublication(
+      article,
+      myPublicationsClosedGrid
+    );
+  }
+);
 
 /* =====================================================
    ESTADOS VAZIOS
@@ -6042,6 +6122,11 @@ if (myPublicationsReportsEmpty) {
 if (myPublicationsClosedEmpty) {
   myPublicationsClosedEmpty.hidden =
     closedCount > 0;
+}
+
+if (myPublicationsWikiEmpty) {
+  myPublicationsWikiEmpty.hidden =
+    activeWiki.length > 0;
 }
 
   } catch (error) {
@@ -6103,6 +6188,9 @@ function setMyPublicationsTab(selectedTab) {
   const showReports =
     selectedTab === 'reports';
 
+  const showWiki =
+    selectedTab === 'wiki';
+
   const showClosed =
     selectedTab === 'closed';
 
@@ -6114,6 +6202,11 @@ function setMyPublicationsTab(selectedTab) {
   if (myPublicationsReportsPanel) {
     myPublicationsReportsPanel.hidden =
       !showReports;
+  }
+
+  if (myPublicationsWikiPanel) {
+    myPublicationsWikiPanel.hidden =
+      !showWiki;
   }
 
   if (myPublicationsClosedPanel) {
@@ -6140,24 +6233,333 @@ function setMyPublicationsTab(selectedTab) {
   );
 }
 
-myPublicationsTabs.forEach(
-  (button) => {
-    button.addEventListener(
-      'click',
-      () => {
-        setMyPublicationsTab(
-          button.dataset.publicationTab
-        );
-      }
-    );
-  }
-);
-
 initializeMyPublications();
 
 /* =========================================================
    CARD - MEU ANIMAL
 ========================================================= */
+/* =========================================================
+   CARD - MEU ARTIGO DA WIKIPET
+========================================================= */
+
+function renderMyWikiPublication(
+  article,
+  targetGrid = myPublicationsWikiGrid
+) {
+  if (
+    !targetGrid ||
+    !article
+  ) {
+    return;
+  }
+
+  const categoryLabels = {
+    saude: 'Saúde',
+    cuidados: 'Cuidados',
+    adocao: 'Adoção'
+  };
+
+  const categoryClasses = {
+    saude: 'category-health',
+    cuidados: 'category-care',
+    adocao: 'category-adoption'
+  };
+
+  const category =
+    article.category ||
+    'cuidados';
+
+  const categoryLabel =
+    categoryLabels[category] ||
+    'Cuidados';
+
+  const categoryClass =
+    categoryClasses[category] ||
+    'category-care';
+
+  const publicationStatus =
+    article.publicationStatus ||
+    'active';
+
+  const statusLabel =
+    publicationStatus === 'archived'
+      ? 'Arquivado'
+      : 'Publicado';
+
+  let createdAt =
+    'Data não informada';
+
+  if (article.createdAt) {
+    const date =
+      new Date(
+        article.createdAt
+      );
+
+    if (
+      !Number.isNaN(
+        date.getTime()
+      )
+    ) {
+      createdAt =
+        date.toLocaleDateString(
+          'pt-BR'
+        );
+    }
+  }
+
+  const archiveButtonHtml =
+    publicationStatus === 'active'
+      ? `
+        <button
+          class="my-publication-wiki-archive"
+          type="button"
+        >
+          📦 Arquivar
+        </button>
+      `
+      : '';
+
+  const card =
+    document.createElement(
+      'article'
+    );
+
+  card.className =
+    'my-publication-card';
+
+  card.dataset.articleId =
+    String(
+      article.id
+    );
+
+  card.innerHTML = `
+    <div class="my-publication-body">
+
+      <span class="my-publication-type">
+        📚 WikiPet
+      </span>
+
+      <span
+        class="wiki-category ${categoryClass}"
+      >
+        ${escapeHtml(
+          categoryLabel
+        )}
+      </span>
+
+      <h3>
+        ${escapeHtml(
+          article.title ||
+          'Artigo'
+        )}
+      </h3>
+
+      <div class="my-publication-info">
+
+        <p>
+          <strong>Categoria:</strong>
+          ${escapeHtml(
+            categoryLabel
+          )}
+        </p>
+
+        <p>
+          <strong>Publicado em:</strong>
+          ${escapeHtml(
+            createdAt
+          )}
+        </p>
+
+        <p>
+          <strong>Status:</strong>
+          ${escapeHtml(
+            statusLabel
+          )}
+        </p>
+
+      </div>
+
+      <p class="my-publication-description">
+        ${escapeHtml(
+          article.summary ||
+          ''
+        )}
+      </p>
+
+      <div class="my-publication-actions">
+
+        <button
+          class="my-publication-wiki-edit"
+          type="button"
+        >
+          ✏️ Editar
+        </button>
+
+        ${archiveButtonHtml}
+
+        <button
+          class="my-publication-wiki-delete"
+          type="button"
+        >
+          🗑 Excluir
+        </button>
+
+      </div>
+
+    </div>
+  `;
+
+
+  /* =====================================================
+     BOTAO - EDITAR ARTIGO
+  ===================================================== */
+
+  const editButton =
+    card.querySelector(
+      '.my-publication-wiki-edit'
+    );
+
+  if (editButton) {
+    editButton.addEventListener(
+      'click',
+      () => {
+        openWikiEditModal(
+          article
+        );
+      }
+    );
+  }
+
+
+  /* =====================================================
+     BOTAO - ARQUIVAR ARTIGO
+  ===================================================== */
+
+  const archiveButton =
+    card.querySelector(
+      '.my-publication-wiki-archive'
+    );
+
+  if (archiveButton) {
+    archiveButton.addEventListener(
+      'click',
+      async () => {
+        const confirmed =
+          window.confirm(
+            `Deseja arquivar o artigo "${article.title || 'Artigo'}"?`
+          );
+
+        if (!confirmed) {
+          return;
+        }
+
+        archiveButton.disabled =
+          true;
+
+        try {
+          const result =
+            await apiRequest(
+              `/api/wiki/${encodeURIComponent(
+                String(article.id)
+              )}/status`,
+              {
+                method: 'PATCH',
+                body:
+                  JSON.stringify({})
+              }
+            );
+
+          showToast(
+            result.message ||
+            'Artigo arquivado com sucesso.'
+          );
+
+          await loadWikiArticles();
+
+          await loadMyPublications();
+
+        } catch (error) {
+          showToast(
+            error.message ||
+            'Não foi possível arquivar o artigo.',
+            'error'
+          );
+
+        } finally {
+          archiveButton.disabled =
+            false;
+        }
+      }
+    );
+  }
+
+
+  /* =====================================================
+     BOTAO - EXCLUIR ARTIGO
+  ===================================================== */
+
+  const deleteButton =
+    card.querySelector(
+      '.my-publication-wiki-delete'
+    );
+
+  if (deleteButton) {
+    deleteButton.addEventListener(
+      'click',
+      async () => {
+        const confirmed =
+          window.confirm(
+            `Tem certeza de que deseja excluir definitivamente o artigo "${article.title || 'Artigo'}"?`
+          );
+
+        if (!confirmed) {
+          return;
+        }
+
+        deleteButton.disabled =
+          true;
+
+        try {
+          const result =
+            await apiRequest(
+              `/api/wiki/${encodeURIComponent(
+                String(article.id)
+              )}`,
+              {
+                method: 'DELETE',
+                body:
+                  JSON.stringify({})
+              }
+            );
+
+          showToast(
+            result.message ||
+            'Artigo excluído com sucesso.'
+          );
+
+          await loadWikiArticles();
+
+          await loadMyPublications();
+
+        } catch (error) {
+          showToast(
+            error.message ||
+            'Não foi possível excluir o artigo.',
+            'error'
+          );
+
+        } finally {
+          deleteButton.disabled =
+            false;
+        }
+      }
+    );
+  }
+
+  targetGrid.appendChild(
+    card
+  );
+}
 
 function renderMyPetPublication(
   pet,
@@ -6963,13 +7365,43 @@ function closeWikiCreateModal() {
     'aria-hidden',
     'true'
   );
+
+  editingWikiArticleId = null;
 }
 
 
 if (wikiCreateButton) {
   wikiCreateButton.addEventListener(
     'click',
-    openWikiCreateModal
+    () => {
+      editingWikiArticleId = null;
+
+      if (wikiCreateForm) {
+        wikiCreateForm.reset();
+      }
+
+      const title =
+        wikiCreateModal?.querySelector(
+          '#wiki-create-title'
+        );
+
+      if (title) {
+        title.textContent =
+          'Publicar na WikiPet';
+      }
+
+      const submitButton =
+        wikiCreateForm?.querySelector(
+          'button[type="submit"]'
+        );
+
+      if (submitButton) {
+        submitButton.textContent =
+          '✍️ Publicar artigo';
+      }
+
+      openWikiCreateModal();
+    }
   );
 }
 
@@ -6994,6 +7426,73 @@ if (wikiCreateModal) {
       }
     }
   );
+}
+
+/* =========================================================
+   WIKIPET - EDITAR ARTIGO
+========================================================= */
+
+let editingWikiArticleId = null;
+
+function openWikiEditModal(article) {
+  if (
+    !wikiCreateModal ||
+    !wikiCreateForm ||
+    !article
+  ) {
+    return;
+  }
+
+  editingWikiArticleId =
+    Number(article.id);
+
+  const values = {
+    title:
+      article.title || '',
+
+    category:
+      article.category || '',
+
+    summary:
+      article.summary || '',
+
+    content:
+      article.content || ''
+  };
+
+  Object.entries(values)
+    .forEach(
+      ([name, value]) => {
+        const field =
+          wikiCreateForm.elements[name];
+
+        if (field) {
+          field.value = value;
+        }
+      }
+    );
+
+  const title =
+    wikiCreateModal.querySelector(
+      '#wiki-create-title'
+    );
+
+  if (title) {
+    title.textContent =
+      'Editar artigo da WikiPet';
+  }
+
+  const submitButton =
+    wikiCreateForm.querySelector(
+      'button[type="submit"]'
+    );
+
+  if (submitButton) {
+    submitButton.textContent =
+      '💾 Salvar alterações';
+  }
+
+  openWikiCreateModal();
 }
 
 /* =========================================================
@@ -7063,18 +7562,41 @@ if (wikiCreateForm) {
       }
 
       try {
-        const result =
-          await apiRequest(
-            '/api/wiki',
-            {
-              method: 'POST',
+        const parsedEditingWikiId =
+  Number(editingWikiArticleId);
 
-              body:
-                JSON.stringify(
-                  article
-                )
-            }
-          );
+const isEditing =
+  editingWikiArticleId !== null &&
+  editingWikiArticleId !== '' &&
+  Number.isSafeInteger(
+    parsedEditingWikiId
+  ) &&
+  parsedEditingWikiId > 0;
+
+const endpoint =
+  isEditing
+    ? `/api/wiki/${encodeURIComponent(
+        String(parsedEditingWikiId)
+      )}`
+    : '/api/wiki';
+
+const method =
+  isEditing
+    ? 'PATCH'
+    : 'POST';
+
+const result =
+  await apiRequest(
+    endpoint,
+    {
+      method,
+
+      body:
+        JSON.stringify(
+          article
+        )
+    }
+  );
 
         if (!result.article) {
           throw new Error(
@@ -7082,13 +7604,31 @@ if (wikiCreateForm) {
           );
         }
 
-        renderWikiArticle(
-  result.article
-);
+        if (isEditing) {
+  await loadWikiArticles();
+  await loadMyPublications();
 
-filterWikiArticles();
+  showToast(
+    result.message ||
+    'Artigo atualizado com sucesso.'
+  );
+
+} else {
+  renderWikiArticle(
+    result.article
+  );
+
+  filterWikiArticles();
+
+  showToast(
+    result.message ||
+    'Artigo publicado na WikiPet com sucesso!'
+  );
+}
 
         wikiCreateForm.reset();
+
+        editingWikiArticleId = null;
 
         closeWikiCreateModal();
 
