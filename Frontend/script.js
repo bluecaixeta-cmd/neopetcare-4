@@ -5848,18 +5848,6 @@ const myPublicationsWikiCreate =
     '#my-publications-wiki-create'
   );
 
-  
-
-  const myPublicationsWikiGrid =
-  document.getElementById(
-    'my-publications-wiki-grid'
-  );
-
-const myPublicationsWikiEmpty =
-  document.getElementById(
-    'my-publications-wiki-empty'
-  );
-
 /* =========================================================
    CARREGAR MINHAS PUBLICACOES
 ========================================================= */
