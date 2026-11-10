@@ -179,39 +179,6 @@ pet_name
           ]
         );
 
-
-      /* =====================================================
-         RESPOSTA
-      ===================================================== */
-
-      return res.json({
-        user: {
-          id:
-            user.id,
-
-          name:
-            user.name,
-
-          email:
-            user.email
-        },
-
-        pets:
-          petsResult.rows,
-
-        reports:
-          reportsResult.rows,
-
-          wiki:
-  wikiResult.rows
-      });
-
-    } catch (error) {
-      next(error);
-    }
-  }
-);
-
 /* =====================================================
    MEUS ARTIGOS DA WIKIPET
 ===================================================== */
@@ -247,6 +214,37 @@ const wikiResult =
       user.id
     ]
   );
+      /* =====================================================
+         RESPOSTA
+      ===================================================== */
+
+      return res.json({
+        user: {
+          id:
+            user.id,
+
+          name:
+            user.name,
+
+          email:
+            user.email
+        },
+
+        pets:
+          petsResult.rows,
+
+        reports:
+          reportsResult.rows,
+
+          wiki:
+  wikiResult.rows
+      });
+
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 /* =========================================================
    MARCAR ANIMAL COMO ADOTADO
