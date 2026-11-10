@@ -4111,7 +4111,7 @@ button {
 background-position: 60% center !important;
 background-size: cover !important;
 background-repeat: no-repeat !important;
-
+  }
   .hero h1 {
     font-size: clamp(2rem, 11vw, 2.8rem);
     line-height: 1.06;
@@ -5033,4 +5033,40 @@ button[type="submit"] {
   #wiki-create-form textarea[name="content"] {
     min-height: 160px;
   }
+}
+
+/* =========================================================
+   CORRECAO FINAL - FORMULARIO WIKIPET
+========================================================= */
+
+#wiki-create-form .form-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  width: 100%;
+}
+
+#wiki-create-form .form-row > * {
+  min-width: 0;
+  width: 100%;
+}
+
+#wiki-create-form label {
+  width: 100%;
+}
+
+#wiki-create-form input,
+#wiki-create-form select,
+#wiki-create-form textarea {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+}
+
+#wiki-create-form textarea[name="summary"] {
+  min-height: 110px;
+}
+
+#wiki-create-form textarea[name="content"] {
+  min-height: 220px;
 }
