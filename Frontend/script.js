@@ -6233,6 +6233,30 @@ function setMyPublicationsTab(selectedTab) {
   );
 }
 
+/* =========================================================
+   CLIQUES NAS ABAS DE MINHAS PUBLICACOES
+========================================================= */
+
+myPublicationsTabs.forEach(
+  (button) => {
+    button.addEventListener(
+      'click',
+      () => {
+        const selectedTab =
+          button.dataset.publicationTab;
+
+        if (!selectedTab) {
+          return;
+        }
+
+        setMyPublicationsTab(
+          selectedTab
+        );
+      }
+    );
+  }
+);
+
 initializeMyPublications();
 
 /* =========================================================
