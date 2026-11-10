@@ -5848,6 +5848,18 @@ const myPublicationsWikiCreate =
     '#my-publications-wiki-create'
   );
 
+  
+
+  const myPublicationsWikiGrid =
+  document.getElementById(
+    'my-publications-wiki-grid'
+  );
+
+const myPublicationsWikiEmpty =
+  document.getElementById(
+    'my-publications-wiki-empty'
+  );
+
 /* =========================================================
    CARREGAR MINHAS PUBLICACOES
 ========================================================= */
@@ -6458,16 +6470,14 @@ function renderMyWikiPublication(
 
         try {
           const result =
-            await apiRequest(
-              `/api/wiki/${encodeURIComponent(
-                String(article.id)
-              )}/status`,
-              {
-                method: 'PATCH',
-                body:
-                  JSON.stringify({})
-              }
-            );
+  await apiRequest(
+    `/api/my-publications/wiki/${encodeURIComponent(
+      String(article.id)
+    )}/status`,
+    {
+      method: 'PATCH'
+    }
+  );
 
           showToast(
             result.message ||
@@ -6493,6 +6503,7 @@ function renderMyWikiPublication(
     );
   }
 
+  
 
   /* =====================================================
      BOTAO - EXCLUIR ARTIGO
@@ -6521,16 +6532,14 @@ function renderMyWikiPublication(
 
         try {
           const result =
-            await apiRequest(
-              `/api/wiki/${encodeURIComponent(
-                String(article.id)
-              )}`,
-              {
-                method: 'DELETE',
-                body:
-                  JSON.stringify({})
-              }
-            );
+  await apiRequest(
+    `/api/my-publications/wiki/${encodeURIComponent(
+      String(article.id)
+    )}`,
+    {
+      method: 'DELETE'
+    }
+  );
 
           showToast(
             result.message ||
@@ -7495,6 +7504,27 @@ function openWikiEditModal(article) {
   openWikiCreateModal();
 }
 
+async function updateWikiArticle(
+  articleId,
+  articleData
+) {
+  await apiRequest(
+    `/api/my-publications/wiki/${articleId}`,
+    {
+      method: 'PATCH',
+
+      body:
+        JSON.stringify(articleData)
+    }
+  );
+
+  await loadMyPublications();
+
+  showToast(
+    'Artigo atualizado com sucesso!'
+  );
+}
+
 /* =========================================================
    WIKIPET - PUBLICAR ARTIGO
 ========================================================= */
@@ -7547,21 +7577,21 @@ if (wikiCreateForm) {
       }
 
       const submitButton =
-        wikiCreateForm.querySelector(
-          'button[type="submit"]'
-        );
+  wikiCreateForm.querySelector(
+    'button[type="submit"]'
+  );
 
-      const originalButtonText =
-        submitButton?.textContent;
+const originalButtonText =
+  submitButton?.textContent;
 
-      if (submitButton) {
-        submitButton.disabled = true;
+if (submitButton) {
+  submitButton.disabled = true;
 
-        submitButton.textContent =
-          'Publicando...';
-      }
+  submitButton.textContent =
+    'Publicando...';
+}
 
-      try {
+try {
         const parsedEditingWikiId =
   Number(editingWikiArticleId);
 
@@ -7573,30 +7603,37 @@ const isEditing =
   ) &&
   parsedEditingWikiId > 0;
 
-const endpoint =
-  isEditing
-    ? `/api/wiki/${encodeURIComponent(
+let result;
+
+if (isEditing) {
+  result =
+    await apiRequest(
+      `/api/my-publications/wiki/${encodeURIComponent(
         String(parsedEditingWikiId)
-      )}`
-    : '/api/wiki';
+      )}`,
+      {
+        method: 'PATCH',
 
-const method =
-  isEditing
-    ? 'PATCH'
-    : 'POST';
+        body:
+          JSON.stringify(
+            article
+          )
+      }
+    );
+} else {
+  result =
+    await apiRequest(
+      '/api/wiki',
+      {
+        method: 'POST',
 
-const result =
-  await apiRequest(
-    endpoint,
-    {
-      method,
-
-      body:
-        JSON.stringify(
-          article
-        )
-    }
-  );
+        body:
+          JSON.stringify(
+            article
+          )
+      }
+    );
+}
 
         if (!result.article) {
           throw new Error(

@@ -1357,160 +1357,304 @@ router.patch(
   }
 );
 
-export default router;
-
 /* =========================================================
-   CARREGAR MINHAS PUBLICACOES
+   EDITAR MEU ARTIGO DA WIKIPET
+
+   PATCH /api/my-publications/wiki/:id
 ========================================================= */
 
-async function loadMyPublications() {
-  if (
-    !myPublicationsSection ||
-    !myPublicationsPetsGrid ||
-    !myPublicationsReportsGrid
-  ) {
-    return;
-  }
+router.patch(
+  '/wiki/:id',
+  async (req, res, next) => {
+    try {
+      const user =
+        await getAuthenticatedUser(req);
 
-  if (myPublicationsLoading) {
-    myPublicationsLoading.hidden = false;
-  }
-
-  if (myPublicationsError) {
-    myPublicationsError.hidden = true;
-  }
-
-  if (myPublicationsPetsEmpty) {
-    myPublicationsPetsEmpty.hidden = true;
-  }
-
-  if (myPublicationsReportsEmpty) {
-    myPublicationsReportsEmpty.hidden = true;
-  }
-
-  try {
-    const result =
-      await apiRequest(
-        '/api/my-publications'
-      );
-
-    const pets =
-      Array.isArray(result.pets)
-        ? result.pets
-        : [];
-
-    const reports =
-      Array.isArray(result.reports)
-        ? result.reports
-        : [];
-
-
-    /* =====================================================
-       MOSTRAR AREA
-    ===================================================== */
-
-    myPublicationsSection.hidden = false;
-
-
-    /* =====================================================
-       CONTADORES
-    ===================================================== */
-
-    if (myPublicationsPetsCount) {
-      myPublicationsPetsCount.textContent =
-        String(pets.length);
-    }
-
-    if (myPublicationsReportsCount) {
-      myPublicationsReportsCount.textContent =
-        String(reports.length);
-    }
-
-
-    /* =====================================================
-       LIMPAR GRADES
-    ===================================================== */
-
-    myPublicationsPetsGrid.innerHTML = '';
-
-    myPublicationsReportsGrid.innerHTML = '';
-
-
-    /* =====================================================
-       ANIMAIS
-    ===================================================== */
-
-    pets.forEach(
-      (pet) => {
-        renderMyPetPublication(pet);
+      if (!user) {
+        return res
+          .status(401)
+          .json({
+            error:
+              'Faça login para editar este artigo.'
+          });
       }
-    );
 
+      const articleId =
+        Number(req.params.id);
 
-    /* =====================================================
-       OCORRENCIAS
-    ===================================================== */
-
-    reports.forEach(
-      (report) => {
-        renderMyReportPublication(report);
+      if (
+        !Number.isSafeInteger(articleId) ||
+        articleId <= 0
+      ) {
+        return res
+          .status(400)
+          .json({
+            error:
+              'Identificador do artigo inválido.'
+          });
       }
-    );
 
+      const article = {
+        title:
+          cleanText(
+            req.body.title,
+            200
+          ),
 
-    /* =====================================================
-       ESTADOS VAZIOS
-    ===================================================== */
+        category:
+          cleanText(
+            req.body.category,
+            100
+          ),
 
-    if (
-      myPublicationsPetsEmpty
-    ) {
-      myPublicationsPetsEmpty.hidden =
-        pets.length > 0;
-    }
+        summary:
+          cleanText(
+            req.body.summary,
+            1000
+          ),
 
-    if (
-      myPublicationsReportsEmpty
-    ) {
-      myPublicationsReportsEmpty.hidden =
-        reports.length > 0;
-    }
+        content:
+          cleanText(
+            req.body.content,
+            20_000
+          )
+      };
 
-  } catch (error) {
-    console.error(
-      'Erro ao carregar minhas publicações:',
-      error
-    );
+      if (
+        !article.title ||
+        !article.category ||
+        !article.summary ||
+        !article.content
+      ) {
+        return res
+          .status(400)
+          .json({
+            error:
+              'Preencha título, categoria, resumo e conteúdo.'
+          });
+      }
 
+      const result =
+        await pool.query(
+          `UPDATE wiki_articles
+           SET
+             title = $1,
+             category = $2,
+             summary = $3,
+             content = $4,
+             updated_at = NOW()
 
-    /*
-     * Se não houver sessão válida,
-     * a área continua escondida.
-     */
-    if (
-      error.message &&
-      (
-        error.message.includes('login') ||
-        error.message.includes('401')
-      )
-    ) {
-      myPublicationsSection.hidden = true;
+           WHERE id = $5
+             AND user_id = $6
 
-      return;
-    }
+           RETURNING
+             id,
 
+             user_id
+               AS "userId",
 
-    if (myPublicationsError) {
-      myPublicationsError.textContent =
-        error.message ||
-        'Não foi possível carregar suas publicações.';
+             title,
+             category,
+             summary,
+             content,
 
-      myPublicationsError.hidden = false;
-    }
+             publication_status
+               AS "publicationStatus",
 
-  } finally {
-    if (myPublicationsLoading) {
-      myPublicationsLoading.hidden = true;
+             created_at
+               AS "createdAt",
+
+             updated_at
+               AS "updatedAt"`,
+          [
+            article.title,
+            article.category,
+            article.summary,
+            article.content,
+            articleId,
+            user.id
+          ]
+        );
+
+      if (!result.rows[0]) {
+        return res
+          .status(404)
+          .json({
+            error:
+              'Artigo não encontrado ou publicação sem autorização.'
+          });
+      }
+
+      return res.json({
+        article:
+          result.rows[0],
+
+        message:
+          'Artigo atualizado com sucesso.'
+      });
+    } catch (error) {
+      next(error);
     }
   }
-}
+);
+
+
+/* =========================================================
+   ARQUIVAR MEU ARTIGO DA WIKIPET
+
+   PATCH /api/my-publications/wiki/:id/status
+========================================================= */
+
+router.patch(
+  '/wiki/:id/status',
+  async (req, res, next) => {
+    try {
+      const user =
+        await getAuthenticatedUser(req);
+
+      if (!user) {
+        return res
+          .status(401)
+          .json({
+            error:
+              'Faça login para arquivar este artigo.'
+          });
+      }
+
+      const articleId =
+        Number(req.params.id);
+
+      if (
+        !Number.isSafeInteger(articleId) ||
+        articleId <= 0
+      ) {
+        return res
+          .status(400)
+          .json({
+            error:
+              'Identificador do artigo inválido.'
+          });
+      }
+
+      const result =
+        await pool.query(
+          `UPDATE wiki_articles
+           SET
+             publication_status = 'archived',
+             updated_at = NOW()
+
+           WHERE id = $1
+             AND user_id = $2
+
+           RETURNING
+             id,
+             title,
+
+             publication_status
+               AS "publicationStatus",
+
+             updated_at
+               AS "updatedAt"`,
+          [
+            articleId,
+            user.id
+          ]
+        );
+
+      if (!result.rows[0]) {
+        return res
+          .status(404)
+          .json({
+            error:
+              'Artigo não encontrado ou publicação sem autorização.'
+          });
+      }
+
+      return res.json({
+        article:
+          result.rows[0],
+
+        message:
+          'Artigo arquivado e enviado para Encerradas.'
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+
+/* =========================================================
+   EXCLUIR MEU ARTIGO DA WIKIPET
+
+   DELETE /api/my-publications/wiki/:id
+========================================================= */
+
+router.delete(
+  '/wiki/:id',
+  async (req, res, next) => {
+    try {
+      const user =
+        await getAuthenticatedUser(req);
+
+      if (!user) {
+        return res
+          .status(401)
+          .json({
+            error:
+              'Faça login para excluir este artigo.'
+          });
+      }
+
+      const articleId =
+        Number(req.params.id);
+
+      if (
+        !Number.isSafeInteger(articleId) ||
+        articleId <= 0
+      ) {
+        return res
+          .status(400)
+          .json({
+            error:
+              'Identificador do artigo inválido.'
+          });
+      }
+
+      const result =
+        await pool.query(
+          `DELETE FROM wiki_articles
+           WHERE id = $1
+             AND user_id = $2
+           RETURNING
+             id,
+             title`,
+          [
+            articleId,
+            user.id
+          ]
+        );
+
+      if (!result.rows[0]) {
+        return res
+          .status(404)
+          .json({
+            error:
+              'Artigo não encontrado ou publicação sem autorização.'
+          });
+      }
+
+      return res.json({
+        article:
+          result.rows[0],
+
+        message:
+          'Artigo excluído com sucesso.'
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+export default router;
